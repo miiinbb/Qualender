@@ -1,5 +1,4 @@
 //SignupPage.js
-
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 const SignupPage = ({ onSignup, onBack }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [password2, setPassword2] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -39,22 +39,34 @@ const SignupPage = ({ onSignup, onBack }) => {
       <View style={styles.inputContainer}>
       {/* 아이디 입력 */}
         <Text style={styles.label}>아이디</Text>
-        <TextInput
-          value={username}
-          onChangeText={text => setUsername(text)}
-          style={styles.input}
-          placeholder="아이디를 입력하세요"
-        />
+        <View style={styles.inputWithButton}>
+          <TextInput
+            value={username}
+            onChangeText={text => setUsername(text)}
+            style={styles.input}
+            placeholder="아이디를 입력하세요"
+          />
+          <TouchableOpacity style={styles.smallButton}>
+          <Text style={styles.smallButtonText}>중복 확인</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.inputContainer}>
       {/* 비밀번호 입력 */}
-        <Text style={styles.label}>비밀번호</Text>
+      <Text style={styles.label}>비밀번호</Text>
         <TextInput
           value={password}
           onChangeText={text => setPassword(text)}
           style={styles.input}
           placeholder="비밀번호를 입력하세요"
+          secureTextEntry={true}
+        />
+        <TextInput
+          value={password2}
+          onChangeText={text => setPassword2(text)}
+          style={styles.input}
+          placeholder="비밀번호를 다시 입력하세요"
           secureTextEntry={true}
         />
       </View>
@@ -113,6 +125,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     padding: 5,
+    paddingTop: 80,  // 제목, 뒤로가기 버튼과 ID 입력창 사이에 여백을 추가했습니다.
   },
   backButton: {
     position: 'absolute',
@@ -136,7 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderColor: '#eb94cf',
     borderWidth: 2,
-    borderRadius: 5,
+    borderRadius: 3,
     padding: 5,
   },
   label: {
@@ -168,6 +181,29 @@ const styles = StyleSheet.create({
   signupButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  inputWithButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 250,  // ID 입력창과 다른 입력창들의 너비를 동일하게 했습니다.
+  },
+  button: {
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    backgroundColor: '#f0f0f0',
+    marginLeft: 10,
+    borderRadius: 5,
+  },
+  smallButton: {
+    paddingHorizontal: 6,  // Reduced padding
+    paddingVertical: 5,   // Reduced padding
+    backgroundColor: '#f0f0f0',
+    marginLeft: 5,
+    borderRadius: 5,
+  },
+  smallButtonText: {
+    fontSize: 12,  // Reduced font size
   },
 });
 
