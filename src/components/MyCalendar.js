@@ -1,4 +1,4 @@
-//MyCalendar.js 수정 중!!!!!
+//MyCalendar.js miiinbb branch code
 import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
@@ -54,7 +54,7 @@ export default function MyCalendar() {
                 if (state === 'disabled') {
                     // 전, 후 월의 날짜를 선택한 경우 해당 월로 이동
                     //const pressedDate = selectedDay || new Date();
-                    if (selectedDay.getMonth() === (date.month - 1)){
+                    if (selectedDay.getMonth() === (date.month - 1) ){
                         //const selectedMonth = date.month - 1
                         subtractMonth => subtractMonth()
                     }
