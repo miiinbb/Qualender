@@ -85,12 +85,17 @@ const SignupPage = ({ onSignup, onBack }) => {
       <View style={styles.inputContainer}>
       {/* 닉네임 입력 */}
         <Text style={styles.label}>닉네임</Text>
+        <View style={styles.inputWithButton}>
         <TextInput
           value={nickname}
           onChangeText={text => setNickname(text)}
           style={styles.input}
           placeholder="닉네임을 입력하세요"
         />
+        <TouchableOpacity style={styles.smallButton}>
+          <Text style={styles.smallButtonText}>중복 확인</Text>
+          </TouchableOpacity>
+      </View>
       </View>
 
       <View style={styles.inputContainer}>

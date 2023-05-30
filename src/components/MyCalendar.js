@@ -53,6 +53,7 @@ export default function MyCalendar() {
               onPress={() => {
                 if (state === 'disabled') {
                     // 전, 후 월의 날짜를 선택한 경우 해당 월로 이동
+                    //selectedDay는 상태함수
                     const pressedDate = selectedDay || new Date();
                     const selectedMonth = date.month - 1; // 선택한 날짜의 전월로 이동
                     pressedDate.setMonth(selectedMonth);
