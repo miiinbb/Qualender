@@ -23,11 +23,18 @@ LocaleConfig.defaultLocale = 'ko';
 
 export default function MyCalendar() {
   // Declare and initialize selectedDay state variable
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  //selectedDay는 상태함수
+  var [selectedDay, setSelectedDay] = useState(null);
+  var [modalVisible, setModalVisible] = useState(false);
+  // 선택한 날짜
+  var selectedDate = new Date(selectedDay);
+  var selectedMonth = selectedDate.getMonth();
+
+  // 오늘 날짜
+  var today = new Date();
+  var currentMonth = today.getMonth();
   
   // 오늘 날짜를 구하는 함수
-  var today = new Date();
   var year = today.getFullYear();
   var month = ('0' + (today.getMonth() + 1)).slice(-2);
   var day = ('0' + today.getDate()).slice(-2);
@@ -53,11 +60,9 @@ export default function MyCalendar() {
               onPress={() => {
                 if (state === 'disabled') {
                     // 전, 후 월의 날짜를 선택한 경우 해당 월로 이동
-                    //selectedDay는 상태함수
-                    const pressedDate = selectedDay || new Date();
-                    const selectedMonth = date.month - 1; // 선택한 날짜의 전월로 이동
-                    pressedDate.setMonth(selectedMonth);
-                    setSelectedDay(pressedDate);
+                    if (selectedMonth === currentMonth-1){
+                      setSelectedDay(selectedDate);
+                    }
                 } else {
                     setSelectedDay(date.dateString);
                 }
