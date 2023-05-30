@@ -1,4 +1,5 @@
 //MyCalendar.js miiinbb branch code
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
@@ -9,7 +10,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Calendar, LocaleConfig, CalendarList, Agenda } from 'react-native-calendars';
-import React, { useState } from 'react';
 import DatePicker from 'react-native-datepicker';
 
 LocaleConfig.locales['ko'] = {
@@ -25,14 +25,15 @@ export default function MyCalendar() {
   // Declare and initialize selectedDay state variable
   //selectedDay는 상태함수
   var [selectedDay, setSelectedDay] = useState(null);
+  var [currentMonth, setCurrentMonth] = useState(null);
   var [modalVisible, setModalVisible] = useState(false);
   // 선택한 날짜
-  var selectedDate = new Date(selectedDay);
-  var selectedMonth = selectedDate.getMonth();
+  var selectedDate = selectedDay ? new Date(selectedDay) : null;
+  var selectedMonth = selectedDate ? selectedDate.getMonth() : null;
 
   // 오늘 날짜
   var today = new Date();
-  var currentMonth = today.getMonth();
+  currentMonth = today.getMonth();
   
   // 오늘 날짜를 구하는 함수
   var year = today.getFullYear();
@@ -40,6 +41,18 @@ export default function MyCalendar() {
   var day = ('0' + today.getDate()).slice(-2);
   var dateString = year + '-' + month  + '-' + day;
 
+  //전 월, 다음 월로 이동하는 함수
+  const goToPreviousMonth = () => {
+    var previousMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1);
+    // Convert the date to string format
+    setSelectedDay(previousMonth.toISOString().split('T')[0]);
+  };
+
+  const goToNextMonth = () => {
+    var nextMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1);
+    // Convert the date to string format
+    setSelectedDay(nextMonth.toISOString().split('T')[0]);
+  };
 
   return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -58,16 +71,14 @@ export default function MyCalendar() {
             //날짜를 선택하면 팝업창이 뜨고, 날짜를 선택하지 않으면 기본 캘린더가 보임
             <TouchableOpacity
               onPress={() => {
-                if (state === 'disabled') {
-                    // 전, 후 월의 날짜를 선택한 경우 해당 월로 이동
-                    if (selectedMonth === currentMonth-1){
-                      setSelectedDay(selectedDate);
-                    }
-                } else {
-                    setSelectedDay(date.dateString);
+                // 전, 후 월의 날짜를 선택한 경우 해당 월로 이동
+                if (selectedMonth === currentMonth-1){
+                  goToPreviousMonth();
+                } else if (selectedMonth === currentMonth+1){
+                  goToNextMonth();
                 }
+                setSelectedDay(date.dateString);
                 setModalVisible(true);
-
               }}
             >
               <View style={styles.dayContainer}>
@@ -92,7 +103,10 @@ export default function MyCalendar() {
         />
       <Modal
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)} //누르지 않았을 때는 팝업창이 뜨지 않는 것
+        onRequestClose={() => {
+          setModalVisible(false); //닫기를 누르면 팝업창이 뜨지 않는 것
+          setSelectedDay(selectedDate);
+        }}
         transparent={true} //팝업창 배경을 투명하게 바꿔주는것
       >
         <View style={styles.modalContainer}>
