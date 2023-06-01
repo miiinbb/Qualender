@@ -1,5 +1,5 @@
 //MyCalendar.js miiinbb branch code
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
@@ -24,35 +24,30 @@ LocaleConfig.defaultLocale = 'ko';
 export default function MyCalendar() {
   // Declare and initialize selectedDay state variable
   //selectedDay는 상태함수
-  var [selectedDay, setSelectedDay] = useState(null);
-  var [currentMonth, setCurrentMonth] = useState(null);
-  var [modalVisible, setModalVisible] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [month, setMonth] = useState(MONTH);
+  const [year, setYear] = useState(YEAR);
+  const calendarRef = useRef(null); // Ref to access the Calendar component
+  <Calendar ref={calendarRef}/>
+
   // 선택한 날짜
   var selectedDate = selectedDay ? new Date(selectedDay) : null;
   var selectedMonth = selectedDate ? selectedDate.getMonth() : null;
 
   // 오늘 날짜
-  var today = new Date();
-  currentMonth = today.getMonth();
-  
-  // 오늘 날짜를 구하는 함수
-  var year = today.getFullYear();
-  var month = ('0' + (today.getMonth() + 1)).slice(-2);
-  var day = ('0' + today.getDate()).slice(-2);
-  var dateString = year + '-' + month  + '-' + day;
+  const DATE = new Date(); //오늘 날짜
+  const YEAR = DATE.getFullYear();  //오늘 날짜의 연도
+  const MONTH = DATE.getMonth() + 1;  //오늘 날짜의 월
+  const DAY = DATE.getDate();  //오늘 날짜의 일
+  const today = { year: YEAR, month: MONTH, date: DAY };
+  const dateString = YEAR + '-' + MONTH  + '-' + DAY;
 
-  //전 월, 다음 월로 이동하는 함수
-  const goToPreviousMonth = () => {
-    var previousMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1);
-    // Convert the date to string format
-    setSelectedDay(previousMonth.toISOString().split('T')[0]);
-  };
-
-  const goToNextMonth = () => {
-    var nextMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1);
-    // Convert the date to string format
-    setSelectedDay(nextMonth.toISOString().split('T')[0]);
-  };
+  //클릭한 월로 이동하는 함수
+  const moveToSpecificYearAndMonth = (year, month) => {
+    setYear(year);
+    setMonth(month);
+  }
 
   return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -72,13 +67,13 @@ export default function MyCalendar() {
             <TouchableOpacity
               onPress={() => {
                 // 전, 후 월의 날짜를 선택한 경우 해당 월로 이동
-                if (selectedMonth === currentMonth-1){
-                  goToPreviousMonth();
-                } else if (selectedMonth === currentMonth+1){
-                  goToNextMonth();
+                //date.month는 선택한 날짜의 월, MONTH는 내가 보고 있는 달력의 월
+                if (date.month !== MONTH) {
+                  moveToSpecificYearAndMonth(date.year, date.month);
                 }
                 setSelectedDay(date.dateString);
                 setModalVisible(true);
+                
               }}
             >
               <View style={styles.dayContainer}>
@@ -97,15 +92,11 @@ export default function MyCalendar() {
             </TouchableOpacity>
           )}
 
-          onDayPress={(day) => {
-            console.log('selected day', day);
-          }}
         />
       <Modal
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(false); //닫기를 누르면 팝업창이 뜨지 않는 것
-          setSelectedDay(selectedDate);
         }}
         transparent={true} //팝업창 배경을 투명하게 바꿔주는것
       >
