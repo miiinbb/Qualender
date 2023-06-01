@@ -56,7 +56,162 @@ export default function MyCalendar() {
             width: Dimensions.get('window').width * 0.9,
             fontFamily: 'System',
           }}
-
+          markingType="multi-period"
+          markedDates={{
+            '2023-06-01': {
+              periods: [
+                { startingDay: true, endingDay: true, color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+              ]
+            },
+            '2023-06-02': {
+              periods: [
+                { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+              ]
+            },
+            '2023-06-03': {
+              periods: [
+                { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+                { startingDay: true, endingDay: true, color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-04': {
+              periods: [
+                { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+                { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-05': {
+              periods: [
+                { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+                { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-06': {
+              periods: [
+                { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+              ]
+            },
+            '2023-06-07': {
+              periods: [
+                { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+              ]
+            },
+            '2023-06-08': {
+              periods: [
+                { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+              ]
+            },
+            '2023-06-09': {
+              periods: [
+                { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
+              ]
+            },
+            '2023-06-10': {
+              periods: [
+                { startingDay: true, endingDay: true, color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-11': {
+              periods: [
+                { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-12': {
+              periods: [
+                { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-13': {
+              periods: [
+                { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-14': {
+              periods: [
+                { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-15': {
+              periods: [
+                { startingDay: true, endingDay: true, color: '#ffa500' }, // 6월 3일부터 10일까지의 period
+              ]
+            },
+            '2023-06-16': {
+              periods: [
+                { color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
+              ]
+            },
+            '2023-06-17': {
+              periods: [
+                { color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
+              ]
+            },
+            '2023-06-18': {
+              periods: [
+                { startingDay: true, endingDay: false, color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
+              ]
+            },
+            '2023-06-19': {
+              periods: [
+                { color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
+              ]
+            },
+            '2023-06-20': {
+              periods: [
+                { color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
+              ]
+            },
+            '2023-06-21': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-22': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-23': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-24': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-25': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-26': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-27': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-28': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-29': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+            '2023-06-30': {
+              periods: [
+                { color: '#ffa500' }, 
+              ]
+            },
+          }}
         />
       <Modal
         visible={modalVisible}
