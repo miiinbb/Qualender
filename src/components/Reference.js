@@ -1,286 +1,211 @@
-import { StyleSheet, View, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import { v4 as uuidv4 } from "uuid";
-import isSameObj from "../utils/isSameObj";
-import SelectYearModal from "./Modal/SelectYearModal";
-import SelectMonthModal from "./Modal/SelectMonthModal";
-function Calendar() {
+//MyCalendar.js miiinbb branch code
+import React, { useState, useRef } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
+import { Calendar, LocaleConfig, CalendarList, Agenda } from 'react-native-calendars';
+import DatePicker from 'react-native-datepicker';
+
+LocaleConfig.locales['ko'] = {
+    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+    monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+    dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+    dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+    today: '오늘'
+  };
+LocaleConfig.defaultLocale = 'ko';
+
+export default function MyCalendar() {
+  // Declare and initialize selectedDay state variable
+  //selectedDay는 상태함수
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [month, setMonth] = useState(MONTH);
+  const [year, setYear] = useState(YEAR);
+  const calendarRef = useRef(null); // Ref to access the Calendar component
+  <Calendar ref={calendarRef}/>
+
+  // 선택한 날짜
+  var selectedDate = selectedDay ? new Date(selectedDay) : null;
+  var selectedMonth = selectedDate ? selectedDate.getMonth() : null;
+
+  // 오늘 날짜
   const DATE = new Date(); //오늘 날짜
   const YEAR = DATE.getFullYear();  //오늘 날짜의 연도
   const MONTH = DATE.getMonth() + 1;  //오늘 날짜의 월
   const DAY = DATE.getDate();  //오늘 날짜의 일
   const today = { year: YEAR, month: MONTH, date: DAY };
+  const dateString = YEAR + '-' + MONTH  + '-' + DAY;
 
-  const [month, setMonth] = useState(MONTH);
-  const [year, setYear] = useState(YEAR);
-  const [date, setDate] = useState(DAY);
-  const moveToNextMonth = (month) => {
-    if (month === 12) {
-      setYear((previousYear) => previousYear + 1);
-      setMonth(1);
-    } else {
-      setMonth((previousMonth) => previousMonth + 1);
-    }
-  };
-
-  const moveToPreviousMonth = (month) => {
-    if (month === 1) {
-      setYear((previousYear) => previousYear - 1);
-      setMonth(12);
-    } else {
-      setMonth((previousMonth) => previousMonth - 1);
-    }
-  };
-
+  //클릭한 월로 이동하는 함수
   const moveToSpecificYearAndMonth = (year, month) => {
     setYear(year);
     setMonth(month);
-  };
+  }
 
   return (
-    <View style={S.calendarContainer}>
-      <Header
-        month={month}
-        year={year}
-        moveToNextMonth={moveToNextMonth}
-        moveToPreviousMonth={moveToPreviousMonth}
-        moveToSpecificYearAndMonth={moveToSpecificYearAndMonth}
-      />
-      <Body
-        month={month}
-        year={year}
-        today={today}
-        date={date}
-        moveToNextMonth={moveToNextMonth}
-        moveToPreviousMonth={moveToPreviousMonth}
-        moveToSpecificYearAndMonth={moveToSpecificYearAndMonth}
-      />
-    </View>
-  );
-}
-export default Calendar;
-
-function Header(props) {
-  const [yearModalVisible, setYearModalVisible] = useState(false);
-  const [monthModalVisible, setMonthModalVisible] = useState(false);
-  return (
-    <>
-      <View style={S.header}>
-        <Pressable
-          onPress={props.moveToPreviousMonth.bind(this, props.month)}
-          style={({ pressed }) => pressed && S.pressed}
-        >
-          <Ionicons name="chevron-back" size={24} color="black" />
-        </Pressable>
-        <View style={{ flexDirection: "row" }}>
-          <Pressable onPress={setMonthModalVisible.bind(this, true)}>
-            <Text>{props.month}월 </Text>
-          </Pressable>
-          <Pressable onPress={setYearModalVisible.bind(this, true)}>
-            <Text>{props.year}</Text>
-          </Pressable>
-        </View>
-        <Pressable
-          onPress={props.moveToNextMonth.bind(this, props.month)}
-          style={({ pressed }) => pressed && S.pressed}
-        >
-          <Ionicons name="chevron-forward" size={24} color="black" />
-        </Pressable>
-      </View>
-      <SelectMonthModal
-        year={props.year}
-        modalVisible={monthModalVisible}
-        setModalVisible={setMonthModalVisible}
-        moveToSpecificYearAndMonth={props.moveToSpecificYearAndMonth}
-      />
-      <SelectYearModal
-        month={props.month}
-        year={props.year}
-        modalVisible={yearModalVisible}
-        setModalVisible={setYearModalVisible}
-        moveToSpecificYearAndMonth={props.moveToSpecificYearAndMonth}
-      />
-    </>
-  );
-}
-//Year,Month,date
-function Body(props) {
-  const [totalDays, setTotalDays] = useState({});
-  const [pressedDate, setPressedDate] = useState({
-    state: "",
-    year: 0,
-    month: 0,
-    date: 0,
-  });
-  const { year, month, date } = props;
-  useEffect(() => {
-    getTotalDays(year, month);
-  }, [year, month, date]);
-
-  const getTotalDays = (year, month) => {
-    const previousMonthLastDate = new Date(year, month - 1, 0).getDate(); //이 전달의 마지막 날짜 체크
-    const previousMonthLastDay = new Date(year, month - 1, 0).getDay(); //이 전 달의 마지막 날짜의 요일
-    const currentMonthLastDate = new Date(year, month, 0).getDate();
-    const currentMonthLastDay = new Date(year, month, 0).getDay();
-
-    const previousDays = Array.from(
-      { length: previousMonthLastDay + 1 },
-      (v, i) => previousMonthLastDate - previousMonthLastDay + i
-    );
-    const currentDays = Array.from(
-      { length: currentMonthLastDate },
-      (v, i) => i + 1
-    );
-    const nextDays = Array.from(
-      { length: 6 - currentMonthLastDay },
-      (v, i) => i + 1
-    );
-    setTotalDays({
-      prev: {
-        daysList: previousMonthLastDay !== 6 ? previousDays : [],
-        year: month === 1 ? year - 1 : year,
-        month: month === 1 ? 12 : month - 1,
-      },
-      curr: { daysList: currentDays, year: year, month: month },
-      next: {
-        daysList: nextDays,
-        year: month === 12 ? year + 1 : year,
-        month: month === 12 ? 1 : month + 1,
-      },
-    });
-  };
-
-  const handlePressDay = (pressedDate) => {
-    setPressedDate(pressedDate);
-    if (pressedDate.state === "prev" || pressedDate.state === "next") {
-      props.moveToSpecificYearAndMonth(pressedDate.year, pressedDate.month);
-    }
-  };
-  //{({ pressed }) => pressed && styles.pressedItem}
-  return (
-    <View>
-      <View style={S.dayOfWeek}>
-        {dayOfWeek.map((day, idx) => (
-          <View style={S.box} key={idx}>
-            <Text style={changeColorByDay(day).dayOfWeek}>{day}</Text>
-          </View>
-        ))}
-      </View>
-      <View style={S.totalDays}>
-        {Object.keys(totalDays).map((state) =>
-          totalDays[state].daysList.map((day) => {
-            const checkPressedDate = {
-              state: state,
-              year: totalDays[state].year,
-              month: totalDays[state].month,
-              date: day,
-            };
-            return (
-              <View style={S.box} key={uuidv4()}>
-                <Pressable
-                  onPress={handlePressDay.bind(this, checkPressedDate)}
-                  style={({ pressed }) => {
-                    return [
-                      pressedDate.date === checkPressedDate.date &&
-                      pressedDate.month === checkPressedDate.month &&
-                      pressedDate.year === checkPressedDate.year
-                        ? S.pressedDate
-                        : null,
-                      pressed && S.pressed,
-                    ];
-                  }}
-                >
-                  <Text
-                    style={[
-                      [
-                        isSameObj(
-                          { state: "curr", ...props.today },
-                          checkPressedDate
-                        )
-                          ? S.today
-                          : state === "prev" || state === "next"
-                          ? S.prev
-                          : S.curr,
-                      ],
-                    ]}
-                  >
-                    {day}
-                  </Text>
-                </Pressable>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Calendar
+          monthFormat={'yyyy'+'년 '+'MM'+'월'}
+          horizontal={true} //가로로 스와이프
+          hideArrows={false}
+          style={{
+            borderWidth: 1,
+            borderColor: 'gray',
+            height: Dimensions.get('window').height * 0.8, //화면비율설정
+            width: Dimensions.get('window').width * 0.9,
+            fontFamily: 'System',
+          }}
+          dayComponent={({ date, state }) => (
+            //날짜를 선택하면 팝업창이 뜨고, 날짜를 선택하지 않으면 기본 캘린더가 보임
+            <TouchableOpacity
+              onPress={() => {
+                // 전, 후 월의 날짜를 선택한 경우 해당 월로 이동
+                //date.month는 선택한 날짜의 월, MONTH는 내가 보고 있는 달력의 월
+                if (date.month !== MONTH) {
+                  moveToSpecificYearAndMonth(date.year, date.month);
+                }
+                setSelectedDay(date.dateString);
+                setModalVisible(true);
+                
+              }}
+            >
+              <View style={styles.dayContainer}>
+              <View style={styles.dayTextContainer}>
+              <Text
+                style={[
+                  styles.dayText,
+                  state === 'disabled' && styles.disabledDayText,
+                  date.dateString === dateString && styles.currentDate,
+                ]}
+              >
+                {date.day}
+              </Text>
               </View>
-            );
-          })
-        )}
-      </View>
+              </View>
+            </TouchableOpacity>
+          )}
+
+        />
+      <Modal
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false); //닫기를 누르면 팝업창이 뜨지 않는 것
+        }}
+        transparent={true} //팝업창 배경을 투명하게 바꿔주는것
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{selectedDay} 📚 리스트</Text>
+            <Text style={styles.modalItem}>{'펀드투자권유자문인력'}</Text>
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={styles.modalButton}
+            >
+              <Text style={styles.modalButtonText}>닫기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      <StatusBar style="auto" />
     </View>
   );
 }
 
-const dayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+//화면 크기에 비례로 디자인 적용하기 위해 실행
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
-const S = StyleSheet.create({
-  calendarContainer: {
-    width: "100%",
-    minHeight: "50%",
-    borderBottomColor: "black",
-    backgroundColor: "#fff",
-    paddingHorizontal: 16,
+const styles = StyleSheet.create({
+  //달력 맨 윗줄(sun mon...)과 첫 주 칸 조정
+  headerContainer: {
+    marginTop: -10, // 맨 윗줄과 첫 주 칸 간의 간격 조정
   },
-  header: {
-    marginTop: 60,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  week: {
+    marginBottom: -10, // 맨 윗줄과 첫 주 칸 간의 간격 조정
   },
-  dayOfWeek: {
-    flexDirection: "row",
+  //일자 컨테이너 스타일 조정
+  dayContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //칸 크기 조정하는 부분 padding
+    paddingBottom: 40,
+    paddingHorizontal: screenWidth*0.01,
+    marginTop : 0,
+    marginBottom: 0,
+    borderColor: '#000', // 테두리 색상 설정
+    borderWidth: 2, // 테두리 두께를 1로 설정
+    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
   },
-  totalDays: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+  dayTextContainer: {
+    width: 30, // Adjust these values as per your design
+    height: 30, // Adjust these values as per your design
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#d094ea', // 테두리 색상 설정
+    borderWidth: 2, // 테두리 두께를 1로 설정
+    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
   },
-  box: {
-    width: "14.2%",
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 16,
+  dayText: {
+    fontSize: 10,
+    fontWeight: 'normal',
+    color: 'black',
   },
-  prev: {
-    color: "gray",
+  disabledDayText: {
+    color: 'lightgray',
+  },
+  currentDate: {
+    color: 'white',
+    fontWeight: 'bold',
+    backgroundColor: 'purple', // 테두리 색상 설정
+    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
+    padding: 5,
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '80%',
+  },
+  modalTitle: {
     fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  next: {
-    color: "gray",
-    fontSize: 24,
+  modalItem: {
+    fontSize: 18,
+    marginBottom: 10,
   },
-  curr: {
-    color: "black",
-    fontSize: 24,
+  modalButton: {
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
   },
-  today: {
-    color: "#2196f3",
-    fontSize: 24,
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 18,
   },
-  pressedDate: {
-    width: 40,
-    height: 40,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  pressed: {
-    opacity: 0.3,
-  },
+
 });
-const changeColorByDay = (day) =>
-  StyleSheet.create({
-    dayOfWeek: {
-      color: day === "Sun" ? "red" : day === "Sat" ? "blue" : "gray",
-      fontSize: 16,
-    },
-  });

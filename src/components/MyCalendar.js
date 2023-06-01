@@ -62,35 +62,6 @@ export default function MyCalendar() {
             width: Dimensions.get('window').width * 0.9,
             fontFamily: 'System',
           }}
-          dayComponent={({ date, state }) => (
-            //날짜를 선택하면 팝업창이 뜨고, 날짜를 선택하지 않으면 기본 캘린더가 보임
-            <TouchableOpacity
-              onPress={() => {
-                // 전, 후 월의 날짜를 선택한 경우 해당 월로 이동
-                //date.month는 선택한 날짜의 월, MONTH는 내가 보고 있는 달력의 월
-                if (date.month !== MONTH) {
-                  moveToSpecificYearAndMonth(date.year, date.month);
-                }
-                setSelectedDay(date.dateString);
-                setModalVisible(true);
-                
-              }}
-            >
-              <View style={styles.dayContainer}>
-              <View style={styles.dayTextContainer}>
-              <Text
-                style={[
-                  styles.dayText,
-                  state === 'disabled' && styles.disabledDayText,
-                  date.dateString === dateString && styles.currentDate,
-                ]}
-              >
-                {date.day}
-              </Text>
-              </View>
-              </View>
-            </TouchableOpacity>
-          )}
 
         />
       <Modal

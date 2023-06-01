@@ -67,15 +67,29 @@ export default function App() {
         <MyCalendar />
       )}
 
-      <TouchableOpacity style={styles.menuButton} onPress={handleToggleMenu}>
-        <Text style={styles.menuName}>🗓</Text>
-      </TouchableOpacity>
+<TouchableOpacity style={styles.menuButton} onPress={handleToggleMenu}>
+  <Text style={styles.menuName}>🗓</Text>
+</TouchableOpacity>
 
       <Animated.View style={[styles.menu, { transform: [{ translateX: menuAnimation }] }]}>
-      <Button title="메인캘린더" style={styles.menuItem} textStyle={styles.menuItemText}/>
-      <Button title="마이캘린더" style={styles.menuItem} textStyle={styles.menuItemText}/> {/* <Text style={styles.menuItem}>마이캘린더</Text> */}
-      <Button title="마이페이지" style={styles.menuItem} textStyle={styles.menuItemText}/>
-      </Animated.View>
+  {menuVisible && (
+    <View style={styles.menuContent}>
+ <TouchableOpacity style={styles.menuItem} onPress={handleLogin}> {/*로그인기능실행*/}
+        <Text style={styles.menuItemText}>로그인</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.menuItem} onPress={() => console.log("메인캘린더 버튼이 클릭되었습니다.")}>
+        <Text style={styles.menuItemText}>메인캘린더</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.menuItem} onPress={() => console.log("마이캘린더 버튼이 클릭되었습니다.")}>
+        <Text style={styles.menuItemText}>마이캘린더</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.menuItem} onPress={() => console.log("마이페이지 버튼이 클릭되었습니다.")}>
+        <Text style={styles.menuItemText}>마이페이지</Text>
+      </TouchableOpacity>
+    </View>
+  )}
+</Animated.View>
+
     </View>
   );
 }
@@ -128,10 +142,10 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: 'absolute',
-    top: 0,
+    top: screenHeight * 0.05 + 55, // 🗓 버튼 아래로 이동
     left: 0,
     height: '100%',
-    width: '80%',
+    width: '100%',
     backgroundColor: '#f0f0f0',
     zIndex: 0,
   },
