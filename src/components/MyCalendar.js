@@ -43,12 +43,6 @@ export default function MyCalendar() {
   const today = { year: YEAR, month: MONTH, date: DAY };
   const dateString = YEAR + '-' + MONTH  + '-' + DAY;
 
-  //클릭한 월로 이동하는 함수
-  const moveToSpecificYearAndMonth = (year, month) => {
-    setYear(year);
-    setMonth(month);
-  }
-
   return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
