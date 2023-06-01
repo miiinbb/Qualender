@@ -38,7 +38,7 @@ function Mypage() {
   );
 }
 
-function CustomDrawerContent({ navigation, ...props }) {
+function CustomDrawerContent(props) {
   const progress = useDrawerProgress();
 
   const translateX = Animated.interpolateNode(progress, {
