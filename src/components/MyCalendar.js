@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { Calendar, LocaleConfig, CalendarList, Agenda } from 'react-native-calendars';
 import DatePicker from 'react-native-datepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 LocaleConfig.locales['ko'] = {
     monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
@@ -29,6 +31,34 @@ export default function MyCalendar() {
   const [month, setMonth] = useState(MONTH);
   const [year, setYear] = useState(YEAR);
   const calendarRef = useRef(null); // Ref to access the Calendar component
+
+  const handleAddEventPress = () => {
+    // 일정 추가 버튼 클릭 시 날짜 선택 모달을 보여줍니다.
+    setDatePickerVisible(true);
+  };
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const handleConfirmDatePicker = (date) => {
+    // 선택한 날짜를 처리합니다.
+    if (!selectedStartDate) {
+      setSelectedStartDate(date);
+    } else {
+      setSelectedEndDate(date);
+      setDatePickerVisible(false);
+
+      // 선택한 날짜로 일정을 추가하는 로직을 구현합니다.
+      console.log('일정 추가:', selectedStartDate, selectedEndDate);
+
+      // 필요한 작업을 수행합니다.
+    }
+  };
+  const handleCancelDatePicker = () => {
+    // 날짜 선택 취소 시 모달을 닫습니다.
+    setDatePickerVisible(false);
+  };
+
+
   <Calendar ref={calendarRef}/>
 
   // 선택한 날짜
@@ -218,6 +248,30 @@ export default function MyCalendar() {
             },
           }}
         />
+
+      {/* 일정 추가 버튼 */}
+      <TouchableOpacity
+        onPress={handleAddEventPress}
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          right: 20,
+          backgroundColor: 'pink',
+          padding: 10,
+          borderRadius: 30,
+          elevation: 5,
+        }}
+      >
+        <Icon name="plus" size={24} color="white" />
+      </TouchableOpacity>
+      {/* 날짜 선택 모달 */}
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirmDatePicker}
+        onCancel={handleCancelDatePicker}
+      />
+
       <Modal
         visible={modalVisible}
         onRequestClose={() => {
