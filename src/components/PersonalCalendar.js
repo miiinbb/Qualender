@@ -1,4 +1,4 @@
-//PersonalCalendar.js
+//PersonalCalendar.js => 마이캘린더 담당
 import React, { useState, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {

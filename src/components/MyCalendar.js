@@ -1,4 +1,4 @@
-//MyCalendar.js miiinbb branch code
+//MyCalendar.js => 메인캘린더 담당
 import React, { useState, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {

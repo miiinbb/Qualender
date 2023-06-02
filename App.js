@@ -16,6 +16,7 @@ import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page'; // 파일의 상대 경로로 Login_page를 가져옴
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
+//기능명은 main, js명은 my
 function MainCalendar() {  
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -24,6 +25,7 @@ function MainCalendar() {
   );
 }
 
+//기능명은 personal1, js명은 personal
 function PersonalCalendar1() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
