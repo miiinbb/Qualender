@@ -42,7 +42,11 @@ export default function MyCalendar() {
   const DAY = DATE.getDate();  //오늘 날짜의 일
   const today = { year: YEAR, month: MONTH, date: DAY };
   const dateString = YEAR + '-' + MONTH  + '-' + DAY;
-
+  const handleDayPress = (day) => {
+    setSelectedDay(day.dateString);
+    setModalVisible(true);
+  };
+  
   return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
@@ -56,6 +60,7 @@ export default function MyCalendar() {
             width: Dimensions.get('window').width * 0.9,
             fontFamily: 'System',
           }}
+          onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가
           markingType="multi-period"
           markedDates={{
             '2023-06-01': {
@@ -222,7 +227,7 @@ export default function MyCalendar() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{selectedDay} 📚 리스트</Text>
+            <Text style={styles.modalTitle} numberOfLines={1}>{selectedDay} 📚 리스트</Text>
             <Text style={styles.modalItem}>{'펀드투자권유자문인력'}</Text>
             <TouchableOpacity
               onPress={() => setModalVisible(false)}
@@ -301,14 +306,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: '80%',
+    maxHeight: '80%', // 추가된 속성
+    maxWidth: '90%',
   },
   modalTitle: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    maxHeight: '80%',
+    maxWidth: '90%', // 추가된 속성
   },
   modalItem: {
-    fontSize: 18,
+    fontSize: 15,
     marginBottom: 10,
   },
   modalButton: {

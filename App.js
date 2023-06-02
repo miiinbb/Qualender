@@ -1,7 +1,7 @@
 //App.js
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -46,18 +46,34 @@ function CustomDrawerContent(props) {
     outputRange: [-100, 0],
   });
 
+function AddEventScreen() {
+  const [eventTitle, setEventTitle] = useState('');
+  const handleAddEvent = () => {
+    // 이곳에서 일정을 추가하는 로직을 구현합니다.
+    // 예를 들어, 서버에 일정을 저장하거나 상태를 업데이트하는 등의 작업을 수행합니다.
+    console.log('일정 추가:', eventTitle);
+    setEventTitle('');
+  }};
+  
+const navigation = useNavigation();
+
+const handleLoginPress = () => {
+  navigation.navigate('LoginPage'); // Replace 'Login' with the actual screen name for the login page
+};
+
   return (
     <DrawerContentScrollView {...props}>
       <Animated.View style={{ transform: [{ translateX }] }}>
           {/* 헤더 부분 */}
           <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
           <Icon name="heart" size={24} color="pink" />
+          <TouchableOpacity onPress={handleLoginPress}>
           <Text
             style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}
-            onPress={() => navigation.navigate('LoginPage')} // 스크린 이름으로 수정
           >
             로그인을 해주세요.
           </Text>
+          </TouchableOpacity>
           </View>
         <DrawerItemList {...props} />
       </Animated.View>
