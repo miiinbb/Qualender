@@ -27,6 +27,7 @@ export default function MyCalendar() {
   // Declare and initialize selectedDay state variable
   //selectedDay는 상태함수
   const [selectedDay, setSelectedDay] = useState(null);
+  const [isYearMonthPickerVisible, setYearMonthPickerVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [month, setMonth] = useState(MONTH);
   const [year, setYear] = useState(YEAR);
@@ -76,11 +77,47 @@ export default function MyCalendar() {
     setSelectedDay(day.dateString);
     setModalVisible(true);
   };
-  
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleYearMonthPickerToggle = () => {
+    setYearMonthPickerVisible(!isYearMonthPickerVisible);
+  };
+
+  const handleYearMonthConfirm = (date) => {
+    // 선택한 년도/월에 대한 작업을 수행합니다.
+    console.log('선택한 년도/월:', date);
+    setYearMonthPickerVisible(false);
+  };
+
+  const renderCustomHeader = () => {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = LocaleConfig.locales[LocaleConfig.defaultLocale].monthNamesShort[new Date().getMonth()];
+    return (
+      <TouchableOpacity onPress={handleYearMonthPickerToggle}>
+        <Text>{`${currentMonth} ${currentYear}`}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+
   return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        {isYearMonthPickerVisible && (
+          <DateTimePickerModal
+            isVisible={isYearMonthPickerVisible}
+            mode="date"
+            onConfirm={handleYearMonthConfirm}
+            onCancel={() => setYearMonthPickerVisible(false)}
+          />
+        )}
         <Calendar
           monthFormat={'yyyy'+'년 '+'MM'+'월'}
+          onDayPress={handleDateSelect}
+          hideExtraDays={true}
+          markedDates={{ [selectedDate]: { selected: true } }}
+          renderHeader={renderCustomHeader}
           horizontal={true} //가로로 스와이프
           hideArrows={false}
           style={{
