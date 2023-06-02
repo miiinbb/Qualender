@@ -12,6 +12,7 @@ import {
 import Animated from 'react-native-reanimated';
 import 'react-native-gesture-handler';
 import MyCalendar from './src/components/MyCalendar';
+import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page'; // 파일의 상대 경로로 Login_page를 가져옴
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
@@ -23,10 +24,10 @@ function MainCalendar() {
   );
 }
 
-function MyCalendar2() {
+function PersonalCalendar1() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>MyCalendar Screen</Text>
+      <PersonalCalendar />
     </View>
   );
 }
@@ -100,7 +101,7 @@ function MyDrawer() {
           },
         }}
       />
-      <Drawer.Screen name="마이캘린더" component={MyCalendar2} />
+      <Drawer.Screen name="마이캘린더" component={PersonalCalendar} />
       <Drawer.Screen name="마이페이지" component={Mypage} />
       <Drawer.Screen name="로그인페이지" component={LoginPage} options={{ drawerLabel: () => null }} />
     </Drawer.Navigator>
