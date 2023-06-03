@@ -8,10 +8,12 @@ import {
   Dimensions,
   Modal,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import { Calendar, LocaleConfig, CalendarList, Agenda } from 'react-native-calendars';
 import DatePicker from 'react-native-datepicker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { Calendar as AddCalendar } from 'react-native-add-calendar-event';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 LocaleConfig.locales['ko'] = {
@@ -27,29 +29,28 @@ export default function MyCalendar() {
   // Declare and initialize selectedDay state variable
   //selectedDay는 상태함수
   const [selectedDay, setSelectedDay] = useState(null);
-  const [isYearMonthPickerVisible, setYearMonthPickerVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [month, setMonth] = useState(MONTH);
-  const [year, setYear] = useState(YEAR);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
   const calendarRef = useRef(null); // Ref to access the Calendar component
 
   const handleAddEventPress = () => {
-    // 일정 추가 버튼 클릭 시 날짜 선택 모달을 보여줍니다.
     setDatePickerVisible(true);
   };
-  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
-  const handleConfirmDatePicker = (date) => {
+
+  const [schedule, setSchedule] = useState({});
+
+  const handleConfirmDatePicker = (startDate, endDate) => {
     // 선택한 날짜를 처리합니다.
     if (!selectedStartDate) {
-      setSelectedStartDate(date);
+      setSelectedStartDate(startDate);
     } else {
-      setSelectedEndDate(date);
+      setSelectedEndDate(endDate);
       setDatePickerVisible(false);
 
       // 선택한 날짜로 일정을 추가하는 로직을 구현합니다.
-      console.log('일정 추가:', selectedStartDate, selectedEndDate);
+      console.log('일정 추가:', startDate, endDate);
 
       // 필요한 작업을 수행합니다.
     }
@@ -81,43 +82,11 @@ export default function MyCalendar() {
     setSelectedDate(date);
   };
 
-  const handleYearMonthPickerToggle = () => {
-    setYearMonthPickerVisible(!isYearMonthPickerVisible);
-  };
-
-  const handleYearMonthConfirm = (date) => {
-    // 선택한 년도/월에 대한 작업을 수행합니다.
-    console.log('선택한 년도/월:', date);
-    setYearMonthPickerVisible(false);
-  };
-
-  const renderCustomHeader = () => {
-    const currentYear = new Date().getFullYear();
-    const currentMonth = LocaleConfig.locales[LocaleConfig.defaultLocale].monthNamesShort[new Date().getMonth()];
-    return (
-      <TouchableOpacity onPress={handleYearMonthPickerToggle}>
-        <Text>{`${currentMonth} ${currentYear}`}</Text>
-      </TouchableOpacity>
-    );
-  };
-
-
   return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {isYearMonthPickerVisible && (
-          <DateTimePickerModal
-            isVisible={isYearMonthPickerVisible}
-            mode="date"
-            onConfirm={handleYearMonthConfirm}
-            onCancel={() => setYearMonthPickerVisible(false)}
-          />
-        )}
         <Calendar
           monthFormat={'yyyy'+'년 '+'MM'+'월'}
-          onDayPress={handleDateSelect}
-          hideExtraDays={true}
-          markedDates={{ [selectedDate]: { selected: true } }}
-          renderHeader={renderCustomHeader}
+          hideExtraDays={false}
           horizontal={true} //가로로 스와이프
           hideArrows={false}
           style={{
@@ -301,14 +270,41 @@ export default function MyCalendar() {
       >
         <Icon name="plus" size={24} color="white" />
       </TouchableOpacity>
-      {/* 날짜 선택 모달 */}
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirmDatePicker}
-        onCancel={handleCancelDatePicker}
-      />
 
+     {/* DatePicker 표시 */}
+     {datePickerVisible && (
+        <>
+          {/* 시작 날짜 선택 */}
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+          />
+
+          {/* 종료 날짜 선택 */}
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+          />
+        </>
+      )}
+
+      {/* 선택한 날짜 표시 */}
+      {startDate && (
+        <Text style={styles.dateText}>
+          시작 날짜: {startDate.toDateString()}
+        </Text>
+      )}
+      {endDate && (
+        <Text style={styles.dateText}>종료 날짜: {endDate.toDateString()}</Text>
+      )}
+      
       <Modal
         visible={modalVisible}
         onRequestClose={() => {
