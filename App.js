@@ -1,6 +1,6 @@
 //App.js
 import * as React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -43,37 +43,26 @@ function Mypage() {
 }
 
 function CustomDrawerContent(props) {
+  const navigation = useNavigation();
   const progress = useDrawerProgress();
   const translateX = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
     outputRange: [-100, 0],
   });
 
-function AddEventScreen() {
-  const [eventTitle, setEventTitle] = useState('');
-  const handleAddEvent = () => {
-    // 이곳에서 일정을 추가하는 로직을 구현합니다.
-    // 예를 들어, 서버에 일정을 저장하거나 상태를 업데이트하는 등의 작업을 수행합니다.
-    console.log('일정 추가:', eventTitle);
-    setEventTitle('');
-  }};
-  
-const navigation = useNavigation();
-
-const handleLoginPress = () => {
-  navigation.navigate('LoginPage'); // Replace 'Login' with the actual screen name for the login page
-};
+  const handleLoginPress = () => {
+    navigation.navigate('LoginPage');
+  };
 
   return (
     <DrawerContentScrollView {...props}>
       <Animated.View style={{ transform: [{ translateX }] }}>
           {/* 헤더 부분 */}
-          <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
+          <View style={styles.headerContainer}>
           <Icon name="heart" size={24} color="pink" />
           <TouchableOpacity onPress={handleLoginPress}>
-          <Text
-            style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}
-          >
+          <Text name="LoginPage" component={LoginPage}
+            style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
             로그인을 해주세요.
           </Text>
           </TouchableOpacity>
@@ -105,7 +94,12 @@ function MyDrawer() {
       />
       <Drawer.Screen name="마이캘린더" component={PersonalCalendar} />
       <Drawer.Screen name="마이페이지" component={Mypage} />
-      <Drawer.Screen name="로그인페이지" component={LoginPage} options={{ drawerLabel: () => null }} />
+      <Drawer.Screen name="LoginPage" component={LoginPage} 
+        options={{ 
+          drawerLabel: () => null,
+          activeTintColor: 'transparent',
+          inactiveTintColor: 'black',
+           }} />
     </Drawer.Navigator>
   );
 }
@@ -117,3 +111,10 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+});
