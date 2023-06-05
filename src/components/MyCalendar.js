@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import { Calendar, LocaleConfig, CalendarList, Agenda } from 'react-native-calendars';
 import DatePicker from 'react-native-datepicker';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Calendar as AddCalendar } from 'react-native-add-calendar-event';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 LocaleConfig.locales['ko'] = {
@@ -30,42 +28,75 @@ export default function MyCalendar() {
   //selectedDay는 상태함수
   const [selectedDay, setSelectedDay] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [additionalModalVisible, setAdditionalModalVisible] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const calendarRef = useRef(null); // Ref to access the Calendar component
 
   const handleAddEventPress = () => {
-    setDatePickerVisible(true);
+    setAdditionalModalVisible(true);
   };
-
-  const [schedule, setSchedule] = useState({});
 
   const handleConfirmDatePicker = (startDate, endDate) => {
     // 선택한 날짜를 처리합니다.
-    if (!selectedStartDate) {
-      setSelectedStartDate(startDate);
-    } else {
-      setSelectedEndDate(endDate);
-      setDatePickerVisible(false);
-
-      // 선택한 날짜로 일정을 추가하는 로직을 구현합니다.
-      console.log('일정 추가:', startDate, endDate);
-
-      // 필요한 작업을 수행합니다.
-    }
-  };
-  const handleCancelDatePicker = () => {
-    // 날짜 선택 취소 시 모달을 닫습니다.
+    setStartDate(startDate);
+    setEndDate(endDate);
     setDatePickerVisible(false);
+  
+    // 선택한 날짜로 일정을 추가하는 로직을 구현합니다.
+    console.log('일정 추가:', startDate, endDate);
+  
+    // 분홍색 선을 그리는 작업을 수행합니다.
+    const markedDates = { ...calendarRef.current.state.markedDates };
+    const start = moment(startDate).format('YYYY-MM-DD');
+    const end = moment(endDate).format('YYYY-MM-DD');
+    const datesRange = moment.range(start, end);
+  
+    for (let date of datesRange.by('day')) {
+      const dateString = date.format('YYYY-MM-DD');
+      const periods = markedDates[dateString]?.periods || [];
+      periods.push({ color: '#FFC0CB' }); // 분홍색 선 추가
+      markedDates[dateString] = { periods };
+    }
+  
+    calendarRef.current.setMarkedDates(markedDates);
+  
+    // 필요한 작업을 수행합니다.
   };
 
+const handleCancelDatePicker = () => {
+  // 날짜 선택 취소 시 모달을 닫습니다.
+  setDatePickerVisible(false);
+
+  // 선택된 날짜의 분홍색 선을 제거합니다.
+  const markedDates = { ...calendarRef.current.state.markedDates };
+  const start = moment(selectedStartDate).format('YYYY-MM-DD');
+  const end = moment(selectedEndDate).format('YYYY-MM-DD');
+  const datesRange = moment.range(start, end);
+
+  for (let date of datesRange.by('day')) {
+    const dateString = date.format('YYYY-MM-DD');
+    const periods = markedDates[dateString]?.periods || [];
+    periods.pop();
+    markedDates[dateString] = { periods };
+  }
+
+    calendarRef.current.setMarkedDates(markedDates);
+    setSelectedStartDate(null);
+    setSelectedEndDate(null);
+  };
+
+  const handleDatePress = (day) => {
+    setSelectedDay(day.dateString);
+    setAdditionalModalVisible(true);
+  };
 
   <Calendar ref={calendarRef}/>
 
   // 선택한 날짜
-  var selectedDate = selectedDay ? new Date(selectedDay) : null;
-  var selectedMonth = selectedDate ? selectedDate.getMonth() : null;
+  const selectedDate = selectedDay ? new Date(selectedDay) : null;
+  const selectedMonth = selectedDate ? selectedDate.getMonth() : null;
 
   // 오늘 날짜
   const DATE = new Date(); //오늘 날짜
@@ -85,6 +116,7 @@ export default function MyCalendar() {
   return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
+          useNativeDriver={true} 
           monthFormat={'yyyy'+'년 '+'MM'+'월'}
           hideExtraDays={false}
           horizontal={true} //가로로 스와이프
@@ -270,41 +302,9 @@ export default function MyCalendar() {
       >
         <Icon name="plus" size={24} color="white" />
       </TouchableOpacity>
-
-     {/* DatePicker 표시 */}
-     {datePickerVisible && (
-        <>
-          {/* 시작 날짜 선택 */}
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            selectsStart
-            startDate={startDate}
-            endDate={endDate}
-          />
-
-          {/* 종료 날짜 선택 */}
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            selectsEnd
-            startDate={startDate}
-            endDate={endDate}
-            minDate={startDate}
-          />
-        </>
-      )}
-
-      {/* 선택한 날짜 표시 */}
-      {startDate && (
-        <Text style={styles.dateText}>
-          시작 날짜: {startDate.toDateString()}
-        </Text>
-      )}
-      {endDate && (
-        <Text style={styles.dateText}>종료 날짜: {endDate.toDateString()}</Text>
-      )}
       
+      {/* 여기 */}
+
       <Modal
         visible={modalVisible}
         onRequestClose={() => {
@@ -325,6 +325,53 @@ export default function MyCalendar() {
           </View>
         </View>
       </Modal>
+
+      {/* 추가 모달 */}
+      <Modal
+        visible={additionalModalVisible}
+        onRequestClose={() => {
+          setAdditionalModalVisible(false);
+        }}
+        transparent={true}
+      >
+        {/* 추가 모달의 컨텐츠를 구현하세요 */}
+        <View style={styles.additionalModalContainer}>
+          <View style={styles.additionalModalContent}>
+            <Text style={styles.additionalModalTitle}>추가 모달</Text>
+            
+            {datePickerVisible && ( // datePickerVisible이 true일 때만 DatePicker 컴포넌트를 표시
+              <>
+              <DatePicker
+                selected={startDate}
+                onDateChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                minDate={new Date()}
+                placeholder="시작 날짜"
+              />
+              <DatePicker
+                selected={endDate}
+                onDateChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                placeholder="종료 날짜"
+              />
+                </>
+              )}
+
+            <TouchableOpacity
+              onPress={() => setAdditionalModalVisible(false)}
+              style={styles.additionalModalButton}
+            >
+              <Text style={styles.additionalModalButtonText}>닫기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <StatusBar style="auto" />
     </View>
   );
@@ -417,6 +464,45 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
+
+  additionalModalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  additionalModalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '80%',
+    maxHeight: '80%', // 추가된 속성
+    maxWidth: '90%',
+  },
+  
+  additionalModalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    maxHeight: '80%',
+    maxWidth: '90%', // 추가된 속성
+  },
+  additionalModalItem: {
+    fontSize: 15,
+    marginBottom: 10,
+  },
+  additionalModalButton: {
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  additionalModalButtonText: {
+    color: '#fff',
+    fontSize: 18,
+  },
+
   container: {
     flex: 1,
     backgroundColor: '#fff',

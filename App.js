@@ -14,6 +14,7 @@ import 'react-native-gesture-handler';
 import MyCalendar from './src/components/MyCalendar';
 import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page'; // 파일의 상대 경로로 Login_page를 가져옴
+import MyPage from './src/components/MyPage';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 //기능명은 main, js명은 my
@@ -33,11 +34,11 @@ function PersonalCalendar1() {
     </View>
   );
 }
-
-function Mypage() {
+ 
+function Mypage1() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Mypage Screen</Text>
+      <MyPage />
     </View>
   );
 }
@@ -51,7 +52,7 @@ function CustomDrawerContent(props) {
   });
 
   const handleLoginPress = () => {
-    navigation.navigate('LoginPage');
+    navigation.navigate(LoginPage);
   };
 
   return (
@@ -60,14 +61,14 @@ function CustomDrawerContent(props) {
           {/* 헤더 부분 */}
           <View style={styles.headerContainer}>
           <Icon name="heart" size={24} color="pink" />
-          <TouchableOpacity onPress={handleLoginPress}>
-          <Text name="LoginPage" component={LoginPage}
-            style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
-            로그인을 해주세요.
-          </Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={handleLoginPress}>
+              <Text 
+                style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
+                로그인을 해주세요.
+              </Text>
+            </TouchableOpacity>
           </View>
-        <DrawerItemList {...props} />
+          <DrawerItemList {...props} />
       </Animated.View>
     </DrawerContentScrollView>
   );
@@ -93,9 +94,14 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen name="마이캘린더" component={PersonalCalendar} />
-      <Drawer.Screen name="마이페이지" component={Mypage} />
+      <Drawer.Screen name="마이페이지" component={MyPage} />
       <Drawer.Screen name="LoginPage" component={LoginPage} 
         options={{ 
+          headerShown: true,
+          headerTitle: '로그인 페이지',
+          headerTitleStyle: {
+          fontWeight: 'bold',
+          },
           drawerLabel: () => null,
           activeTintColor: 'transparent',
           inactiveTintColor: 'black',
