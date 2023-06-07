@@ -16,6 +16,7 @@ import 'react-native-gesture-handler';
 import MyCalendar from './src/components/MyCalendar';
 import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page';
+import SignupPage from './src/components/SignupPage';
 import MyPage from './src/components/MyPage';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
@@ -47,7 +48,7 @@ function MyPage1() {
   );
 }
 
-function LoginPage1() {
+function LoginPage1({navigation}) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <LoginPage />
@@ -116,7 +117,7 @@ function MyDrawer() {
           },
           drawerLabel: () => null,
           activeTintColor: 'transparent',
-          inactiveTintColor: 'black',
+          inactiveTintColor: 'transparent',
            }} />
     </Drawer.Navigator>
   );
@@ -125,9 +126,10 @@ function MyDrawer() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MyDrawer">
+      <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
         <Stack.Screen name="목록으로" component={MyDrawer} options={{ headerShown: false }} />
         <Stack.Screen name="LoginPage" component={LoginPage1} />
+        <Stack.Screen name="SignupPage" component={SignupPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

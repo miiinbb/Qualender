@@ -3,17 +3,14 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions,} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
+import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from "@react-navigation/stack";
 
 
-const LoginPage = ({ onLogin, onBack, onSignup, navigation }) => {
+const LoginPage = ({ onLogin, onBack, navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
-
-
-  const handleBack = () => {
-    onBack(); // 뒤로가기 버튼이 눌렸을 때 onBack 함수 호출
-  };
 
   const handleLogin = () => {
     // 로그인 버튼이 클릭되었을 때 실행되는 로직을 작성합니다.
@@ -22,15 +19,12 @@ const LoginPage = ({ onLogin, onBack, onSignup, navigation }) => {
     console.log('Password:', password);
     // 여기에서 실제로 로그인 처리를 진행하면 됩니다.
     // 예를 들어, 서버로 요청을 보내고 응답을 처리하는 등의 로직을 수행합니다.
-    onLogin(); // 로그인 성공 시 상위 컴포넌트로 알림
+    navigation.navigate('MyCalendar')
   };
 
-  const handleSignup = () => {
-    onSignup(); // 회원가입 버튼이 눌렸을 때 onSignup 함수 호출
-  };
-
-  const handleTogglePage = () => {
-    setIsSignup(!isSignup); // Toggle between login and signup pages
+  const clickSignup = () => {
+    console.log('회원가입하기 버튼이 클릭되었습니다.');
+    navigation.navigate('SignupPage'); // 회원가입 페이지로 이동
   };
 
   const handleKakaoLogin = async () => {
@@ -43,19 +37,9 @@ const LoginPage = ({ onLogin, onBack, onSignup, navigation }) => {
       console.log('카카오톡 로그인 실패:', error);
     }};
 
-  // Render SignupPage if isSignup is true
-  if (isSignup) {
-    return <SignupPage onSignup={handleTogglePage} onBack={handleBack} />;
-  }
 
   return (
     <View style={styles.container}>
-      {/* 뒤로가기 버튼 */}
-      <TouchableOpacity style={styles.backButton} 
-        onPress={() => navigation.navigate("MyCalendar")}
-        >
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
       {/* 제목 */}
       <Text style={styles.title}>로그인</Text>
 
@@ -93,7 +77,8 @@ const LoginPage = ({ onLogin, onBack, onSignup, navigation }) => {
       </TouchableOpacity>
 
       {/* 회원가입하기 버튼 */}
-      <TouchableOpacity style={[styles.signupButton, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
+      <TouchableOpacity style={[styles.signupButton]} 
+        onPress={clickSignup}>
         <Text style={styles.signupButtonText}>회원가입하기</Text>
       </TouchableOpacity>
     </View>
@@ -191,6 +176,7 @@ const styles = StyleSheet.create({
   },
   
   signupButton: { //'회원가입'버튼
+    backgroundColor: 'lightgrey',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -198,12 +184,12 @@ const styles = StyleSheet.create({
     borderWidth: 2, // 테두리 두께 설정
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
     padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
-  }
+  },
 
-  // signupButtonText: {
-  //   fontSize: 16,
-  //   fontWeight: 'bold',
-  // },
+  signupButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   
 });
 
