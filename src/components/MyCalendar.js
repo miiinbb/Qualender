@@ -389,6 +389,8 @@ const styles = StyleSheet.create({
     width: '80%',
     maxHeight: '80%', // 추가된 속성
     maxWidth: '90%',
+    flexDirection: 'row', // 수평으로 정렬
+    alignItems: 'center', // 버튼들을 수직 중앙 정렬
   },
   
   additionalModalTitle: {
