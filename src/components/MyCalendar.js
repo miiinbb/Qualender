@@ -250,7 +250,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
                   width: '100%', // DatePicker가 전체 너비를 차지하도록 설정
                   height: 40,
                   textAlign: 'left', // 텍스트를 왼쪽으로 정렬
-                },
+                },  
               }}
               onDateChange={(date) => setStartDate(date)}
             />
