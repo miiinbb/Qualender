@@ -40,8 +40,7 @@ export default function MyCalendar() {
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const calendarRef = useRef(null); // Ref to access the Calendar component
   const [markedDates, setMarkedDates] = useState({});
-  const [eventTitle, setEventTitle] = useState(''); // 일정 제목 상태 변수 추가
-  const [eventTitles, setEventTitles] = useState([]);
+  const [eventTitle, setEventTitle] = useState({}); // 일정 제목 상태 변수 추가
   const [colorIndex, setColorIndex] = useState(0); // 현재 색상 인덱스 상태 변수 추가
   
   const handleAddEventPress = () => {
@@ -56,8 +55,6 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   const datesRange = getDatesRange(start, end);
 
   const updatedMarkedDates = { ...markedDates };
-  const newEventTitles = [...eventTitles, eventTitle];
-  setEventTitles(newEventTitles);
 
   // 기존에 설정된 marking을 유지한 채로 시작 날짜와 종료 날짜를 표시
   updatedMarkedDates[startDate] = { ...updatedMarkedDates[startDate], startingDay: true };
@@ -85,7 +82,6 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   setStartDate(null);
   setEndDate(null);
   setAdditionalModalVisible(false);
-  setEventTitles(updatedEventTitles);
   // 다음 색상 인덱스로 업데이트
   setColorIndex((colorIndex + 1) % COLORS.length);
 };
@@ -127,7 +123,12 @@ const handleConfirmDatePicker = (startDate, endDate) => {
     setSelectedDay(day.dateString);
     setModalVisible(true);
   };
+  const [currentMonth, setCurrentMonth] = useState('');
 
+  // 현재 보이는 달(months)이 변경될 때 호출되는 콜백 함수
+  const handleVisibleMonthsChange = (months) => {
+    setCurrentMonth(months[0]);
+  };
   return (
       <View style={{ height: 600, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
@@ -137,6 +138,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
           hideExtraDays={false}
           horizontal={true} //가로로 스와이프
           hideArrows={false}
+          pagingEnabled={true} // 가로로 페이지 단위로 스와이프
           style={{
             borderWidth: 1,
             borderColor: 'gray',
@@ -147,6 +149,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
           onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가
           markingType="multi-period"
           markedDates={markedDates}
+          onVisibleMonthsChange={handleVisibleMonthsChange} // 현재 보이는 달(months)이 변경될 때 호출되는 콜백 함수
         />
 
       {/* 일정 추가 버튼 */}
@@ -174,13 +177,13 @@ const handleConfirmDatePicker = (startDate, endDate) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-          {markedDates[selectedDay] && eventTitle[selectedMonth] ? ( // 수정: markedDates[selectedDay] 존재 여부를 확인하여 제목 표시 여부 결정
+          {markedDates[selectedDay] && eventTitle ? ( // 수정: markedDates[selectedDay] 존재 여부를 확인하여 제목 표시 여부 결정
         <>
           <Text style={styles.modalTitle} numberOfLines={1}>
             {selectedDay}
           </Text>
           <Text style={styles.modalTitle} numberOfLines={1}>
-            {eventTitles[selectedMonth]}
+            {eventTitle}
           </Text>
         </>
       ) : (
