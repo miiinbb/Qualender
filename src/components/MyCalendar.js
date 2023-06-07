@@ -9,6 +9,7 @@ import {
   Modal,
   TouchableOpacity,
   Button,
+  TextInput,
 } from 'react-native';
 import { Calendar, LocaleConfig, CalendarList, Agenda } from 'react-native-calendars';
 import DatePicker from 'react-native-datepicker';
@@ -36,6 +37,7 @@ export default function MyCalendar() {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [markedDates, setMarkedDates] = useState({});
+  const [eventTitle, setEventTitle] = useState(''); // 일정 제목 상태 변수 추가
 
   const handleAddEventPress = () => {
     setAdditionalModalVisible(true);
@@ -63,7 +65,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   // 사이의 날짜를 표시
   datesRange.forEach((date) => {
     const dateString = formatDate(date);
-    updatedMarkedDates[dateString] = { color: '#FFC0CB' };
+    updatedMarkedDates[dateString] = { periods: [ { startingDay: true, endingDay: !endDate, color: '#FFC0CB' },] };
   });
 
   setMarkedDates(updatedMarkedDates);
@@ -150,42 +152,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
           }}
           onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가
           markingType="multi-period"
-          markedDates={{
-            [startDate]: {
-              periods: [
-                { startingDay: true, endingDay: !endDate, color: '#FFC0CB' },
-              ],
-            },
-            [endDate]: {
-              periods: [
-                { startingDay: !!startDate, endingDay: true, color: '#FFC0CB' },
-              ],
-            },
-          }}
-          // markedDates={{
-          //   '2023-06-01': {
-          //     periods: [
-          //       { startingDay: true, endingDay: true, color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-02': {
-          //     periods: [
-          //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-03': {
-          //     periods: [
-          //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //       { startingDay: true, endingDay: true, color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-04': {
-          //     periods: [
-          //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //       { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          // }}
+          markedDates={markedDates}
         />
 
       {/* 일정 추가 버튼 */}
@@ -203,8 +170,6 @@ const handleConfirmDatePicker = (startDate, endDate) => {
       >
         <Icon name="plus" size={24} color="white" />
       </TouchableOpacity>
-      
-      {/* 여기 */}
 
       <Modal
         visible={modalVisible}
@@ -239,7 +204,16 @@ const handleConfirmDatePicker = (startDate, endDate) => {
         <View style={styles.additionalModalContainer}>
           <View style={styles.additionalModalContent}>
             <Text style={styles.additionalModalTitle}>일정 추가</Text>
-            
+
+            <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.titleInput}
+            placeholder="일정 제목"
+            value={eventTitle}
+            onChangeText={setEventTitle}
+          />
+           </View>
+
             {datePickerVisible && ( // datePickerVisible이 true일 때만 DatePicker 컴포넌트를 표시
               <>
             <DatePicker
@@ -451,7 +425,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
-
+  inputContainer: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 10,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
