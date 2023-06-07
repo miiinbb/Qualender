@@ -24,6 +24,11 @@ LocaleConfig.locales['ko'] = {
   };
 LocaleConfig.defaultLocale = 'ko';
 
+const COLORS = [
+  '#FFC0CB', '#FFD700', '#00FFFF', '#008000', '#FF4500', '#8A2BE2',
+  '#00BFFF', '#FF1493', '#FFA500', '#808080', '#008080', '#800080',
+];
+
 export default function MyCalendar() {
   // Declare and initialize selectedDay state variable
   //selectedDay는 상태함수
@@ -36,7 +41,9 @@ export default function MyCalendar() {
   const calendarRef = useRef(null); // Ref to access the Calendar component
   const [markedDates, setMarkedDates] = useState({});
   const [eventTitle, setEventTitle] = useState(''); // 일정 제목 상태 변수 추가
-
+  const [eventTitles, setEventTitles] = useState([]);
+  const [colorIndex, setColorIndex] = useState(0); // 현재 색상 인덱스 상태 변수 추가
+  
   const handleAddEventPress = () => {
     setAdditionalModalVisible(true);
     setDatePickerVisible(true);
@@ -49,7 +56,13 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   const datesRange = getDatesRange(start, end);
 
   const updatedMarkedDates = { ...markedDates };
+  const newEventTitles = [...eventTitles, eventTitle];
+  setEventTitles(newEventTitles);
 
+  // 기존에 설정된 marking을 유지한 채로 시작 날짜와 종료 날짜를 표시
+  updatedMarkedDates[startDate] = { ...updatedMarkedDates[startDate], startingDay: true };
+  updatedMarkedDates[endDate] = { ...updatedMarkedDates[endDate], endingDay: true };
+  
   // 기존에 설정된 marking 초기화
   Object.keys(updatedMarkedDates).forEach((date) => {
     if (updatedMarkedDates[date].startingDay || updatedMarkedDates[date].endingDay) {
@@ -58,18 +71,23 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   });
 
   // 시작 날짜와 종료 날짜를 표시
-  updatedMarkedDates[startDate] = { startingDay: true, endingDay: true, color: '#FFC0CB' };
+  updatedMarkedDates[startDate] = { 
+    startingDay: true, endingDay: true, color: COLORS[colorIndex],
+   };
 
   // 사이의 날짜를 표시
   datesRange.forEach((date) => {
     const dateString = formatDate(date);
-    updatedMarkedDates[dateString] = { periods: [ { startingDay: true, endingDay: !endDate, color: '#FFC0CB' },] };
+    updatedMarkedDates[dateString] = { periods: [{ color: COLORS[colorIndex] }] };
   });
 
   setMarkedDates(updatedMarkedDates);
   setStartDate(null);
   setEndDate(null);
   setAdditionalModalVisible(false);
+  setEventTitles(updatedEventTitles);
+  // 다음 색상 인덱스로 업데이트
+  setColorIndex((colorIndex + 1) % COLORS.length);
 };
 
   // 시작 날짜부터 종료 날짜까지의 모든 날짜를 배열로 반환하는 함수
@@ -111,7 +129,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   };
 
   return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ height: 600, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
           ref={calendarRef}
           useNativeDriver={true} 
@@ -122,8 +140,8 @@ const handleConfirmDatePicker = (startDate, endDate) => {
           style={{
             borderWidth: 1,
             borderColor: 'gray',
-            height: Dimensions.get('window').height * 0.8, //화면비율설정
-            width: Dimensions.get('window').width * 0.9,
+            height: Dimensions.get('window').height * 0.9, //화면비율설정
+            width: Dimensions.get('window').width,
             fontFamily: 'System',
           }}
           onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가
@@ -156,7 +174,20 @@ const handleConfirmDatePicker = (startDate, endDate) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle} numberOfLines={1}>{selectedDay} 📚 리스트</Text>
+          {markedDates[selectedDay] && eventTitle[selectedMonth] ? ( // 수정: markedDates[selectedDay] 존재 여부를 확인하여 제목 표시 여부 결정
+        <>
+          <Text style={styles.modalTitle} numberOfLines={1}>
+            {selectedDay}
+          </Text>
+          <Text style={styles.modalTitle} numberOfLines={1}>
+            {eventTitles[selectedMonth]}
+          </Text>
+        </>
+      ) : (
+        <Text style={styles.modalTitle} numberOfLines={1}>
+          {selectedDay}
+        </Text>
+      )}
             <Text style={styles.modalItem}>{'펀드투자권유자문인력'}</Text>
             <TouchableOpacity
               onPress={() => setModalVisible(false)}
@@ -195,7 +226,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
 
             {datePickerVisible && ( // datePickerVisible이 true일 때만 DatePicker 컴포넌트를 표시
               <>
-            <View style={[styles.inputContainer, { flex: 1 }]}>
+            <View style={styles.inputContainer}>
             <DatePicker
               style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
               date={startDate}
@@ -389,7 +420,6 @@ const styles = StyleSheet.create({
     width: '80%',
     maxHeight: '80%', // 추가된 속성
     maxWidth: '90%',
-    flexDirection: 'row', // 수평으로 정렬
     alignItems: 'center', // 버튼들을 수직 중앙 정렬
   },
   
