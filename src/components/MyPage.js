@@ -1,11 +1,11 @@
-//Login_page.js
+//Mypage.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions,} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
 
 
-const LoginPage = ({ onLogin, onBack, onSignup }) => {
+const MyPage = ({ onLogin, onBack, onSignup }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
@@ -49,50 +49,44 @@ const LoginPage = ({ onLogin, onBack, onSignup }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.outerContainer}>
       {/* 뒤로가기 버튼 */}
       <TouchableOpacity style={styles.backButton} onPress={onBack}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
       {/* 제목 */}
-      <Text style={styles.title}>로그인</Text>
+      <Text style={styles.title}>마이페이지</Text>
 
-      <View style={styles.inputContainer}>
-        {/* 아이디 입력란 */}
-        <Text style={styles.label}>아이디</Text>
-        <TextInput
-          value={username}
-          onChangeText={text => setUsername(text)}
-          style={styles.input}
-          placeholder="아이디를 입력하세요"
-        />
+      <View style={styles.innerContainer}>
+        {/* 즐겨찾기 메뉴 버튼 */}
+        <TouchableOpacity style={styles.favorites} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>즐겨찾기</Text>
+        </TouchableOpacity>
+
+        {/* 취득한자격증 메뉴 버튼 */}
+        <TouchableOpacity style={styles.ObtainedList} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>취득한 자격증</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.inputContainer}>
-        {/* 비밀번호 입력란 */}
-        <Text style={styles.label}>비밀번호</Text>
-        <TextInput
-          value={password}
-          onChangeText={text => setPassword(text)}
-          style={styles.input}
-          placeholder="비밀번호를 입력하세요"
-          secureTextEntry={true}
-        />
-      </View>
-
-      {/* 로그인 버튼 */}
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>로그인</Text>
+      {/* 비밀번호 변경 버튼 */}
+      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
+        <Text style={styles.memberInfoManagementText}>비밀번호 변경</Text>
       </TouchableOpacity>
 
-      {/* 카카오톡으로 로그인하기 버튼 */}
-      <TouchableOpacity style={[styles.kakaologinButton, { backgroundColor: 'yellow' }]}>
-        <Text style={styles.kakaologinButtonText}>카카오톡으로 로그인하기</Text>
+      {/* 연락처 변경 버튼 */}
+      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
+        <Text style={styles.memberInfoManagementText}>연락처 변경</Text>
       </TouchableOpacity>
 
-      {/* 회원가입하기 버튼 */}
-      <TouchableOpacity style={[styles.signupButton, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
-        <Text style={styles.signupButtonText}>회원가입하기</Text>
+      {/* 이메일 변경 버튼 */}
+      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
+        <Text style={styles.memberInfoManagementText}>이메일 변경</Text>
+      </TouchableOpacity>
+
+      {/* 회원 탈퇴 버튼 */}
+      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
+        <Text style={styles.memberInfoManagementText}>회원 탈퇴</Text>
       </TouchableOpacity>
     </View>
   );
@@ -103,11 +97,11 @@ const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
-  container: { //하늘색 부분
+  outerContainer: { //하늘색 부분
     flex: 1,
     //position: 'absolute',
-    top: screenHeight*0.05,
-    bottom: screenWidth*0.05,
+    //margintop: screenHeight*0.5,
+    //marginbottom: screenHeight*0.5,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#5bd1d7', // 테두리 색상 설정
@@ -124,7 +118,7 @@ const styles = StyleSheet.create({
     borderWidth: 2, // 테두리 두께 설정
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
   },
-  title: {//'로그인'이라고 적혀있는 부분
+  title: {//'마이페이지'이라고 적혀있는 부분
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
@@ -133,31 +127,13 @@ const styles = StyleSheet.create({
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
     padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
-  inputContainer: {////아이디, 비밀번호 글자부분 + 입력 부분 각각(분홍색 부분)
-    marginBottom: 20,
-    borderColor: '#eb94cf', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
+
+  innerContainer:{
+    flexDirection: 'row',
   },
-  label: { //'아이디''비밀번호'라고 적혀있는 부분분
-    fontSize: 16,
-    marginBottom: 5,
-    borderColor: 'red', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
-  },
-  input: { //아이디, 비밀번호 입력하는 부분만
-    borderWidth: 1,
-    borderColor: 'gray',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 5,
-    width: 250,
-  },
-  loginButton: { //하단 '로그인', '카톡로그인'버튼 같이
-    backgroundColor: '#007AFF',
+
+  favorites:{//즐겨찾기 메뉴 버튼
+    backgroundColor: '#c6beee',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -166,29 +142,19 @@ const styles = StyleSheet.create({
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
     padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
-  loginButtonText: { //하단 '로그인', '카톡로그인' 텍스트 같이
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
 
-  kakaologinButton: { //하단 '카톡로그인'버튼 
-    backgroundColor: '#007AFF',
+  ObtainedList:{//취득한자격증 메뉴 버튼
+    backgroundColor: '#ADD8E6',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    borderColor: '#ADD8E6', // 블루로 테두리 색상 설정
+    borderColor: '#9eeb47', // 테두리 색상 설정
     borderWidth: 2, // 테두리 두께 설정
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
     padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
-  kakaologinButtonText: { //하단 '카톡로그인' 텍스트 같이
-      color: '#000000', //검은색으로 바꿈 
-      fontSize: 16,
-      fontWeight: 'bold',
-  },
   
-  signupButton: { //'회원가입'버튼
+  memberInfoManagement: { //'회원가입'버튼
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -196,13 +162,14 @@ const styles = StyleSheet.create({
     borderWidth: 2, // 테두리 두께 설정
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
     padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
-  }
+  },
 
-  // signupButtonText: {
-  //   fontSize: 16,
-  //   fontWeight: 'bold',
-  // },
+  memberInfoManagementText: {
+  color: '#000000', //검은색으로 바꿈
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   
 });
 
-export default LoginPage;
+export default MyPage;

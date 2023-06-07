@@ -93,6 +93,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
     return `${year}-${month}-${day}`;
   };
 
+
   // 선택한 날짜
   const selectedDate = selectedDay ? new Date(selectedDay) : null;
   const selectedMonth = selectedDate ? selectedDate.getMonth() : null;
@@ -136,6 +137,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
           ref={calendarRef}
+
           useNativeDriver={true} 
           monthFormat={'yyyy'+'년 '+'MM'+'월'}
           hideExtraDays={false}
