@@ -34,8 +34,6 @@ export default function MyCalendar() {
   const [endDate, setEndDate] = useState(null);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const calendarRef = useRef(null); // Ref to access the Calendar component
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [markedDates, setMarkedDates] = useState({});
   const [eventTitle, setEventTitle] = useState(''); // 일정 제목 상태 변수 추가
 
@@ -69,11 +67,10 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   });
 
   setMarkedDates(updatedMarkedDates);
-  setStartDate(startDate);
-  setEndDate(endDate);
+  setStartDate(null);
+  setEndDate(null);
   setAdditionalModalVisible(false);
 };
-
 
   // 시작 날짜부터 종료 날짜까지의 모든 날짜를 배열로 반환하는 함수
   const getDatesRange = (startDate, endDate) => {
@@ -96,7 +93,6 @@ const handleConfirmDatePicker = (startDate, endDate) => {
     return `${year}-${month}-${day}`;
   };
 
-
   // 선택한 날짜
   const selectedDate = selectedDay ? new Date(selectedDay) : null;
   const selectedMonth = selectedDate ? selectedDate.getMonth() : null;
@@ -114,33 +110,10 @@ const handleConfirmDatePicker = (startDate, endDate) => {
     setModalVisible(true);
   };
 
-  const handleDatePress = (day) => {
-    if (!startDate) {
-      setStartDate(day.dateString);
-      setEndDate(day.dateString);
-    } else if (startDate && !endDate) {
-      if (day.dateString > startDate) {
-        setEndDate(day.dateString);
-      } else {
-        setEndDate(startDate);
-        setStartDate(day.dateString);
-      }
-    } else {
-      setStartDate(day.dateString);
-      setEndDate(null);
-    }
-    setModalVisible(true);
-  };
-
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-  };
-
   return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
           ref={calendarRef}
-
           useNativeDriver={true} 
           monthFormat={'yyyy'+'년 '+'MM'+'월'}
           hideExtraDays={false}
@@ -156,7 +129,6 @@ const handleConfirmDatePicker = (startDate, endDate) => {
           onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가
           markingType="multi-period"
           markedDates={markedDates}
-
         />
 
       {/* 일정 추가 버튼 */}
@@ -208,20 +180,24 @@ const handleConfirmDatePicker = (startDate, endDate) => {
         <View style={styles.additionalModalContainer}>
           <View style={styles.additionalModalContent}>
             <Text style={styles.additionalModalTitle}>일정 추가</Text>
-            <View style={styles.inputContainer}>
+
+          <View style={styles.inputContainer}>
           <TextInput
             style={styles.titleInput}
             placeholder="일정 제목"
             value={eventTitle}
             onChangeText={setEventTitle}
+            multiline={false}
+            numberOfLines={1}
+            maxLength={20}
           />
-           </View>
-
+          </View>
 
             {datePickerVisible && ( // datePickerVisible이 true일 때만 DatePicker 컴포넌트를 표시
               <>
+            <View style={[styles.inputContainer, { flex: 1 }]}>
             <DatePicker
-              style={styles.datePicker}
+              style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
               date={startDate}
               mode="date"
               placeholder="시작 날짜"
@@ -232,19 +208,23 @@ const handleConfirmDatePicker = (startDate, endDate) => {
               cancelBtnText="취소"
               customStyles={{
                 dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0,
+                  display: 'none',
                 },
                 dateInput: {
-                  marginLeft: 36,
+                  borderWidth: 0, // DatePicker 내부의 border 제거
+                  padding: 0, // DatePicker 내부의 padding 제거
+                  width: '100%', // DatePicker가 전체 너비를 차지하도록 설정
+                  height: 40,
+                  textAlign: 'left', // 텍스트를 왼쪽으로 정렬
                 },
               }}
               onDateChange={(date) => setStartDate(date)}
             />
+            </View>
+
+            <View style={styles.inputContainer}>
             <DatePicker
-              style={styles.datePicker}
+              style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
               date={endDate}
               mode="date"
               placeholder="종료 날짜"
@@ -255,13 +235,14 @@ const handleConfirmDatePicker = (startDate, endDate) => {
               cancelBtnText="취소"
               customStyles={{
                 dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0,
+                  display: 'none',
                 },
                 dateInput: {
-                  marginLeft: 36,
+                  borderWidth: 0, // DatePicker 내부의 border 제거
+                  padding: 0, // DatePicker 내부의 padding 제거
+                  width: '100%', // DatePicker가 전체 너비를 차지하도록 설정
+                  height: 40,
+                  textAlign: 'left', // 텍스트를 왼쪽으로 정렬
                 },
                 confirmBtnContainer: {
                   position: 'absolute',
@@ -280,6 +261,8 @@ const handleConfirmDatePicker = (startDate, endDate) => {
               }}
               onDateChange={(date) => setEndDate(date)}
             />
+            </View>
+
           <TouchableOpacity
             onPress={() => handleConfirmDatePicker(startDate, endDate)}
             style={styles.additionalModalButton}
@@ -429,15 +412,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
-
   inputContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    marginTop: 10,
+    width: 200, // 원하는 너비 설정
+    height: 40,
   },
-
   container: {
     flex: 1,
     backgroundColor: '#fff',
