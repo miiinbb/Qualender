@@ -74,6 +74,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   setAdditionalModalVisible(false);
 };
 
+
   // 시작 날짜부터 종료 날짜까지의 모든 날짜를 배열로 반환하는 함수
   const getDatesRange = (startDate, endDate) => {
     const datesRange = [];
@@ -94,6 +95,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+
 
   // 선택한 날짜
   const selectedDate = selectedDay ? new Date(selectedDay) : null;
@@ -138,6 +140,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
           ref={calendarRef}
+
           useNativeDriver={true} 
           monthFormat={'yyyy'+'년 '+'MM'+'월'}
           hideExtraDays={false}
@@ -153,6 +156,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
           onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가
           markingType="multi-period"
           markedDates={markedDates}
+
         />
 
       {/* 일정 추가 버튼 */}
@@ -204,7 +208,6 @@ const handleConfirmDatePicker = (startDate, endDate) => {
         <View style={styles.additionalModalContainer}>
           <View style={styles.additionalModalContent}>
             <Text style={styles.additionalModalTitle}>일정 추가</Text>
-
             <View style={styles.inputContainer}>
           <TextInput
             style={styles.titleInput}
@@ -213,6 +216,7 @@ const handleConfirmDatePicker = (startDate, endDate) => {
             onChangeText={setEventTitle}
           />
            </View>
+
 
             {datePickerVisible && ( // datePickerVisible이 true일 때만 DatePicker 컴포넌트를 표시
               <>
@@ -425,6 +429,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
+
   inputContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
@@ -432,6 +437,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 10,
   },
+
   container: {
     flex: 1,
     backgroundColor: '#fff',

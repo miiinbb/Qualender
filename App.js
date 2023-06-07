@@ -1,6 +1,6 @@
 //App.js
 import * as React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import {
   createDrawerNavigator,
@@ -14,6 +14,7 @@ import 'react-native-gesture-handler';
 import MyCalendar from './src/components/MyCalendar';
 import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page'; // 파일의 상대 경로로 Login_page를 가져옴
+import MyPage from './src/components/MyPage';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 //기능명은 main, js명은 my
@@ -33,52 +34,41 @@ function PersonalCalendar1() {
     </View>
   );
 }
-
-function Mypage() {
+ 
+function Mypage1() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Mypage Screen</Text>
+      <MyPage />
     </View>
   );
 }
 
 function CustomDrawerContent(props) {
+  const navigation = useNavigation();
   const progress = useDrawerProgress();
   const translateX = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
     outputRange: [-100, 0],
   });
 
-function AddEventScreen() {
-  const [eventTitle, setEventTitle] = useState('');
-  const handleAddEvent = () => {
-    // 이곳에서 일정을 추가하는 로직을 구현합니다.
-    // 예를 들어, 서버에 일정을 저장하거나 상태를 업데이트하는 등의 작업을 수행합니다.
-    console.log('일정 추가:', eventTitle);
-    setEventTitle('');
-  }};
-  
-const navigation = useNavigation();
-
-const handleLoginPress = () => {
-  navigation.navigate('LoginPage'); // Replace 'Login' with the actual screen name for the login page
-};
+  const handleLoginPress = () => {
+    navigation.navigate(LoginPage);
+  };
 
   return (
     <DrawerContentScrollView {...props}>
       <Animated.View style={{ transform: [{ translateX }] }}>
           {/* 헤더 부분 */}
-          <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
+          <View style={styles.headerContainer}>
           <Icon name="heart" size={24} color="pink" />
-          <TouchableOpacity onPress={handleLoginPress}>
-          <Text
-            style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}
-          >
-            로그인을 해주세요.
-          </Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={handleLoginPress}>
+              <Text 
+                style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
+                로그인을 해주세요.
+              </Text>
+            </TouchableOpacity>
           </View>
-        <DrawerItemList {...props} />
+          <DrawerItemList {...props} />
       </Animated.View>
     </DrawerContentScrollView>
   );
@@ -104,8 +94,18 @@ function MyDrawer() {
         }}
       />
       <Drawer.Screen name="마이캘린더" component={PersonalCalendar} />
-      <Drawer.Screen name="마이페이지" component={Mypage} />
-      <Drawer.Screen name="로그인페이지" component={LoginPage} options={{ drawerLabel: () => null }} />
+      <Drawer.Screen name="마이페이지" component={MyPage} />
+      <Drawer.Screen name="LoginPage" component={LoginPage} 
+        options={{ 
+          headerShown: true,
+          headerTitle: '로그인 페이지',
+          headerTitleStyle: {
+          fontWeight: 'bold',
+          },
+          drawerLabel: () => null,
+          activeTintColor: 'transparent',
+          inactiveTintColor: 'black',
+           }} />
     </Drawer.Navigator>
   );
 }
@@ -117,3 +117,10 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+});
