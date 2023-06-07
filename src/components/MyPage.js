@@ -27,6 +27,10 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     navigation.navigate('Favorites'); // 즐겨찾기로 이동
   };
 
+  const clickMemberInfoChange = () => {
+    navigation.navigate('MemberInfoChange'); // 회원정보변경으로 이동
+  };
+
   const handleLogin = () => {
     // 로그인 버튼이 클릭되었을 때 실행되는 로직을 작성합니다.
     console.log('로그인 버튼이 클릭되었습니다.');
@@ -81,25 +85,10 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         </View>        
       </View>
 
-      {/* 비밀번호 변경 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
-        <Text style={styles.memberInfoManagementText}>비밀번호 변경</Text>
-      </TouchableOpacity>
-
-      {/* 연락처 변경 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
-        <Text style={styles.memberInfoManagementText}>연락처 변경</Text>
-      </TouchableOpacity>
-
-      {/* 이메일 변경 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
-        <Text style={styles.memberInfoManagementText}>이메일 변경</Text>
-      </TouchableOpacity>
-
-      {/* 회원 탈퇴 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
-        <Text style={styles.memberInfoManagementText}>회원 탈퇴</Text>
-      </TouchableOpacity>
+      {/* 회원정보변경 메뉴 버튼 */}
+      <View style={styles.ObtainedList}>
+        <Button title="회원정보 변경" onPress={clickMemberInfoChange} />
+      </View> 
     </View>
   );
 };
