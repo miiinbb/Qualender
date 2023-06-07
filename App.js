@@ -108,7 +108,7 @@ function MyDrawer() {
       />
       <Drawer.Screen name="마이캘린더" component={PersonalCalendar1} />
       <Drawer.Screen name="마이페이지" component={MyPage1} />
-      <Drawer.Screen name="LoginPage" component={LoginPage1}
+      {/* <Drawer.Screen name="LoginPage" component={LoginPage1}
         options={{ 
           headerShown: true,
           headerTitle: '로그인 페이지',
@@ -118,7 +118,7 @@ function MyDrawer() {
           drawerLabel: () => null,
           activeTintColor: 'transparent',
           inactiveTintColor: 'transparent',
-           }} />
+           }} /> */}
     </Drawer.Navigator>
   );
 }
