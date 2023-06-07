@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from "@react-navigation/stack";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -11,11 +12,14 @@ import {
 } from '@react-navigation/drawer';
 import Animated from 'react-native-reanimated';
 import 'react-native-gesture-handler';
+
 import MyCalendar from './src/components/MyCalendar';
 import PersonalCalendar from './src/components/PersonalCalendar';
-import LoginPage from './src/components/Login_page'; // 파일의 상대 경로로 Login_page를 가져옴
+import LoginPage from './src/components/Login_page';
 import MyPage from './src/components/MyPage';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
+
+const Stack = createStackNavigator();
 
 //기능명은 main, js명은 my
 function MainCalendar() {  
@@ -35,10 +39,18 @@ function PersonalCalendar1() {
   );
 }
  
-function Mypage1() {
+function MyPage1() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <MyPage />
+    </View>
+  );
+}
+
+function LoginPage1() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <LoginPage />
     </View>
   );
 }
@@ -93,9 +105,9 @@ function MyDrawer() {
           },
         }}
       />
-      <Drawer.Screen name="마이캘린더" component={PersonalCalendar} />
-      <Drawer.Screen name="마이페이지" component={MyPage} />
-      <Drawer.Screen name="LoginPage" component={LoginPage} 
+      <Drawer.Screen name="마이캘린더" component={PersonalCalendar1} />
+      <Drawer.Screen name="마이페이지" component={MyPage1} />
+      <Drawer.Screen name="LoginPage" component={LoginPage1}
         options={{ 
           headerShown: true,
           headerTitle: '로그인 페이지',
@@ -113,7 +125,10 @@ function MyDrawer() {
 export default function App() {
   return (
     <NavigationContainer>
-      <MyDrawer />
+      <Stack.Navigator initialRouteName="MyDrawer">
+        <Stack.Screen name="목록으로" component={MyDrawer} options={{ headerShown: false }} />
+        <Stack.Screen name="LoginPage" component={LoginPage1} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

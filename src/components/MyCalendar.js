@@ -45,7 +45,7 @@ export default function MyCalendar() {
   };
 
 // DatePicker에서 선택한 시작 날짜와 종료 날짜를 처리하는 함수
-const handleConfirmDatePicker = (startDate, endDate) => {
+  const handleConfirmDatePicker = (startDate, endDate) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
   const datesRange = getDatesRange(start, end);

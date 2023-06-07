@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
 
 
-const LoginPage = ({ onLogin, onBack, onSignup }) => {
+const LoginPage = ({ onLogin, onBack, onSignup, navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
@@ -51,7 +51,9 @@ const LoginPage = ({ onLogin, onBack, onSignup }) => {
   return (
     <View style={styles.container}>
       {/* 뒤로가기 버튼 */}
-      <TouchableOpacity style={styles.backButton} onPress={onBack}>
+      <TouchableOpacity style={styles.backButton} 
+        onPress={() => navigation.navigate("MyCalendar")}
+        >
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
       {/* 제목 */}
