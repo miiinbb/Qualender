@@ -1,9 +1,9 @@
 //SignupPage.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const SignupPage = ({ onSignup, onBack }) => {
+const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
@@ -12,7 +12,7 @@ const SignupPage = ({ onSignup, onBack }) => {
   const [email, setEmail] = useState('');
 
   const handleBack = () => {
-    onBack();
+    navigation.goBack();
   };
 
   const handleSignup = () => {

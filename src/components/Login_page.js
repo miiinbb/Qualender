@@ -1,29 +1,23 @@
 //Login_page.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions,} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 
+const Stack = createStackNavigator();
 
-const LoginPage = ({ onLogin, onBack, navigation }) => {
+function LoginPage ({ onLogin, onBack, }) {
+  const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
 
   const handleLogin = () => {
-    // 로그인 버튼이 클릭되었을 때 실행되는 로직을 작성합니다.
-    console.log('로그인 버튼이 클릭되었습니다.');
-    console.log('Username:', username);
-    console.log('Password:', password);
-    // 여기에서 실제로 로그인 처리를 진행하면 됩니다.
-    // 예를 들어, 서버로 요청을 보내고 응답을 처리하는 등의 로직을 수행합니다.
-    navigation.navigate('MyCalendar')
+    navigation.navigate('MyCalendar');
   };
 
   const clickSignup = () => {
-    console.log('회원가입하기 버튼이 클릭되었습니다.');
     navigation.navigate('SignupPage'); // 회원가입 페이지로 이동
   };
 
@@ -67,9 +61,9 @@ const LoginPage = ({ onLogin, onBack, navigation }) => {
       </View>
 
       {/* 로그인 버튼 */}
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>로그인</Text>
-      </TouchableOpacity>
+      <View style={styles.loginButton}>
+        <Button title="로그인" onPress={handleLogin}/>
+      </View>
 
       {/* 카카오톡으로 로그인하기 버튼 */}
       <TouchableOpacity style={[styles.kakaologinButton, { backgroundColor: 'yellow' }]}>
@@ -77,10 +71,9 @@ const LoginPage = ({ onLogin, onBack, navigation }) => {
       </TouchableOpacity>
 
       {/* 회원가입하기 버튼 */}
-      <TouchableOpacity style={[styles.signupButton]} 
-        onPress={clickSignup}>
-        <Text style={styles.signupButtonText}>회원가입하기</Text>
-      </TouchableOpacity>
+      <View style={styles.signupButton}>
+        <Button title="회원가입하기" onPress={clickSignup} />
+      </View>
     </View>
   );
 };
