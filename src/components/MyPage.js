@@ -1,11 +1,14 @@
 //Mypage.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions,} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
+import { NavigationContainer,useNavigation } from '@react-navigation/native';
 
+const Stack = createStackNavigator();
 
-const MyPage = ({ onLogin, onBack, onSignup }) => {
+function MyPage ({ onLogin, onBack, onSignup }) {
+  const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
@@ -13,6 +16,10 @@ const MyPage = ({ onLogin, onBack, onSignup }) => {
 
   const handleBack = () => {
     onBack(); // 뒤로가기 버튼이 눌렸을 때 onBack 함수 호출
+  };
+
+  const clickObtained = () => {
+    navigation.navigate('ObtainedList'); // 회원가입 페이지로 이동
   };
 
   const handleLogin = () => {
@@ -64,9 +71,9 @@ const MyPage = ({ onLogin, onBack, onSignup }) => {
         </TouchableOpacity>
 
         {/* 취득한자격증 메뉴 버튼 */}
-        <TouchableOpacity style={styles.ObtainedList} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>취득한 자격증</Text>
-        </TouchableOpacity>
+        <View style={styles.ObtainedList}>
+          <Button title="취득한 자격증" onPress={clickObtained} />
+        </View>        
       </View>
 
       {/* 비밀번호 변경 버튼 */}
