@@ -35,6 +35,7 @@ export default function MyCalendar() {
   const calendarRef = useRef(null); // Ref to access the Calendar component
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [markedDates, setMarkedDates] = useState({});
 
   const handleAddEventPress = () => {
     setAdditionalModalVisible(true);
@@ -43,46 +44,44 @@ export default function MyCalendar() {
 
 // DatePicker에서 선택한 시작 날짜와 종료 날짜를 처리하는 함수
 const handleConfirmDatePicker = (startDate, endDate) => {
-  if (calendarRef.current) {
-    const markedDates = { ...calendarRef.current.getMarkedDates() };
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const datesRange = getDatesRange(start, end);
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const datesRange = getDatesRange(start, end);
 
-    // 시작 날짜와 종료 날짜를 표시
-    markedDates[startDate] = { startingDay: true, color: '#FFC0CB' };
-    markedDates[endDate] = { endingDay: true, color: '#FFC0CB' };
+  const updatedMarkedDates = { ...markedDates };
 
-    // 사이의 날짜를 표시
-    datesRange.forEach((date) => {
-      const dateString = formatDate(date);
-      markedDates[dateString] = {
-        ...markedDates[dateString],
-        color: '#FFC0CB',
-        textColor: 'white',
-        startingDay: false,
-        endingDay: false,
-      };
-    });
+  // 기존에 설정된 marking 초기화
+  Object.keys(updatedMarkedDates).forEach((date) => {
+    if (updatedMarkedDates[date].startingDay || updatedMarkedDates[date].endingDay) {
+      delete updatedMarkedDates[date];
+    }
+  });
 
-    calendarRef.current.setMarkedDates(markedDates);
-  }
+  // 시작 날짜와 종료 날짜를 표시
+  updatedMarkedDates[startDate] = { startingDay: true, endingDay: true, color: '#FFC0CB' };
 
+  // 사이의 날짜를 표시
+  datesRange.forEach((date) => {
+    const dateString = formatDate(date);
+    updatedMarkedDates[dateString] = { color: '#FFC0CB' };
+  });
+
+  setMarkedDates(updatedMarkedDates);
   setStartDate(startDate);
   setEndDate(endDate);
   setAdditionalModalVisible(false);
 };
 
   // 시작 날짜부터 종료 날짜까지의 모든 날짜를 배열로 반환하는 함수
-  const getDatesRange = (start, end) => {
+  const getDatesRange = (startDate, endDate) => {
     const datesRange = [];
-    let currentDate = new Date(start);
-
-    while (currentDate <= end) {
+    const currentDate = new Date(startDate);
+  
+    while (currentDate <= endDate) {
       datesRange.push(new Date(currentDate));
       currentDate.setDate(currentDate.getDate() + 1);
     }
-
+  
     return datesRange;
   };
 
@@ -107,6 +106,11 @@ const handleConfirmDatePicker = (startDate, endDate) => {
   const dateString = YEAR + '-' + MONTH  + '-' + DAY;
 
   const handleDayPress = (day) => {
+    setSelectedDay(day.dateString);
+    setModalVisible(true);
+  };
+
+  const handleDatePress = (day) => {
     if (!startDate) {
       setStartDate(day.dateString);
       setEndDate(day.dateString);
@@ -148,12 +152,15 @@ const handleConfirmDatePicker = (startDate, endDate) => {
           markingType="multi-period"
           markedDates={{
             [startDate]: {
-              periods: [{ startingDay: true, endingDay: !endDate, color: '#FFC0CB' }]
+              periods: [
+                { startingDay: true, endingDay: !endDate, color: '#FFC0CB' },
+              ],
             },
             [endDate]: {
-              periods: [{ startingDay: !!startDate, endingDay: true, color: '#FFC0CB' }]
+              periods: [
+                { startingDay: !!startDate, endingDay: true, color: '#FFC0CB' },
+              ],
             },
-            // ...getMarkedDates()
           }}
           // markedDates={{
           //   '2023-06-01': {
@@ -176,137 +183,6 @@ const handleConfirmDatePicker = (startDate, endDate) => {
           //     periods: [
           //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
           //       { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-05': {
-          //     periods: [
-          //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //       { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-06': {
-          //     periods: [
-          //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-07': {
-          //     periods: [
-          //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-08': {
-          //     periods: [
-          //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-09': {
-          //     periods: [
-          //       { color: '#5f9ea0' }, // 6월 1일부터 15일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-10': {
-          //     periods: [
-          //       { startingDay: true, endingDay: true, color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-11': {
-          //     periods: [
-          //       { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-12': {
-          //     periods: [
-          //       { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-13': {
-          //     periods: [
-          //       { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-14': {
-          //     periods: [
-          //       { color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-15': {
-          //     periods: [
-          //       { startingDay: true, endingDay: true, color: '#ffa500' }, // 6월 3일부터 10일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-16': {
-          //     periods: [
-          //       { color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-17': {
-          //     periods: [
-          //       { color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-18': {
-          //     periods: [
-          //       { startingDay: true, endingDay: false, color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-19': {
-          //     periods: [
-          //       { color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-20': {
-          //     periods: [
-          //       { color: '#f0e68c' }, // 6월 18일부터 30일까지의 period
-          //     ]
-          //   },
-          //   '2023-06-21': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-22': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-23': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-24': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-25': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-26': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-27': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-28': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-29': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
-          //     ]
-          //   },
-          //   '2023-06-30': {
-          //     periods: [
-          //       { color: '#ffa500' }, 
           //     ]
           //   },
           // }}
@@ -408,6 +284,20 @@ const handleConfirmDatePicker = (startDate, endDate) => {
                 },
                 dateInput: {
                   marginLeft: 36,
+                },
+                confirmBtnContainer: {
+                  position: 'absolute',
+                  right: 70, // 확인 버튼 위치 조정
+                },
+                cancelBtnContainer: {
+                  position: 'absolute',
+                  right: 0, // 취소 버튼 위치 조정
+                },
+                btnTextConfirm: {
+                  color: 'blue', // 확인 버튼 텍스트 색상 설정
+                },
+                btnTextCancel: {
+                  color: 'red', // 취소 버튼 텍스트 색상 설정
                 },
               }}
               onDateChange={(date) => setEndDate(date)}
