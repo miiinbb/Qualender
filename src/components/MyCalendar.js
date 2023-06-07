@@ -24,6 +24,11 @@ LocaleConfig.locales['ko'] = {
   };
 LocaleConfig.defaultLocale = 'ko';
 
+const COLORS = [
+  '#FFC0CB', '#FFD700', '#00FFFF', '#008000', '#FF4500', '#8A2BE2',
+  '#00BFFF', '#FF1493', '#FFA500', '#808080', '#008080', '#800080',
+];
+
 export default function MyCalendar() {
   // Declare and initialize selectedDay state variable
   //selectedDay는 상태함수
@@ -34,11 +39,10 @@ export default function MyCalendar() {
   const [endDate, setEndDate] = useState(null);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const calendarRef = useRef(null); // Ref to access the Calendar component
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [markedDates, setMarkedDates] = useState({});
-  const [eventTitle, setEventTitle] = useState(''); // 일정 제목 상태 변수 추가
-
+  const [eventTitle, setEventTitle] = useState({}); // 일정 제목 상태 변수 추가
+  const [colorIndex, setColorIndex] = useState(0); // 현재 색상 인덱스 상태 변수 추가
+  
   const handleAddEventPress = () => {
     setAdditionalModalVisible(true);
     setDatePickerVisible(true);
@@ -52,6 +56,10 @@ export default function MyCalendar() {
 
   const updatedMarkedDates = { ...markedDates };
 
+  // 기존에 설정된 marking을 유지한 채로 시작 날짜와 종료 날짜를 표시
+  updatedMarkedDates[startDate] = { ...updatedMarkedDates[startDate], startingDay: true };
+  updatedMarkedDates[endDate] = { ...updatedMarkedDates[endDate], endingDay: true };
+  
   // 기존에 설정된 marking 초기화
   Object.keys(updatedMarkedDates).forEach((date) => {
     if (updatedMarkedDates[date].startingDay || updatedMarkedDates[date].endingDay) {
@@ -60,20 +68,23 @@ export default function MyCalendar() {
   });
 
   // 시작 날짜와 종료 날짜를 표시
-  updatedMarkedDates[startDate] = { startingDay: true, endingDay: true, color: '#FFC0CB' };
+  updatedMarkedDates[startDate] = { 
+    startingDay: true, endingDay: true, color: COLORS[colorIndex],
+   };
 
   // 사이의 날짜를 표시
   datesRange.forEach((date) => {
     const dateString = formatDate(date);
-    updatedMarkedDates[dateString] = { periods: [ { startingDay: true, endingDay: !endDate, color: '#FFC0CB' },] };
+    updatedMarkedDates[dateString] = { periods: [{ color: COLORS[colorIndex] }] };
   });
 
   setMarkedDates(updatedMarkedDates);
-  setStartDate(startDate);
-  setEndDate(endDate);
+  setStartDate(null);
+  setEndDate(null);
   setAdditionalModalVisible(false);
+  // 다음 색상 인덱스로 업데이트
+  setColorIndex((colorIndex + 1) % COLORS.length);
 };
-
 
   // 시작 날짜부터 종료 날짜까지의 모든 날짜를 배열로 반환하는 함수
   const getDatesRange = (startDate, endDate) => {
@@ -96,7 +107,6 @@ export default function MyCalendar() {
     return `${year}-${month}-${day}`;
   };
 
-
   // 선택한 날짜
   const selectedDate = selectedDay ? new Date(selectedDay) : null;
   const selectedMonth = selectedDate ? selectedDate.getMonth() : null;
@@ -113,50 +123,33 @@ export default function MyCalendar() {
     setSelectedDay(day.dateString);
     setModalVisible(true);
   };
+  const [currentMonth, setCurrentMonth] = useState('');
 
-  const handleDatePress = (day) => {
-    if (!startDate) {
-      setStartDate(day.dateString);
-      setEndDate(day.dateString);
-    } else if (startDate && !endDate) {
-      if (day.dateString > startDate) {
-        setEndDate(day.dateString);
-      } else {
-        setEndDate(startDate);
-        setStartDate(day.dateString);
-      }
-    } else {
-      setStartDate(day.dateString);
-      setEndDate(null);
-    }
-    setModalVisible(true);
+  // 현재 보이는 달(months)이 변경될 때 호출되는 콜백 함수
+  const handleVisibleMonthsChange = (months) => {
+    setCurrentMonth(months[0]);
   };
-
-  const handleDateSelect = (date) => {
-    setSelectedDate(date);
-  };
-
   return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ height: 600, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
           ref={calendarRef}
-
           useNativeDriver={true} 
           monthFormat={'yyyy'+'년 '+'MM'+'월'}
           hideExtraDays={false}
           horizontal={true} //가로로 스와이프
           hideArrows={false}
+          pagingEnabled={true} // 가로로 페이지 단위로 스와이프
           style={{
             borderWidth: 1,
             borderColor: 'gray',
-            height: Dimensions.get('window').height * 0.8, //화면비율설정
-            width: Dimensions.get('window').width * 0.9,
+            height: Dimensions.get('window').height * 0.9, //화면비율설정
+            width: Dimensions.get('window').width,
             fontFamily: 'System',
           }}
           onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가
           markingType="multi-period"
           markedDates={markedDates}
-
+          onVisibleMonthsChange={handleVisibleMonthsChange} // 현재 보이는 달(months)이 변경될 때 호출되는 콜백 함수
         />
 
       {/* 일정 추가 버튼 */}
@@ -184,7 +177,20 @@ export default function MyCalendar() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle} numberOfLines={1}>{selectedDay} 📚 리스트</Text>
+          {markedDates[selectedDay] && eventTitle ? ( // 수정: markedDates[selectedDay] 존재 여부를 확인하여 제목 표시 여부 결정
+        <>
+          <Text style={styles.modalTitle} numberOfLines={1}>
+            {selectedDay}
+          </Text>
+          <Text style={styles.modalTitle} numberOfLines={1}>
+            {eventTitle}
+          </Text>
+        </>
+      ) : (
+        <Text style={styles.modalTitle} numberOfLines={1}>
+          {selectedDay}
+        </Text>
+      )}
             <Text style={styles.modalItem}>{'펀드투자권유자문인력'}</Text>
             <TouchableOpacity
               onPress={() => setModalVisible(false)}
@@ -208,20 +214,24 @@ export default function MyCalendar() {
         <View style={styles.additionalModalContainer}>
           <View style={styles.additionalModalContent}>
             <Text style={styles.additionalModalTitle}>일정 추가</Text>
-            <View style={styles.inputContainer}>
+
+          <View style={styles.inputContainer}>
           <TextInput
             style={styles.titleInput}
             placeholder="일정 제목"
             value={eventTitle}
             onChangeText={setEventTitle}
+            multiline={false}
+            numberOfLines={1}
+            maxLength={20}
           />
-           </View>
-
+          </View>
 
             {datePickerVisible && ( // datePickerVisible이 true일 때만 DatePicker 컴포넌트를 표시
               <>
+            <View style={styles.inputContainer}>
             <DatePicker
-              style={styles.datePicker}
+              style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
               date={startDate}
               mode="date"
               placeholder="시작 날짜"
@@ -232,19 +242,23 @@ export default function MyCalendar() {
               cancelBtnText="취소"
               customStyles={{
                 dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0,
+                  display: 'none',
                 },
                 dateInput: {
-                  marginLeft: 36,
-                },
+                  borderWidth: 0, // DatePicker 내부의 border 제거
+                  padding: 0, // DatePicker 내부의 padding 제거
+                  width: '100%', // DatePicker가 전체 너비를 차지하도록 설정
+                  height: 40,
+                  textAlign: 'left', // 텍스트를 왼쪽으로 정렬
+                },  
               }}
               onDateChange={(date) => setStartDate(date)}
             />
+            </View>
+
+            <View style={styles.inputContainer}>
             <DatePicker
-              style={styles.datePicker}
+              style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
               date={endDate}
               mode="date"
               placeholder="종료 날짜"
@@ -255,13 +269,14 @@ export default function MyCalendar() {
               cancelBtnText="취소"
               customStyles={{
                 dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0,
+                  display: 'none',
                 },
                 dateInput: {
-                  marginLeft: 36,
+                  borderWidth: 0, // DatePicker 내부의 border 제거
+                  padding: 0, // DatePicker 내부의 padding 제거
+                  width: '100%', // DatePicker가 전체 너비를 차지하도록 설정
+                  height: 40,
+                  textAlign: 'left', // 텍스트를 왼쪽으로 정렬
                 },
                 confirmBtnContainer: {
                   position: 'absolute',
@@ -280,6 +295,8 @@ export default function MyCalendar() {
               }}
               onDateChange={(date) => setEndDate(date)}
             />
+            </View>
+
           <TouchableOpacity
             onPress={() => handleConfirmDatePicker(startDate, endDate)}
             style={styles.additionalModalButton}
@@ -406,6 +423,7 @@ const styles = StyleSheet.create({
     width: '80%',
     maxHeight: '80%', // 추가된 속성
     maxWidth: '90%',
+    alignItems: 'center', // 버튼들을 수직 중앙 정렬
   },
   
   additionalModalTitle: {
@@ -429,15 +447,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
   },
-
   inputContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    marginTop: 10,
+    width: 200, // 원하는 너비 설정
+    height: 40,
   },
-
   container: {
     flex: 1,
     backgroundColor: '#fff',
