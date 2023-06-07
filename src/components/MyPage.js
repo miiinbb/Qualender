@@ -69,9 +69,24 @@ const MyPage = ({ onLogin, onBack, onSignup }) => {
         </TouchableOpacity>
       </View>
 
-      {/* 회원정보관리 버튼 */}
+      {/* 비밀번호 변경 버튼 */}
       <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
-        <Text style={styles.memberInfoManagementText}>회원정보관리</Text>
+        <Text style={styles.memberInfoManagementText}>비밀번호 변경</Text>
+      </TouchableOpacity>
+
+      {/* 연락처 변경 버튼 */}
+      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
+        <Text style={styles.memberInfoManagementText}>연락처 변경</Text>
+      </TouchableOpacity>
+
+      {/* 이메일 변경 버튼 */}
+      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
+        <Text style={styles.memberInfoManagementText}>이메일 변경</Text>
+      </TouchableOpacity>
+
+      {/* 회원 탈퇴 버튼 */}
+      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]} onPress={handleSignup}>
+        <Text style={styles.memberInfoManagementText}>회원 탈퇴</Text>
       </TouchableOpacity>
     </View>
   );
