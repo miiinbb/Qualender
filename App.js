@@ -19,6 +19,7 @@ import LoginPage from './src/components/Login_page';
 import SignupPage from './src/components/SignupPage';
 import MyPage from './src/components/MyPage';
 import ObtainedList from './src/components/ObtainedList';
+import Favorites from './src/components/Favorites';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 const Stack = createStackNavigator();
@@ -132,6 +133,7 @@ export default function App() {
         <Stack.Screen name="LoginPage" component={LoginPage1} />
         <Stack.Screen name="SignupPage" component={SignupPage} />
         <Stack.Screen name="ObtainedList" component={ObtainedList} />
+        <Stack.Screen name="Favorites" component={Favorites} />
       </Stack.Navigator>
     </NavigationContainer>
   );

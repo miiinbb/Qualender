@@ -23,6 +23,10 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     navigation.navigate('ObtainedList'); // 회원가입 페이지로 이동
   };
 
+  const clickFavorites = () => {
+    navigation.navigate('Favorites'); // 즐겨찾기로 이동
+  };
+
   const handleLogin = () => {
     // 로그인 버튼이 클릭되었을 때 실행되는 로직을 작성합니다.
     console.log('로그인 버튼이 클릭되었습니다.');
@@ -67,9 +71,9 @@ function MyPage ({ onLogin, onBack, onSignup }) {
 
       <View style={styles.innerContainer}>
         {/* 즐겨찾기 메뉴 버튼 */}
-        <TouchableOpacity style={styles.favorites} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>즐겨찾기</Text>
-        </TouchableOpacity>
+        <View style={styles.favorites}>
+          <Button title="즐겨찾기" onPress={clickFavorites} />
+        </View>  
 
         {/* 취득한자격증 메뉴 버튼 */}
         <View style={styles.ObtainedList}>
