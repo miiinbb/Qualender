@@ -335,26 +335,26 @@ const styles = StyleSheet.create({
   },
   //일자 컨테이너 스타일 조정
   dayContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
     //칸 크기 조정하는 부분 padding
-    paddingBottom: 40,
-    paddingHorizontal: screenWidth*0.01,
-    marginTop : 0,
-    marginBottom: 0,
-    borderColor: '#000', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께를 1로 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
+    paddingBottom: 50,
+    // paddingHorizontal: screenWidth*0.1,
+    // marginTop : 0,
+    // marginBottom: 0,
+    // borderColor: '#000', // 테두리 색상 설정
+    // borderWidth: 2, // 테두리 두께를 1로 설정
+    // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
   },
   dayTextContainer: {
-    width: 30, // Adjust these values as per your design
-    height: 30, // Adjust these values as per your design
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#d094ea', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께를 1로 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
+    // width: 30, // Adjust these values as per your design
+    // height: 10, // Adjust these values as per your design
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // borderColor: '#d094ea', // 테두리 색상 설정
+    // borderWidth: 2, // 테두리 두께를 1로 설정
+    // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
   },
   dayText: {
     fontSize: 10,

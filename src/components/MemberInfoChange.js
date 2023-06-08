@@ -1,35 +1,66 @@
-import React from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from "react-native";
+//Mypage.js
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
-function MemberInfoChange({ navigation }) {
+function MemberInfoChange() {
+  const navigation = useNavigation();
+
+  const handlePasswordchange = () => {
+    navigation.navigate('Passwordchange');
+  };
+
+  const handlePhonenumberchange = () => {
+    navigation.navigate('Phonenumberchange');
+  };
+
+  const handleEmailchange = () => {
+  navigation.navigate('Emailchange');
+  };
+
+  const handleMemberout = () => {
+    navigation.navigate('Memberout');
+    };
+  
   return (
     <View>
       <Text>회원정보변경!</Text>
       <Button
         title="Go to Login"
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.navigate('LoginPage')}
       />
       {/* 비밀번호 변경 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]}>
+      <TouchableOpacity
+        style={[styles.memberInfoManagement, { backgroundColor: 'lightgrey' }]}
+        onPress={handlePasswordchange}
+      >
         <Text style={styles.memberInfoManagementText}>비밀번호 변경</Text>
       </TouchableOpacity>
 
       {/* 연락처 변경 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]}>
+      <TouchableOpacity
+        style={[styles.memberInfoManagement, { backgroundColor: 'lightgrey' }]}
+        onPress={handlePhonenumberchange}
+      >
         <Text style={styles.memberInfoManagementText}>연락처 변경</Text>
       </TouchableOpacity>
 
       {/* 이메일 변경 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]}>
+      <TouchableOpacity
+        style={[styles.memberInfoManagement, { backgroundColor: 'lightgrey' }]}
+        onPress={handleEmailchange}
+      >
         <Text style={styles.memberInfoManagementText}>이메일 변경</Text>
       </TouchableOpacity>
 
       {/* 회원 탈퇴 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {backgroundColor: 'lightgrey'}]}>
+      <TouchableOpacity
+        style={[styles.memberInfoManagement, { backgroundColor: 'lightgrey' }]}
+        onPress={handleMemberout}
+      >
         <Text style={styles.memberInfoManagementText}>회원 탈퇴</Text>
       </TouchableOpacity>
     </View>

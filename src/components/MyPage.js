@@ -31,16 +31,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     navigation.navigate('MemberInfoChange'); // 회원정보변경으로 이동
   };
 
-  const handleLogin = () => {
-    // 로그인 버튼이 클릭되었을 때 실행되는 로직을 작성합니다.
-    console.log('로그인 버튼이 클릭되었습니다.');
-    console.log('Username:', username);
-    console.log('Password:', password);
-    // 여기에서 실제로 로그인 처리를 진행하면 됩니다.
-    // 예를 들어, 서버로 요청을 보내고 응답을 처리하는 등의 로직을 수행합니다.
-    onLogin(); // 로그인 성공 시 상위 컴포넌트로 알림
-  };
-
   const handleSignup = () => {
     onSignup(); // 회원가입 버튼이 눌렸을 때 onSignup 함수 호출
   };
@@ -49,16 +39,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     setIsSignup(!isSignup); // Toggle between login and signup pages
   };
 
-  const handleKakaoLogin = async () => {
-    try {
-      const token = await KakaoLoginButton.login();
-      // 로그인 성공 시 처리할 로직
-      console.log('카카오톡으로 로그인 성공:', token.accessToken);
-    } catch (error) {
-      // 로그인 실패 시 처리할 로직
-      console.log('카카오톡 로그인 실패:', error);
-    }};
-
   // Render SignupPage if isSignup is true
   if (isSignup) {
     return <SignupPage onSignup={handleTogglePage} onBack={handleBack} />;
@@ -66,10 +46,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
 
   return (
     <View style={styles.outerContainer}>
-      {/* 뒤로가기 버튼 */}
-      <TouchableOpacity style={styles.backButton} onPress={onBack}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
       {/* 제목 */}
       <Text style={styles.title}>마이페이지</Text>
 
@@ -110,15 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
     padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
-  backButton: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    zIndex: 1,
-    borderColor: '#f0bf4c', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-  },
+
   title: {//'마이페이지'이라고 적혀있는 부분
     fontSize: 24,
     fontWeight: 'bold',
@@ -129,8 +97,13 @@ const styles = StyleSheet.create({
     padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
 
-  innerContainer:{
+  innerContainer:{ //즐겨찾기랑 취득한자격증 버튼을 포함하는 영역
     flexDirection: 'row',
+    borderRadius: 5,
+    borderColor: '#FFDAB9', // 테두리 색상 설정
+    borderWidth: 2, // 테두리 두께 설정
+    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
+    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
 
   favorites:{//즐겨찾기 메뉴 버튼
