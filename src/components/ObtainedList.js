@@ -20,7 +20,7 @@ function ObtainedList({ navigation }) {
     }
   };
 
-  const boxNames = [
+  const boxNames = [ //자격증 리스트
     "펀드투자권유자문인력",
     "파생상품투자권유자문인력",
     "생명보험대리점",
@@ -35,8 +35,7 @@ function ObtainedList({ navigation }) {
     "토스",
   ];
 
-  // Define an array of colors
-  const boxColors = [
+  const boxColors = [  // 색상 리스트
     "#B8A6DF", // Pale Purple
     "#F791B6", // Soft Pink
     "#89CDD9", // Pale Aqua
