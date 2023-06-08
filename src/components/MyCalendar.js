@@ -129,6 +129,37 @@ export default function MyCalendar() {
   const handleVisibleMonthsChange = (months) => {
     setCurrentMonth(months[0]);
   };
+
+  const boxNames = [ //자격증 리스트
+  "펀드투자권유자문인력",
+  "파생상품투자권유자문인력",
+  "생명보험대리점",
+  "제3보험",
+  "손해보험대리점",
+  "신용분석사",
+  "ADsP",
+  "SQLD",
+  "COS",
+  "COS PRO",
+  "토익",
+  "토스",
+];
+
+const boxColors = [  // 색상 리스트
+  "#B8A6DF", // Pale Purple
+  "#F791B6", // Soft Pink
+  "#89CDD9", // Pale Aqua
+  "#FBA58D", // Coral
+  "#9ED6A1", // Pale Green
+  "#FFB884", // Apricot
+  "#FAC98A", // Peach
+  "#CDA2D9", // Lavender
+  "#9BCBF6", // Powder Blue
+  "#FFCFA6", // Pale Orange
+  "#FFC107", // Amber
+  "#C4E9B5", // Pale Greenish
+];
+
   return (
       <View style={{ height: 600, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
@@ -191,7 +222,7 @@ export default function MyCalendar() {
           {selectedDay}
         </Text>
       )}
-            <Text style={styles.modalItem}>{'펀드투자권유자문인력'}</Text>
+            <Text style={styles.modalItem}>{'...'}</Text>
             <TouchableOpacity
               onPress={() => setModalVisible(false)}
               style={styles.modalButton}

@@ -46,9 +46,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
 
   return (
     <View style={styles.outerContainer}>
-      {/* 제목 */}
-      <Text style={styles.title}>마이페이지</Text>
-
       <View style={styles.innerContainer}>
         {/* 즐겨찾기 메뉴 버튼 */}
         <View style={styles.favorites}>
@@ -82,16 +79,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#5bd1d7', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
-  },
-
-  title: {//'마이페이지'이라고 적혀있는 부분
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    borderColor: '#c6beee', // 테두리 색상 설정
     borderWidth: 2, // 테두리 두께 설정
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
     padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)

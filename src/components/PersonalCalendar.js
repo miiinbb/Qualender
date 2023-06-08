@@ -48,7 +48,7 @@ export default function PersonalCalendar() {
   };
   
   return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ height: 600, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Calendar
           monthFormat={'yyyy'+'년 '+'MM'+'월'}
           horizontal={true} //가로로 스와이프
@@ -56,8 +56,8 @@ export default function PersonalCalendar() {
           style={{
             borderWidth: 1,
             borderColor: 'gray',
-            height: Dimensions.get('window').height * 0.8, //화면비율설정
-            width: Dimensions.get('window').width * 0.9,
+            height: Dimensions.get('window').height * 0.9, //화면비율설정
+            width: Dimensions.get('window').width,
             fontFamily: 'System',
           }}
           onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가

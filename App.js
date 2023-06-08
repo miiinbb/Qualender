@@ -135,7 +135,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
-        <Stack.Screen name="목록으로" component={MyDrawer} options={{ headerShown: false }} />
+        <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
         <Stack.Screen name="LoginPage" component={LoginPage1} />
         <Stack.Screen name="SignupPage" component={SignupPage} />
         <Stack.Screen name="ObtainedList" component={ObtainedList} />
