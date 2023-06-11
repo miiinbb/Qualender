@@ -12,7 +12,6 @@ import {
   TextInput,
 } from 'react-native';
 import { LocaleConfig, CalendarList, Agenda } from 'react-native-calendars';
-import DropDownPicker from 'react-native-dropdown-picker';
 import Calendar from '../react-native-calendars/src/calendar/index'
 import DatePicker from 'react-native-datepicker';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
@@ -44,37 +43,6 @@ export default function MyCalendar() {
   const [markedDates, setMarkedDates] = useState({});
   const [eventTitle, setEventTitle] = useState({}); // 일정 제목 상태 변수 추가
   const [colorIndex, setColorIndex] = useState(0); // 현재 색상 인덱스 상태 변수 추가
-
-  const boxNames = [ //자격증 리스트
-  "펀드투자권유자문인력",
-  "파생상품투자권유자문인력",
-  "생명보험대리점",
-  "제3보험",
-  "손해보험대리점",
-  "신용분석사",
-  "ADsP",
-  "SQLD",
-  "COS",
-  "COS PRO",
-  "토익",
-  "토스",
-];
-
-const boxColors = [  // 색상 리스트
-  "#B8A6DF", // Pale Purple
-  "#F791B6", // Soft Pink
-  "#89CDD9", // Pale Aqua
-  "#FBA58D", // Coral
-  "#9ED6A1", // Pale Green
-  "#FFB884", // Apricot
-  "#FAC98A", // Peach
-  "#CDA2D9", // Lavender
-  "#9BCBF6", // Powder Blue
-  "#FFCFA6", // Pale Orange
-  "#FFC107", // Amber
-  "#C4E9B5", // Pale Greenish
-];
-
   
   const handleAddEventPress = () => {
     setAdditionalModalVisible(true);
@@ -250,21 +218,21 @@ const boxColors = [  // 색상 리스트
           <View style={styles.additionalModalContent}>
             <Text style={styles.additionalModalTitle}>일정 추가</Text>
 
-            <View style={[styles.inputTitleContainer, { marginTop: 10 }]}>
-            <DropDownPicker
-                items={boxNames.map((name, index) => ({ label: name, value: name }))}
-                defaultValue={eventTitle[0]}
-                placeholder="자격증 이름 선택"
-                containerStyle={{ height: 40, width: '100%' }}
-                style={{ backgroundColor: '#fafafa' }}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
-                onChangeItem={(item) => setEventTitle(item.value)}
-            />
-            </View>
+          <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.titleInput}
+            placeholder="일정 제목"
+            value={eventTitle}
+            onChangeText={setEventTitle}
+            multiline={false}
+            numberOfLines={1}
+            maxLength={20}
+          />
+          </View>
 
             {datePickerVisible && ( // datePickerVisible이 true일 때만 DatePicker 컴포넌트를 표시
               <>
-            <View style={[styles.inputContainer, { marginBottom: 10 }]}>
+            <View style={styles.inputContainer}>
             <DatePicker
               style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
               date={startDate}
@@ -291,7 +259,7 @@ const boxColors = [  // 색상 리스트
             />
             </View>
 
-            <View style={[styles.inputContainer, { marginBottom: 10 }]}>
+            <View style={styles.inputContainer}>
             <DatePicker
               style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
               date={endDate}
@@ -484,17 +452,11 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#ccc',
     borderRadius: 5,
-    backgroundColor: '#fafafa',
-    alignItems: 'center',
-    padding: 5,
-    width: 290, // 원하는 너비 설정
-    height: 50,
-  },
-  inputTitleContainer: {
-    height: 60, // 적절한 높이로 설정
-    // 추가적인 스타일 속성들
+    padding: 10,
+    width: 200, // 원하는 너비 설정
+    height: 40,
   },
   container: {
     flex: 1,
