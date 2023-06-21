@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 
 function Passwordchange({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
@@ -15,6 +15,20 @@ function Passwordchange({ navigation }) {
       // 비밀번호가 일치하지 않을 경우 알림 메시지를 보여줄 수 있습니다.
     }
   };
+
+  const goAlert = () =>
+    Alert.alert( //여기서 'ㅎㅎㅎ'지우면 확인 누를 시 어플이 종료됩니다..
+      "정말로 변경하시겠습니까?", "깔깔마녀", [
+        {
+          text: "취소",
+          onPress: () => console.log('Cancel Pressed'),
+          style: "cancel",
+        },
+        { text: "확인",
+          onPress: () => console.log("전화번호 변경 완료")},
+      ],
+      { cancelable: false }
+    );
 
   return (
     <View style={styles.container}>
@@ -36,8 +50,8 @@ function Passwordchange({ navigation }) {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Button title="확인" onPress={handlePasswordChange} />
         <Button title="돌아가기" onPress={() => navigation.goBack()} />
+        <Button title="확인" onPress={goAlert} />
       </View>
     </View>
   );

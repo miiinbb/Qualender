@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 function Memberout({ navigation }) {
   return (
     <View>
-      <Text>회원탈퇴!</Text>
+      <Text>탈퇴하지 마세용....</Text>
       <Button
         title="Go to Login"
         onPress={() => navigation.navigate("Login")}
