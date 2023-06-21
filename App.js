@@ -100,7 +100,10 @@ const Drawer = createDrawerNavigator();
 function MyDrawer() {
   return (
     <Drawer.Navigator
+      initialRouteName='메인캘린더'
       useLegacyImplementation
+      //drawer 오른쪽 방향으로 바꾸는 코드..이지만 실행하면 뭔가 충돌나서 일단 멈춤
+      //screenOptions={{drawerPosition: 'right'}}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
@@ -116,17 +119,6 @@ function MyDrawer() {
       />
       <Drawer.Screen name="마이캘린더" component={PersonalCalendar1} />
       <Drawer.Screen name="마이페이지" component={MyPage1} />
-      {/* <Drawer.Screen name="LoginPage" component={LoginPage1}
-        options={{ 
-          headerShown: true,
-          headerTitle: '로그인 페이지',
-          headerTitleStyle: {
-          fontWeight: 'bold',
-          },
-          drawerLabel: () => null,
-          activeTintColor: 'transparent',
-          inactiveTintColor: 'transparent',
-           }} /> */}
     </Drawer.Navigator>
   );
 }
@@ -135,16 +127,16 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
-        <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
-        <Stack.Screen name="LoginPage" component={LoginPage1} />
-        <Stack.Screen name="SignupPage" component={SignupPage} />
-        <Stack.Screen name="ObtainedList" component={ObtainedList} />
-        <Stack.Screen name="Favorites" component={Favorites} />
-        <Stack.Screen name="MemberInfoChange" component={MemberInfoChange} />
-        <Stack.Screen name="Passwordchange" component={Passwordchange} />
-        <Stack.Screen name="Phonenumberchange" component={Phonenumberchange} />
-        <Stack.Screen name="Emailchange" component={Emailchange} />
-        <Stack.Screen name="Memberout" component={Memberout} />
+        <Stack.Screen name="마이페이지" component={MyDrawer} options={{ headerShown: false }} />
+        <Stack.Screen name="LoginPage" component={LoginPage1} options={{title:'로그인'}}/>
+        <Stack.Screen name="SignupPage" component={SignupPage} options={{title:'회원가입'}}/>
+        <Stack.Screen name="ObtainedList" component={ObtainedList} options={{title:'취득한 자격증'}}/>
+        <Stack.Screen name="Favorites" component={Favorites} options={{title:'즐겨찾기'}}/>
+        <Stack.Screen name="MemberInfoChange" component={MemberInfoChange} options={{title:'회원정보 변경'}}/>
+        <Stack.Screen name="Passwordchange" component={Passwordchange} options={{title:'비밀번호 변경'}}/>
+        <Stack.Screen name="Phonenumberchange" component={Phonenumberchange} options={{title:'연락처 변경'}}/>
+        <Stack.Screen name="Emailchange" component={Emailchange} options={{title:'이메일 변경'}}/>
+        <Stack.Screen name="Memberout" component={Memberout} options={{title:'회원 탈퇴'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
