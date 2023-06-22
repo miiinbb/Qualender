@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
@@ -14,6 +14,16 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
 
+  const goToMain = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'MainCalendar' },
+        ],
+      })
+    );
+  }
 
   const handleBack = () => {
     onBack(); // 뒤로가기 버튼이 눌렸을 때 onBack 함수 호출
@@ -62,6 +72,10 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       <View style={styles.ObtainedList}>
         <Button title="회원정보 변경" onPress={clickMemberInfoChange} />
       </View> 
+      <Button
+        title="메인캘린더로 돌아가기"
+        onPress={() => goToMain()}
+      />
     </View>
   );
 };

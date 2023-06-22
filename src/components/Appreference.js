@@ -12,7 +12,6 @@ import {
 } from '@react-navigation/drawer';
 import Animated from 'react-native-reanimated';
 import 'react-native-gesture-handler';
-
 import MyCalendar from './src/components/MyCalendar';
 import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page';
@@ -25,7 +24,6 @@ import Passwordchange from './src/components/memberInfoManagement/Passwordchange
 import Phonenumberchange from './src/components/memberInfoManagement/Phonenumberchange';
 import Emailchange from './src/components/memberInfoManagement/Emailchange';
 import Memberout from './src/components/memberInfoManagement/Memberout';
-
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 const Stack = createStackNavigator();
@@ -33,7 +31,7 @@ const Stack = createStackNavigator();
 //기능명은 main, js명은 my
 function MainCalendar() {  
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -20 }}>
       <MyCalendar />
     </View>
   );
@@ -128,7 +126,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
         <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
-        <Stack.Screen name="MainCalendar" component={MyDrawer} options={{title:'메인캘린더'}}/>
+        <Stack.Screen name="MainCalendar" component={MyDrawer} options={{headerShown: false, title:'뒤로'}}/>
         <Stack.Screen name="LoginPage" component={LoginPage1} options={{title:'로그인'}}/>
         <Stack.Screen name="SignupPage" component={SignupPage} options={{title:'회원가입'}}/>
         <Stack.Screen name="ObtainedList" component={ObtainedList} options={{title:'취득한 자격증'}}/>

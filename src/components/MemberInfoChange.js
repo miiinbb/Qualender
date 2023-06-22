@@ -8,7 +8,6 @@ function MemberInfoChange() {
   const navigation = useNavigation();
 
   const goToMain = () => {
-    //navigation.navigate('MainCalendar');
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
