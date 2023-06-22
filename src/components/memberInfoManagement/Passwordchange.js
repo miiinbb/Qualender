@@ -1,3 +1,4 @@
+//Passwordchange.js
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 
@@ -25,7 +26,7 @@ function Passwordchange({ navigation }) {
           style: "cancel",
         },
         { text: "확인",
-          onPress: () => console.log("전화번호 변경 완료")},
+          onPress: () => console.log("비밀번호 변경 완료")},
       ],
       { cancelable: false }
     );

@@ -1,3 +1,4 @@
+//Emailchange.js
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 
@@ -13,7 +14,7 @@ function Emailchange({ navigation }) {
           style: "cancel",
         },
         { text: "확인",
-          onPress: () => console.log("전화번호 변경 완료")},
+          onPress: () => console.log("이메일 변경 완료")},
       ],
       { cancelable: false }
     );

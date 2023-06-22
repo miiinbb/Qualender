@@ -14,7 +14,7 @@ function Phonenumberchange({ navigation }) {
           style: "cancel",
         },
         { text: "확인",
-          onPress: () => console.log("전화번호 변경 완료")},
+          onPress: () => console.log("연락처 변경 완료")},
       ],
       { cancelable: false }
     );

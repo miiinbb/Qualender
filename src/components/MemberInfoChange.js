@@ -1,13 +1,23 @@
-//Mypage.js
+//MemberInfoChange.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
-const Stack = createStackNavigator();
 
 function MemberInfoChange() {
   const navigation = useNavigation();
+
+  const goToMain = () => {
+    //navigation.navigate('MainCalendar');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'MainCalendar' },
+        ],
+      })
+    );
+  }
 
   const handlePasswordchange = () => {
     navigation.navigate('Passwordchange');
@@ -60,7 +70,7 @@ function MemberInfoChange() {
       </TouchableOpacity>
       <Button
         title="메인캘린더로 돌아가기"
-        onPress={() => navigation.navigate('MainCalendar')}
+        onPress={() => goToMain()}
       />
     </View>
   );
