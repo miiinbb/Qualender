@@ -103,7 +103,7 @@ const renderItem = ({ item }) => {
     }
   };
 
-  const circleColor = boxColors[boxNames.indexOf(item.title) % boxColors.length];
+  // const circleColor = boxColors[boxNames.indexOf(item.title) % boxColors.length];
 
   return (
     <TouchableOpacity
@@ -112,7 +112,7 @@ const renderItem = ({ item }) => {
       <View>
         <Text style={styles.itemtestatus}>{item.teststatus}</Text>
       </View>
-      <View style={[styles.circle, { backgroundColor: circleColor }]} />
+      <View style={styles.circle} />
       <Text style={styles.itemTitleText}>{item.title}</Text>
     </TouchableOpacity>
   );
