@@ -1,6 +1,6 @@
 //Phonenumberchange.js
 import React, { useState, } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, } from "react-native";
 
 function Phonenumberchange({ navigation }) {
   const [newNumber, setNewNumber] = useState("");
@@ -26,10 +26,11 @@ function Phonenumberchange({ navigation }) {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="새로운 연락처"
+          placeholder="새로운 연락처(ex: 01012341234, 숫자만 입력)"
+          placeholderTextColor="silver"
           value={newNumber}
           onChangeText={(text) => setNewNumber(text)}
-          secureTextEntry={true}
+          keyboardType="numeric"
         />
 
       </View>
@@ -41,11 +42,13 @@ function Phonenumberchange({ navigation }) {
   );
 }
 
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: height * 0.53,
   },
   title: {
     fontSize: 20,

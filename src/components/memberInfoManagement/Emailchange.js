@@ -1,6 +1,6 @@
 //Emailchange.js
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, } from "react-native";
 
 function Emailchange({ navigation }) {
   const [newEmail, setNewEmail] = useState("");
@@ -26,6 +26,7 @@ function Emailchange({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="새로운 이메일"
+          placeholderTextColor="silver"
           value={newEmail}
           onChangeText={(text) => setNewEmail(text)}
           secureTextEntry={true}
@@ -40,11 +41,13 @@ function Emailchange({ navigation }) {
   );
 }
 
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: height * 0.53,
   },
   title: {
     fontSize: 20,

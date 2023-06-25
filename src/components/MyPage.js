@@ -138,12 +138,12 @@ const styles = StyleSheet.create({
 
   innerContainer:{ //즐겨찾기랑 취득한자격증 버튼을 포함하는 영역
     flexDirection: 'row',
+    justifyContent: 'space-evenly',
     height: height*0.2,
     borderRadius: 5,
     borderColor: '#FFDAB9', // 테두리 색상 설정
     borderWidth: 2, // 테두리 두께 설정
     borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 2, // 테두리와 내부 요소 간의 간격 설정 (옵션)
     marginBottom: 10,
   },
 
@@ -154,17 +154,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#c6beee',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginRight: 20,
+    // marginRight: width*0.1,
     borderRadius: 5,
   },
   favText:{//즐겨찾기텍스트
     fontSize: 23,
-    backgroundColor: '#E0FFFF',
     textAlign: 'center',
   },
   favNum:{//즐겨찾기 갯수
     fontSize: 17,
-    backgroundColor: '#FDEDEC',
     textAlign: 'center',
   },
 
@@ -179,12 +177,10 @@ const styles = StyleSheet.create({
   },
   obtText:{//취득한 텍스트
     fontSize: 23,
-    backgroundColor: '#E0FFFF',
     textAlign: 'center',
   },
   obtNum:{//취득한 갯수
     fontSize: 17,
-    backgroundColor: '#FDEDEC',
     textAlign: 'center',
   },
   memberInfoManagement: { //'회원정보변경'버튼

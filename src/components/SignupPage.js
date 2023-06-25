@@ -5,18 +5,19 @@ import { Ionicons } from '@expo/vector-icons';
 
 const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [username, setUsername] = useState('');
+  const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
 
   const handleSignup = () => {
     console.log('회원가입 버튼이 클릭되었습니다.');
     console.log('Username:', username);
+    console.log('Nickname:', nickname);
     console.log('Password:', password);
     console.log('PhoneNumber:', phoneNumber);
-    console.log('Nickname:', nickname);
     console.log('Email:', email);
     registerUser();
   };
@@ -26,28 +27,28 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
 
     if (password !== confirmPassword) {
       console.log('Password and confirm password do not match');
-      Alert.alert('Error', '비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      Alert.alert('오류', '비밀번호와 확인 비밀번호가 일치하지 않습니다.');
       return;
     }
 
     if (!username || !password || !confirmPassword || !phoneNumber || !nickname || !email) {
       console.log('Missing input fields');
-      Alert.alert('Error', 'Please fill in all the required fields');
+      Alert.alert('오류', '투입되지 않은 항목이 있습니다.');
       return;
     }
 
     try {
       // Send the registration request to the server
-      const response = await fetch('http://localhost:3000/register', {
+      const response = await fetch('http://143.248.253.14:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           username: username,
+          nickname: nickname,
           password: password,
           phoneNumber: phoneNumber,
-          nickname: nickname,
           email: email,
         }),
       });
@@ -59,12 +60,12 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             onPress: () => {
               // Clear input fields and navigate to the main calendar screen
               setUsername('');
+              setNickname('');
               setPassword('');
               setConfirmPassword('');
               setPhoneNumber('');
-              setNickname('');
               setEmail('');
-              navigation.navigate('MainCalendar');
+              navigation.navigate('MyCalendar');
             },
           },
         ]);
@@ -72,63 +73,57 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
         Alert.alert('오류', '회원가입에 실패하셨습니다');
       }
     } catch (error) {
-      Alert.alert('오류', '회원가입에 실패하셨습니다');
+      Alert.alert('오류', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도하세요.');
     }
   };
 
-  const checkUsernameAvailability = async () => {
+  const checkNameAvailability = async () => {
+    console.log('checkname is called');
     try {
-      const response = await fetch(`http://localhost:3000/check-username?username=${username}`, {
-        method: 'GET',
+      const response = await fetch('http://143.248.253.14:3000/name', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          nickname: nickname,
+        }),
       });
-
+      console.log(response);
       if (response.ok) {
         const { available } = await response.json();
         if (available) {
-          Alert.alert('성공', '사용하실 수 있는 ID입니다');
+          Alert.alert('성공', '사용하실 수 있는 이름입니다');
+          setIsUsernameValid(true);
         } else {
-          Alert.alert('오류', '사용하실 수 없는 ID입니다');
+          Alert.alert('오류', '다른 사용자가 이미 사용중인 이름입니다');
+          setUsername('');
+          setNickname('');
+          setIsUsernameValid(false);
         }
       } else {
-        Alert.alert('오류', '아이디 확인 중 오류가 발생했습니다.');
+        Alert.alert('오류', '확인 중 오류가 발생했습니다.');
       }
     } catch (error) {
-      Alert.alert('오류', '아이디 확인 중 오류가 발생했습니다.');
+      Alert.alert('오류', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도하세요.');
     }
   };
 
-  const checkNicknameAvailability = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/check-nickname?nickname=${nickname}`, {
-        method: 'GET',
-      });
-
-      if (response.ok) {
-        const { available } = await response.json();
-        if (available) {
-          Alert.alert('성공', '사용하실 수 있는 닉네임입니다');
-        } else {
-          Alert.alert('오류', '사용하실 수 없는 닉네임입니다');
-        }
-      } else {
-        Alert.alert('오류', '닉네임 확인 중 오류가 발생했습니다.');
-      }
-    } catch (error) {
-      Alert.alert('오류', '닉네임 확인 중 오류가 발생했습니다.');
+  const handlePasswordChange = (text) => {
+    if (!isUsernameValid) {
+      setPassword('');
+      Alert.alert('에러', '중복 확인을 해주세요.');
+    } else {
+      setPassword(text);
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Back button */}
-      <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
-
       <Text style={styles.title}>회원가입</Text>
 
       <View style={styles.inputContainer}>
-      {/* Username input */}
       <Text style={styles.label}>아이디</Text>
         <View style={styles.inputWithButton}>
           <TextInput
@@ -137,7 +132,22 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             style={styles.input}
             placeholder="아이디를 입력하세요"
           />
-          <TouchableOpacity style={styles.smallButton} onPress={checkUsernameAvailability}>
+          <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
+            <Text style={styles.smallButtonText}>중복 확인</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>닉네임</Text>
+        <View style={styles.inputWithButton}>
+          <TextInput
+            value={nickname}
+            onChangeText={text => setNickname(text)}
+            style={styles.input}
+            placeholder="닉네임을 입력하세요"
+          />
+          <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
             <Text style={styles.smallButtonText}>중복 확인</Text>
           </TouchableOpacity>
         </View>
@@ -147,7 +157,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
         <Text style={styles.label}>비밀번호</Text>
         <TextInput
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={handlePasswordChange}
           style={styles.input}
           placeholder="비밀번호를 입력하세요"
           secureTextEntry={true}
@@ -169,21 +179,6 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
           style={styles.input}
           placeholder="연락처를 입력하세요"
         />
-      </View>
-
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>닉네임</Text>
-        <View style={styles.inputWithButton}>
-          <TextInput
-            value={nickname}
-            onChangeText={text => setNickname(text)}
-            style={styles.input}
-            placeholder="닉네임을 입력하세요"
-          />
-          <TouchableOpacity style={styles.smallButton} onPress={checkNicknameAvailability}>
-            <Text style={styles.smallButtonText}>중복 확인</Text>
-          </TouchableOpacity>
-        </View>
       </View>
 
       <View style={styles.inputContainer}>
@@ -215,13 +210,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 5,
     paddingTop: 80,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    zIndex: 1,
-
   },
   title: {
     fontSize: 24,
@@ -280,9 +268,8 @@ const styles = StyleSheet.create({
   },
   smallButtonText: {
     color: 'white',
-    fontWeight: 'bold',
     fontSize: 12,
   },
 });
 
-export default SignupPage;
+export default SignupPage
