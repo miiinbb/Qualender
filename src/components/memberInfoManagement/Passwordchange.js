@@ -1,6 +1,6 @@
 //Passwordchange.js
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, } from "react-native";
 
 function Passwordchange({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
@@ -18,7 +18,7 @@ function Passwordchange({ navigation }) {
   };
 
   const goAlert = () =>
-    Alert.alert( //여기서 'ㅎㅎㅎ'지우면 확인 누를 시 어플이 종료됩니다..
+    Alert.alert( //여기서 '깔깔마녀' 없애면 확인 누를 시 어플이 종료됩니다..
       "정말로 변경하시겠습니까?", "깔깔마녀", [
         {
           text: "취소",
@@ -37,14 +37,16 @@ function Passwordchange({ navigation }) {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="새로운 비밀번호"
           value={newPassword}
           onChangeText={(text) => setNewPassword(text)}
+          placeholder="새로운 비밀번호"
+          placeholderTextColor="silver"
           secureTextEntry={true}
         />
         <TextInput
           style={styles.input}
           placeholder="비밀번호 확인"
+          placeholderTextColor="silver"
           value={confirmPassword}
           onChangeText={(text) => setConfirmPassword(text)}
           secureTextEntry={true}
@@ -58,11 +60,13 @@ function Passwordchange({ navigation }) {
   );
 }
 
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: height * 0.5,
   },
   title: {
     fontSize: 20,
