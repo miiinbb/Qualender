@@ -11,10 +11,6 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
 
-  const handleBack = () => {
-    navigation.goBack();
-  };
-
   const handleSignup = () => {
     console.log('회원가입 버튼이 클릭되었습니다.');
     console.log('Username:', username);
@@ -225,6 +221,7 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     zIndex: 1,
+
   },
   title: {
     fontSize: 24,
@@ -238,6 +235,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
+    fontWeight: 'bold',
     marginBottom: 5,
     padding: 5,
   },

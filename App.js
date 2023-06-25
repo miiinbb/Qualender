@@ -36,8 +36,8 @@ import lifeinsurance from './src/components/Certificatelist/lifeinsurance';
 import nonlifeinsurance from './src/components/Certificatelist/nonlifeinsurance';
 import sqld from './src/components/Certificatelist/sqld';
 import thirdinsurance from './src/components/Certificatelist/thirdinsurance';
-
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
+
 
 const Stack = createStackNavigator();
 
@@ -148,6 +148,7 @@ export default function App() {
         <Stack.Screen name="Passwordchange" component={Passwordchange} options={{title:'비밀번호 변경'}}/>
         <Stack.Screen name="Phonenumberchange" component={Phonenumberchange} options={{title:'연락처 변경'}}/>
         <Stack.Screen name="Emailchange" component={Emailchange} options={{title:'이메일 변경'}}/>
+        <Stack.Screen name="Memberout" component={Memberout} options={{title:'회원 탈퇴'}}/>
         <Stack.Screen name="Toeic" component={Toeic} options={{title:'토익'}}/>
         <Stack.Screen name="ToeicSpeaking" component={ToeicSpeaking} options={{title:'토익 스피킹'}}/>
         <Stack.Screen name="adsp" component={ToeicSpeaking} options={{title:'데이터분석준전문가(ADsP)'}}/>
