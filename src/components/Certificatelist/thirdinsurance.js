@@ -1,13 +1,15 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const creditCertificateImage = require("../../../assets/toeicspeakinginfo.jpeg");
+const insuranceImage1 = require("../../../assets/insurance1.png");
+const insuranceImage2 = require("../../../assets/insurance2.png");
+const insuranceImage3 = require("../../../assets/insurance3.png");
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-function thirdinsurance({ navigation }) {
+function Thirdinsurance({ navigation }) {
   const link = () => {
-    Linking.openURL("https://www.toeicswt.co.kr");
+    Linking.openURL("https://www.in.or.kr/main/certification/agent/outline/outline.do");
   };
 
   return (
@@ -17,7 +19,9 @@ function thirdinsurance({ navigation }) {
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>시험 상세 정보</Text>
           </View>
-          <Image source={creditCertificateImage} style={styles.image} resizeMode="contain" />
+          <Image source={insuranceImage1} style={styles.image} resizeMode="contain" />
+          <Image source={insuranceImage2} style={styles.image} resizeMode="contain" />
+          <Image source={insuranceImage3} style={styles.image} resizeMode="contain" />
         </View>
         <TouchableOpacity style={styles.buttonContainer} onPress={link}>
           <Text style={styles.buttonText}>시험 접수</Text>
@@ -40,7 +44,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: windowWidth, // 이미지 너비를 화면 너비의 90%로 설정
-    height: windowHeight * 2.6,
+    height: windowHeight * 0.6,
     aspectRatio: 0.8, // 이미지의 가로 세로 비율
     maxWidth: "100%",
     maxHeight: "200%",
@@ -76,5 +80,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default thirdinsurance;
+export default Thirdinsurance;

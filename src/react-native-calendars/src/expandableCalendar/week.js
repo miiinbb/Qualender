@@ -14,7 +14,7 @@ function arePropsEqual(prevProps, nextProps) {
     return isEqual(prevContext, nextContext) && isEqual(prevMarkings, nextMarkings) && isEqual(prevOthers, nextOthers);
 }
 const Week = React.memo((props) => {
-    const { theme, current, firstDay, hideExtraDays, markedDates, onDayPress, onDayLongPress, style: propsStyle, numberOfDays = 1, timelineLeftInset, testID, } = props;
+    const { theme, current, firstDay, hideExtraDays, markedDates, onDayPress, onDayLongPress, style: propsStyle, numberOfDays = 1, timelineLeftInset, testID, isOpen, } = props;
     const style = useRef(styleConstructor(theme));
     const disableDaySelection = useMemo(() => {
         return !!numberOfDays && numberOfDays > 1;
@@ -28,6 +28,12 @@ const Week = React.memo((props) => {
         return [style.current.partialWeek, { paddingLeft: timelineLeftInset }];
     }, [timelineLeftInset]);
     const dayProps = extractDayProps(props);
+    if(isOpen){
+        dayProps.markingType = 'multi-period';
+    }else{
+        dayProps.markingType = 'multi-dot';
+    }
+    console.log("in week", dayProps.markingType, isOpen)
     const currXdate = useMemo(() => parseDate(current), [current]);
     const renderDay = (day, id) => {
         // hide extra days
