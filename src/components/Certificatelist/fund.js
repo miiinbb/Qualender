@@ -1,13 +1,14 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const creditCertificateImage = require("../../../assets/toeicspeakinginfo.jpeg");
+const fundImage1 = require("../../../assets/fund_1.jpg");
+const fundImage2 = require("../../../assets/fund_2.jpg");
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-function fund({ navigation }) {
+function Fund({ navigation }) {
   const link = () => {
-    Linking.openURL("https://www.toeicswt.co.kr");
+    Linking.openURL("https://license.kofia.or.kr/examInfo/examYearly.do");
   };
 
   return (
@@ -17,7 +18,8 @@ function fund({ navigation }) {
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>시험 상세 정보</Text>
           </View>
-          <Image source={creditCertificateImage} style={styles.image} resizeMode="contain" />
+          <Image source={fundImage1} style={styles.image} resizeMode="contain" />
+          <Image source={fundImage2} style={styles.image} resizeMode="contain" />
         </View>
         <TouchableOpacity style={styles.buttonContainer} onPress={link}>
           <Text style={styles.buttonText}>시험 접수</Text>
@@ -39,8 +41,8 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   image: {
-    width: windowWidth, // 이미지 너비를 화면 너비의 90%로 설정
-    height: windowHeight * 2.6,
+    width: windowWidth , // 이미지 너비를 화면 너비의 90%로 설정
+    height: windowHeight * 2,
     aspectRatio: 0.8, // 이미지의 가로 세로 비율
     maxWidth: "100%",
     maxHeight: "200%",
@@ -77,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default fund;
+export default Fund;

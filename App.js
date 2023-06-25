@@ -26,16 +26,16 @@ import Emailchange from './src/components/memberInfoManagement/Emailchange';
 import Memberout from './src/components/memberInfoManagement/Memberout';
 import Toeic from './src/components/Certificatelist/Toeic';
 import ToeicSpeaking from './src/components/Certificatelist/ToeicSpeaking';
-import adsp from './src/components/Certificatelist/adsp';
-import cos from './src/components/Certificatelist/cos';
-import cospro from './src/components/Certificatelist/cospro';
-import credit from './src/components/Certificatelist/credit';
-import derived from './src/components/Certificatelist/derived';
-import fund from './src/components/Certificatelist/fund';
-import lifeinsurance from './src/components/Certificatelist/lifeinsurance';
-import nonlifeinsurance from './src/components/Certificatelist/nonlifeinsurance';
-import sqld from './src/components/Certificatelist/sqld';
-import thirdinsurance from './src/components/Certificatelist/thirdinsurance';
+import Adsp from './src/components/Certificatelist/Adsp';
+import Cos from './src/components/Certificatelist/Cos';
+import Cospro from './src/components/Certificatelist/Cospro';
+import Credit from './src/components/Certificatelist/Credit';
+import Derived from './src/components/Certificatelist/Derived';
+import Fund from './src/components/Certificatelist/Fund';
+import Lifeinsurance from './src/components/Certificatelist/Lifeinsurance';
+import Nonlifeinsurance from './src/components/Certificatelist/Nonlifeinsurance';
+import Sqld from './src/components/Certificatelist/Sqld';
+import Thirdinsurance from './src/components/Certificatelist/Thirdinsurance';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 
@@ -151,16 +151,16 @@ export default function App() {
         <Stack.Screen name="Memberout" component={Memberout} options={{title:'회원 탈퇴'}}/>
         <Stack.Screen name="Toeic" component={Toeic} options={{title:'토익'}}/>
         <Stack.Screen name="ToeicSpeaking" component={ToeicSpeaking} options={{title:'토익 스피킹'}}/>
-        <Stack.Screen name="adsp" component={ToeicSpeaking} options={{title:'데이터분석준전문가(ADsP)'}}/>
-        <Stack.Screen name="cos" component={ToeicSpeaking} options={{title:'COS'}}/>
-        <Stack.Screen name="cospro" component={ToeicSpeaking} options={{title:'COS PRO'}}/>
-        <Stack.Screen name="credit" component={ToeicSpeaking} options={{title:'신용분석사'}}/>
-        <Stack.Screen name="derived" component={ToeicSpeaking} options={{title:'파생상품투자권유자문인력'}}/>
-        <Stack.Screen name="fund" component={ToeicSpeaking} options={{title:'펀드투자권유자문인력'}}/>
-        <Stack.Screen name="lifeinsurance" component={ToeicSpeaking} options={{title:'생명보험대리점'}}/>
-        <Stack.Screen name="nonlifeinsurance" component={ToeicSpeaking} options={{title:'손해보험대리점'}}/>
-        <Stack.Screen name="sqld" component={ToeicSpeaking} options={{title:'SQLD'}}/>
-        <Stack.Screen name="thirdinsurance" component={ToeicSpeaking} options={{title:'제3보험'}}/>
+        <Stack.Screen name="Adsp" component={Adsp} options={{title:'데이터분석준전문가(ADsP)'}}/>
+        <Stack.Screen name="Cos" component={Cos} options={{title:'COS'}}/>
+        <Stack.Screen name="Cospro" component={Cospro} options={{title:'COS PRO'}}/>
+        <Stack.Screen name="Credit" component={Credit} options={{title:'신용분석사'}}/>
+        <Stack.Screen name="Derived" component={Derived} options={{title:'파생상품투자권유자문인력'}}/>
+        <Stack.Screen name="Fund" component={Fund} options={{title:'펀드투자권유자문인력'}}/>
+        <Stack.Screen name="Lifeinsurance" component={Lifeinsurance} options={{title:'생명보험대리점'}}/>
+        <Stack.Screen name="Nonlifeinsurance" component={Nonlifeinsurance} options={{title:'손해보험대리점'}}/>
+        <Stack.Screen name="Sqld" component={Sqld} options={{title:'SQLD'}}/>
+        <Stack.Screen name="Thirdinsurance" component={Thirdinsurance} options={{title:'제3보험'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

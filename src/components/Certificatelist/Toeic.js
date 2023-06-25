@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const creditCertificateImage = require("../../../assets/toeic_info.jpeg");
+const ToeicImage = require("../../../assets/toeic_info.jpeg");
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-function ToeicInfo({ navigation }) {
+function Toeic({ navigation }) {
   const link = () => {
     Linking.openURL("https://www.toeicswt.co.kr");
   };
@@ -17,7 +17,7 @@ function ToeicInfo({ navigation }) {
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>시험 상세 정보</Text>
           </View>
-          <Image source={creditCertificateImage} style={styles.image} resizeMode="contain" />
+          <Image source={ToeicImage} style={styles.image} resizeMode="contain" />
         </View>
         <TouchableOpacity style={styles.buttonContainer} onPress={link}>
           <Text style={styles.buttonText}>시험 접수</Text>
@@ -77,4 +77,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ToeicInfo;
+export default Toeic;

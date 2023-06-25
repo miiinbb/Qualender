@@ -18,11 +18,11 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@react-navigation/stack": "^6.3.16",
-    "@unimodules/core": "^7.1.2",
     "@types/react": "~18.0.27",
-
+    "@unimodules/core": "^7.1.2",
     "date-fns": "^2.30.0",
     "expo": "~48.0.15",
+    "expo-linking": "~4.0.1",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-datepicker": "^4.12.0",
@@ -42,7 +42,6 @@
     "react-native-screens": "~3.20.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.10",
-    "expo-linking": "~4.0.1"
     "typescript": "^4.9.4"
   },
   "devDependencies": {

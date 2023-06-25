@@ -1,13 +1,16 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const creditCertificateImage = require("../../../assets/toeicspeakinginfo.jpeg");
+const sqldImage1 = require("../../../assets/sqld1.jpeg");
+const sqldImage2 = require("../../../assets/sqld2.jpeg");
+const sqldImage3 = require("../../../assets/sqld3.jpeg");
+const sqldImage4 = require("../../../assets/sqld4.jpeg");
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
-function sqld({ navigation }) {
+function Sqld({ navigation }) {
   const link = () => {
-    Linking.openURL("https://www.toeicswt.co.kr");
+    Linking.openURL("https://www.dataq.or.kr/www/sub/a_04.do");
   };
 
   return (
@@ -17,7 +20,10 @@ function sqld({ navigation }) {
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>시험 상세 정보</Text>
           </View>
-          <Image source={creditCertificateImage} style={styles.image} resizeMode="contain" />
+          <Image source={sqldImage1} style={styles.image} resizeMode="contain" />
+          <Image source={sqldImage2} style={styles.image} resizeMode="contain" />
+          <Image source={sqldImage3} style={styles.image} resizeMode="contain" />
+          <Image source={sqldImage4} style={styles.image} resizeMode="contain" />
         </View>
         <TouchableOpacity style={styles.buttonContainer} onPress={link}>
           <Text style={styles.buttonText}>시험 접수</Text>
@@ -40,7 +46,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: windowWidth, // 이미지 너비를 화면 너비의 90%로 설정
-    height: windowHeight * 2.6,
+    height: windowHeight * 2,
     aspectRatio: 0.8, // 이미지의 가로 세로 비율
     maxWidth: "100%",
     maxHeight: "200%",
@@ -77,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default sqld;
+export default Sqld;

@@ -379,6 +379,7 @@ const ExpandableCalendar = (props) => {
         return (<Animated.View ref={weekCalendarWrapper} style={weekCalendarStyle} pointerEvents={isOpen ? 'none' : 'auto'}>
         <WeekComponent testID={`${testID}.weekCalendar`} firstDay={firstDay} {...others} allowShadow={disableWeekScroll ? undefined : false} current={disableWeekScroll ? date : undefined} theme={themeObject} style={calendarStyle} hideDayNames={true} onDayPress={_onDayPress} accessibilityElementsHidden // iOS
          importantForAccessibility={'no-hide-descendants'} // Android
+         isOpen={isOpen}
         />
       </Animated.View>);
     };

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const creditCertificateImage = require("../../../assets/toeicspeakinginfo.jpeg");
+const ToeicSpeakingImage = require("../../../assets/toeicspeakinginfo.jpeg");
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -17,7 +17,7 @@ function ToeicSpeaking({ navigation }) {
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>시험 상세 정보</Text>
           </View>
-          <Image source={creditCertificateImage} style={styles.image} resizeMode="contain" />
+          <Image source={ToeicSpeakingImage} style={styles.image} resizeMode="contain" />
         </View>
         <TouchableOpacity style={styles.buttonContainer} onPress={link}>
           <Text style={styles.buttonText}>시험 접수</Text>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   image: {
-    width: windowWidth, // 이미지 너비를 화면 너비의 90%로 설정
+    width: windowWidth * 1.2, // 이미지 너비를 화면 너비의 90%로 설정
     height: windowHeight * 2.6,
     aspectRatio: 0.8, // 이미지의 가로 세로 비율
     maxWidth: "100%",

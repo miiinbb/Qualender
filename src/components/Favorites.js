@@ -1,4 +1,4 @@
-//ObtainedList.js
+//Favorites.js
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
