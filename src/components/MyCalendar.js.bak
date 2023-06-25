@@ -133,34 +133,34 @@ const renderItem = ({ item }) => {
         navigation.navigate('ToeicSpeaking');
         break;
       case '펀드투자권유자문인력':
-        navigation.navigate('fund');
+        navigation.navigate('Fund');
         break;
       case '파생상품투자권유자문인력':
-        navigation.navigate('derived');
+        navigation.navigate('Derived');
         break;
       case '생명보험대리점':
-        navigation.navigate('lifeinsurance');
+        navigation.navigate('Lifeinsurance');
         break;
       case '제3보험':
-        navigation.navigate('thirdinsurance');
+        navigation.navigate('Thirdinsurance');
         break;
       case '손해보험대리점':
-        navigation.navigate('nonlifeinsurance');
+        navigation.navigate('Nonlifeinsurance');
         break;     
       case '신용분석사':
-        navigation.navigate('credit');
+        navigation.navigate('Credit');
         break;
       case 'ADsP':
-        navigation.navigate('adsp');
+        navigation.navigate('Adsp');
         break;
       case 'SQLD':
-        navigation.navigate('sqld');
+        navigation.navigate('Sqld');
         break;
       case 'COS':
-        navigation.navigate('cos');
+        navigation.navigate('Cos');
         break; 
       case 'COS PRO':
-        navigation.navigate('cospro');
+        navigation.navigate('Cospro');
         break;
       default:
         // 처리할 아이템이 없을 경우에 대한 동작
@@ -208,24 +208,18 @@ const getMarkedDates = () => {
 
   ITEMS.forEach((item) => {
     if (item.data && item.data.length > 0 && !_.isEmpty(item.data[0])) {
-      item.data.forEach((_item) => {
-        const startDate = new Date(_item.start_date);
-        const endDate = new Date(_item.end_date);
-        const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-        const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-        const dateRange = getDatesInRange(start, end);
+      const dots = item.data.map((dataItem, index) => ({
+        key: index.toString(),
+        color: boxColors[boxNames.indexOf(dataItem.title) % boxColors.length],
+      }));
+      const periods = item.data.map((dataItem, index) => ({
+        key: index.toString(),
+        startingDay: dataItem.startingDay,
+        endingDay: dataItem.endingDay,
+        color: boxColors[boxNames.indexOf(dataItem.title) % boxColors.length],
+      }));
 
-        const dots = [{ key: item.title, color: boxColors[boxNames.indexOf(item.title) % boxColors.length] }];
-
-        dateRange.forEach((date) => {
-          const dateString = date.toISOString().split('T')[0];
-          if (!marked[dateString]) {
-            marked[dateString] = { dots };
-          } else {
-            marked[dateString].dots.push(...dots); // 기존 dots 배열에 새로운 dots를 추가
-          }
-        });
-      });
+      marked[item.title] = { marked: true, dots, periods };
     } else {
       marked[item.title] = { disabled: true };
     }
@@ -273,7 +267,7 @@ export default function MyCalendar(props) {
           calendarStyle={[styles.calendar, { paddingHorizontal: screenWidth * 0.01, justifyContent: 'center' }]} // Add paddingHorizontal here
           theme={getTheme()}
           disableAllTouchEventsForDisabledDays
-          markingType={'multi-dot'}
+          markingType={'multi-period'}
           markedDates={getMarkedDates()} 
         />
       )}
@@ -294,14 +288,14 @@ const ITEMS = [
       {
         teststatus: '시험 접수일',
         title: '토익',
-        start_date: '2023-06-22',
-        end_date: '2023-06-25',
+        startingDay: '2023-06-22',
+        endingDay: '2023-06-25',
       },
       {
         teststatus: '시험 접수일',
         title: '토스',
-        start_date: '2023-06-22',
-        end_date: '2023-06-29',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
       }
     ],
   },
@@ -315,10 +309,64 @@ const ITEMS = [
         end_date: '2023-06-25',
       },
       {
-        start_time: '5:00pm',
-        end_time: '6:30pm',
-        title: 'Boxing',
-        location: 'WEST YMCA',
+        teststatus: '시험 접수일',
+        title: '토스',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: 'ADsP',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: 'COS',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: 'COS PRO',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: 'SQLD',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: '신용분석사',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: '생명보험대리점',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: '제3보험',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: '손해보험대리점',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: '파생상품투자권유자문인력',
+        startingDay: '2023-06-26',
+        endingDay: '2023-06-29',
       },
     ],
   },
