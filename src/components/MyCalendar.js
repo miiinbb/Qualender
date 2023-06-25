@@ -10,13 +10,14 @@ import {
 import {add, sub, isSameMonth, eachDayOfInterval} from 'date-fns';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import ITEMS from './Items';
 
 const Stack = createStackNavigator();
 const today = new Date().toISOString().split('T')[0];
 const fastDate = getPastDate(3);
 const futureDates = getFutureDates(9);
 const dates = [fastDate, today].concat(futureDates);
-const themeColor = 'green';
+const themeColor = '#000080';
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
@@ -281,239 +282,6 @@ export default function MyCalendar(props) {
 }
 console.log(dates[0]);
 
-const ITEMS = [
-  {
-    title: '2023-06-22',
-    data: [
-      {
-        teststatus: '시험 접수일',
-        title: '토익',
-        startingDay: '2023-06-22',
-        endingDay: '2023-06-25',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: '토스',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      }
-    ],
-  },
-  {
-    title: '2023-06-23',
-    data: [
-      {
-        teststatus: '시험 접수일',
-        title: '펀드투자권유자문인력',
-        start_date: '2023-06-23',
-        end_date: '2023-06-25',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: '토스',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: 'ADsP',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: 'COS',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: 'COS PRO',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: 'SQLD',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: '신용분석사',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: '생명보험대리점',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: '제3보험',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: '손해보험대리점',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-      {
-        teststatus: '시험 접수일',
-        title: '파생상품투자권유자문인력',
-        startingDay: '2023-06-26',
-        endingDay: '2023-06-29',
-      },
-    ],
-  },
-  {
-    title: dates[2],
-    data: [
-      {
-        start_time: '1:00pm',
-        end_time: '4:30pm',
-        title: 'Drills',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '2:00pm',
-        end_time: '3:00pm',
-        title: 'Practice',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '3:00pm',
-        end_time: '4:00pm',
-        title: 'Practice',
-        location: 'WEST YMCA',
-      },
-    ],
-  },
-  {
-    title: dates[3],
-    data: [
-      {
-        start_time: '11:00am',
-        end_time: '12:00am',
-        title: 'Yoga',
-        location: 'WEST YMCA',
-        description:
-          'Enjoy a series of seated and standing yoga poses with chair support. ' +
-          'Designed to increase flexibility, balance and range of movement. ' +
-          'Restorative breathing exercises and a final relaxation will promote stress reduction and mental clarity.',
-      },
-    ],
-  },
-  {
-    title: dates[4],
-    data: [
-      {
-        start_time: '9:00am',
-        end_time: '10:00am',
-        title: 'HIIT',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '10:00am',
-        end_time: '10:30am',
-        title: 'Lunch',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '1:00pm',
-        end_time: '3:00pm',
-        title: 'Press Conference',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '6:00pm',
-        end_time: '8:00pm',
-        title: 'Charity',
-        location: 'WEST YMCA',
-      },
-    ],
-  },
-  {
-    title: dates[5],
-    data: [
-      {
-        start_time: '12:00am',
-        end_time: '1:00pm',
-        title: 'Game Day',
-        location: 'WEST YMCA',
-      },
-    ],
-  },
-  {
-    title: dates[6],
-    data: [
-      {
-        start_time: '12:00pm',
-        end_time: '1:00pm',
-        title: 'Lunch at Applebees with parents',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '3:00pm',
-        end_time: '4:30pm',
-        title: 'Drills',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '7:00pm',
-        end_time: '10:00pm',
-        title: 'Charity Banquet',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '11:00pm',
-        end_time: '11:30pm',
-        title: 'Game Review',
-        location: 'WEST YMCA',
-      },
-    ],
-  },
-  {
-    title: dates[7],
-    data: [
-      {
-        start_time: '1:00pm',
-        end_time: '1:30pm',
-        title: 'Practice',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '2:00pm',
-        end_time: '3:00pm',
-        title: 'Game',
-        location: 'WEST YMCA',
-      },
-      {
-        start_time: '3:00pm',
-        end_time: '3:30pm',
-        title: 'Game Review',
-        location: 'WEST YMCA',
-      },
-    ],
-  },
-  {
-    title: dates[8],
-    data: [
-      {
-        start_time: '12:00am',
-        end_time: '12:30pm',
-        title: 'Muay Thai',
-        location: 'WEST YMCA',
-      },
-    ],
-  },  
-];
-
-
 const styles = StyleSheet.create({
   calendar: {
     paddingLeft: 20,
@@ -541,7 +309,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: 'green', // 동그라미의 색상 설정
+    backgroundColor: 'navy', // 동그라미의 색상 설정
     marginRight: 10,
   },
   itemTitleText: {
