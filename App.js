@@ -24,7 +24,20 @@ import Passwordchange from './src/components/memberInfoManagement/Passwordchange
 import Phonenumberchange from './src/components/memberInfoManagement/Phonenumberchange';
 import Emailchange from './src/components/memberInfoManagement/Emailchange';
 import Memberout from './src/components/memberInfoManagement/Memberout';
+import Toeic from './src/components/Certificatelist/Toeic';
+import ToeicSpeaking from './src/components/Certificatelist/ToeicSpeaking';
+import adsp from './src/components/Certificatelist/adsp';
+import cos from './src/components/Certificatelist/cos';
+import cospro from './src/components/Certificatelist/cospro';
+import credit from './src/components/Certificatelist/credit';
+import derived from './src/components/Certificatelist/derived';
+import fund from './src/components/Certificatelist/fund';
+import lifeinsurance from './src/components/Certificatelist/lifeinsurance';
+import nonlifeinsurance from './src/components/Certificatelist/nonlifeinsurance';
+import sqld from './src/components/Certificatelist/sqld';
+import thirdinsurance from './src/components/Certificatelist/thirdinsurance';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
+
 
 const Stack = createStackNavigator();
 
@@ -136,6 +149,18 @@ export default function App() {
         <Stack.Screen name="Phonenumberchange" component={Phonenumberchange} options={{title:'연락처 변경'}}/>
         <Stack.Screen name="Emailchange" component={Emailchange} options={{title:'이메일 변경'}}/>
         <Stack.Screen name="Memberout" component={Memberout} options={{title:'회원 탈퇴'}}/>
+        <Stack.Screen name="Toeic" component={Toeic} options={{title:'토익'}}/>
+        <Stack.Screen name="ToeicSpeaking" component={ToeicSpeaking} options={{title:'토익 스피킹'}}/>
+        <Stack.Screen name="adsp" component={ToeicSpeaking} options={{title:'데이터분석준전문가(ADsP)'}}/>
+        <Stack.Screen name="cos" component={ToeicSpeaking} options={{title:'COS'}}/>
+        <Stack.Screen name="cospro" component={ToeicSpeaking} options={{title:'COS PRO'}}/>
+        <Stack.Screen name="credit" component={ToeicSpeaking} options={{title:'신용분석사'}}/>
+        <Stack.Screen name="derived" component={ToeicSpeaking} options={{title:'파생상품투자권유자문인력'}}/>
+        <Stack.Screen name="fund" component={ToeicSpeaking} options={{title:'펀드투자권유자문인력'}}/>
+        <Stack.Screen name="lifeinsurance" component={ToeicSpeaking} options={{title:'생명보험대리점'}}/>
+        <Stack.Screen name="nonlifeinsurance" component={ToeicSpeaking} options={{title:'손해보험대리점'}}/>
+        <Stack.Screen name="sqld" component={ToeicSpeaking} options={{title:'SQLD'}}/>
+        <Stack.Screen name="thirdinsurance" component={ToeicSpeaking} options={{title:'제3보험'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

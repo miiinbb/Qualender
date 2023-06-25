@@ -1,506 +1,464 @@
-//MyCalendar.js => 메인캘린더 담당
-import React, { useState, useRef } from 'react';
-import { StatusBar } from 'expo-status-bar';
+import _ from 'lodash';
+import React from 'react';
+import {Platform, Dimensions, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Modal,
-  TouchableOpacity,
-  Button,
-  TextInput,
-} from 'react-native';
-import { LocaleConfig, CalendarList, Agenda } from 'react-native-calendars';
-import DropDownPicker from 'react-native-dropdown-picker';
-import Calendar from '../react-native-calendars/src/calendar/index'
-import DatePicker from 'react-native-datepicker';
-import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
+  ExpandableCalendar,
+  AgendaList,
+  CalendarProvider,
+  WeekCalendar,
+} from 'react-native-calendars';
+import {add, sub, isSameMonth} from 'date-fns';
+import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-LocaleConfig.locales['ko'] = {
-    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-    monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-    dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
-    dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-    today: '오늘'
-  };
-LocaleConfig.defaultLocale = 'ko';
-
-const COLORS = [
-  '#FFC0CB', '#FFD700', '#00FFFF', '#008000', '#FF4500', '#8A2BE2',
-  '#00BFFF', '#FF1493', '#FFA500', '#808080', '#008080', '#800080',
-];
-
-export default function MyCalendar() {
-  // Declare and initialize selectedDay state variable
-  //selectedDay는 상태함수
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [additionalModalVisible, setAdditionalModalVisible] = useState(false);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [datePickerVisible, setDatePickerVisible] = useState(false);
-  const calendarRef = useRef(null); // Ref to access the Calendar component
-  const [markedDates, setMarkedDates] = useState({});
-  const [eventTitle, setEventTitle] = useState({}); // 일정 제목 상태 변수 추가
-  const [colorIndex, setColorIndex] = useState(0); // 현재 색상 인덱스 상태 변수 추가
-
-  const boxNames = [ //자격증 리스트
-  "펀드투자권유자문인력",
-  "파생상품투자권유자문인력",
-  "생명보험대리점",
-  "제3보험",
-  "손해보험대리점",
-  "신용분석사",
-  "ADsP",
-  "SQLD",
-  "COS",
-  "COS PRO",
-  "토익",
-  "토스",
-];
-
-const boxColors = [  // 색상 리스트
-  "#B8A6DF", // Pale Purple
-  "#F791B6", // Soft Pink
-  "#89CDD9", // Pale Aqua
-  "#FBA58D", // Coral
-  "#9ED6A1", // Pale Green
-  "#FFB884", // Apricot
-  "#FAC98A", // Peach
-  "#CDA2D9", // Lavender
-  "#9BCBF6", // Powder Blue
-  "#FFCFA6", // Pale Orange
-  "#FFC107", // Amber
-  "#C4E9B5", // Pale Greenish
-];
-
-  
-  const handleAddEventPress = () => {
-    setAdditionalModalVisible(true);
-    setDatePickerVisible(true);
-  };
-  
-// DatePicker에서 선택한 시작 날짜와 종료 날짜를 처리하는 함수
-  const handleConfirmDatePicker = (startDate, endDate) => {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const datesRange = getDatesRange(start, end);
-
-  const updatedMarkedDates = { ...markedDates };
-
-  const colorPosition = Object.values(updatedMarkedDates).length > 0
-    ? Object.values(updatedMarkedDates)[0].periods.length
-    : 0;
-
-
-  // 사이의 날짜를 표시
-  datesRange.forEach((date) => {
-    const dateString = formatDate(date);
-    if (!updatedMarkedDates[dateString]) {
-      updatedMarkedDates[dateString] = { periods: [] };
-    }
-    
-    for (let i = updatedMarkedDates[dateString].periods.length; i < colorPosition; i++) {
-      updatedMarkedDates[dateString].periods.push({ color: 'transparent' });
-    }
-
-    updatedMarkedDates[dateString].periods.push({ color: COLORS[colorIndex] });
-  });
-
-  
-
-  setMarkedDates(updatedMarkedDates);
-  setStartDate(null);
-  setEndDate(null);
-  setAdditionalModalVisible(false);
-  // 다음 색상 인덱스로 업데이트
-  setColorIndex((colorIndex + 1) % COLORS.length);
-};
-
-  // 시작 날짜부터 종료 날짜까지의 모든 날짜를 배열로 반환하는 함수
-  const getDatesRange = (startDate, endDate) => {
-    const datesRange = [];
-    const currentDate = new Date(startDate);
-  
-    while (currentDate <= endDate) {
-      datesRange.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-  
-    return datesRange;
-  };
-
-  // 날짜를 'yyyy-MM-dd' 형식의 문자열로 변환하는 함수
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  // 선택한 날짜
-  const selectedDate = selectedDay ? new Date(selectedDay) : null;
-  const selectedMonth = selectedDate ? selectedDate.getMonth() : null;
-
-  // 오늘 날짜
-  const DATE = new Date(); //오늘 날짜
-  const YEAR = DATE.getFullYear();  //오늘 날짜의 연도
-  const MONTH = DATE.getMonth() + 1;  //오늘 날짜의 월
-  const DAY = DATE.getDate();  //오늘 날짜의 일
-  const today = { year: YEAR, month: MONTH, date: DAY };
-  const dateString = YEAR + '-' + MONTH  + '-' + DAY;
-
-  const handleDayPress = (day) => {
-    setSelectedDay(day.dateString);
-    setModalVisible(true);
-  };
-  const [currentMonth, setCurrentMonth] = useState('');
-
-  // 현재 보이는 달(months)이 변경될 때 호출되는 콜백 함수
-  const handleVisibleMonthsChange = (months) => {
-    setCurrentMonth(months[0]);
-  };
-
-
-
-  return (
-      <View style={{ height: 600, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Calendar
-          ref={calendarRef}
-          useNativeDriver={true} 
-          monthFormat={'yyyy'+'년 '+'MM'+'월'}
-          hideExtraDays={false}
-          horizontal={true} //가로로 스와이프
-          hideArrows={false}
-          pagingEnabled={true} // 가로로 페이지 단위로 스와이프
-          style={{
-            borderWidth: 1,
-            borderColor: 'gray',
-            height: Dimensions.get('window').height * 0.9, //화면비율설정
-            width: Dimensions.get('window').width,
-            fontFamily: 'System',
-          }}
-          onDayPress={handleDayPress} // 팝업 창을 열기 위한 이벤트 핸들러 추가
-          markingType="multi-period"
-          markedDates={markedDates}
-          onVisibleMonthsChange={handleVisibleMonthsChange} // 현재 보이는 달(months)이 변경될 때 호출되는 콜백 함수
-        />
-
-      {/* 일정 추가 버튼 */}
-      <TouchableOpacity
-        onPress={handleAddEventPress}
-        style={{
-          position: 'absolute',
-          bottom: 20,
-          right: 20,
-          backgroundColor: 'pink',
-          padding: 10,
-          borderRadius: 30,
-          elevation: 5,
-        }}
-      >
-        <Icon name="plus" size={24} color="white" />
-      </TouchableOpacity>
-
-      <Modal
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false); //닫기를 누르면 팝업창이 뜨지 않는 것
-        }}
-        transparent={true} //팝업창 배경을 투명하게 바꿔주는것
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-          {markedDates[selectedDay] && eventTitle ? ( // 수정: markedDates[selectedDay] 존재 여부를 확인하여 제목 표시 여부 결정
-        <>
-          <Text style={styles.modalTitle} numberOfLines={1}>
-            {selectedDay}
-          </Text>
-          <Text style={styles.modalTitle} numberOfLines={1}>
-            {eventTitle}
-          </Text>
-        </>
-      ) : (
-        <Text style={styles.modalTitle} numberOfLines={1}>
-          {selectedDay}
-        </Text>
-      )}
-            <Text style={styles.modalItem}>{'펀드투자권유자문인력'}</Text>
-            <TouchableOpacity
-              onPress={() => setModalVisible(false)}
-              style={styles.modalButton}
-            >
-              <Text style={styles.modalButtonText}>닫기</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* 추가 모달 */}
-      <Modal
-        visible={additionalModalVisible}
-        onRequestClose={() => {
-          setAdditionalModalVisible(false);
-        }}
-        transparent={true}
-      >
-        {/* 추가 모달의 컨텐츠를 구현하세요 */}
-        <View style={styles.additionalModalContainer}>
-          <View style={styles.additionalModalContent}>
-            <Text style={styles.additionalModalTitle}>일정 추가</Text>
-
-            <View style={[styles.inputTitleContainer, { marginTop: 10 }]}>
-            <DropDownPicker
-                items={boxNames.map((name, index) => ({ label: name, value: name }))}
-                defaultValue={eventTitle[0]}
-                placeholder="자격증 이름 선택"
-                containerStyle={{ height: 40, width: '100%' }}
-                style={{ backgroundColor: '#fafafa' }}
-                dropDownStyle={{ backgroundColor: '#fafafa' }}
-                onChangeItem={(item) => setEventTitle(item.value)}
-            />
-            </View>
-
-            {datePickerVisible && ( // datePickerVisible이 true일 때만 DatePicker 컴포넌트를 표시
-              <>
-            <View style={[styles.inputContainer, { marginBottom: 10 }]}>
-            <DatePicker
-              style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
-              date={startDate}
-              mode="date"
-              placeholder="시작 날짜"
-              format="YYYY-MM-DD"
-              minDate={dateString}
-              maxDate="2024-06-30"
-              confirmBtnText="확인"
-              cancelBtnText="취소"
-              customStyles={{
-                dateIcon: {
-                  display: 'none',
-                },
-                dateInput: {
-                  borderWidth: 0, // DatePicker 내부의 border 제거
-                  padding: 0, // DatePicker 내부의 padding 제거
-                  width: '100%', // DatePicker가 전체 너비를 차지하도록 설정
-                  height: 40,
-                  textAlign: 'left', // 텍스트를 왼쪽으로 정렬
-                },  
-              }}
-              onDateChange={(date) => setStartDate(date)}
-            />
-            </View>
-
-            <View style={[styles.inputContainer, { marginBottom: 10 }]}>
-            <DatePicker
-              style={[styles.datePicker, { marginTop: 0 }]} // marginTop 값을 0으로 설정
-              date={endDate}
-              mode="date"
-              placeholder="종료 날짜"
-              format="YYYY-MM-DD"
-              minDate={startDate}
-              maxDate="2024-06-30"
-              confirmBtnText="확인"
-              cancelBtnText="취소"
-              customStyles={{
-                dateIcon: {
-                  display: 'none',
-                },
-                dateInput: {
-                  borderWidth: 0, // DatePicker 내부의 border 제거
-                  padding: 0, // DatePicker 내부의 padding 제거
-                  width: '100%', // DatePicker가 전체 너비를 차지하도록 설정
-                  height: 40,
-                  textAlign: 'left', // 텍스트를 왼쪽으로 정렬
-                },
-                confirmBtnContainer: {
-                  position: 'absolute',
-                  right: 70, // 확인 버튼 위치 조정
-                },
-                cancelBtnContainer: {
-                  position: 'absolute',
-                  right: 0, // 취소 버튼 위치 조정
-                },
-                btnTextConfirm: {
-                  color: 'blue', // 확인 버튼 텍스트 색상 설정
-                },
-                btnTextCancel: {
-                  color: 'red', // 취소 버튼 텍스트 색상 설정
-                },
-              }}
-              onDateChange={(date) => setEndDate(date)}
-            />
-            </View>
-
-          <TouchableOpacity
-            onPress={() => handleConfirmDatePicker(startDate, endDate)}
-            style={styles.additionalModalButton}
-          >
-            <Text style={styles.additionalModalButtonText}>확인</Text>
-          </TouchableOpacity>
-          </>
-          )}
-
-            <TouchableOpacity
-              onPress={() => setAdditionalModalVisible(false)}
-              style={styles.additionalModalButton}
-            >
-              <Text style={styles.additionalModalButtonText}>닫기</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-//화면 크기에 비례로 디자인 적용하기 위해 실행
+const Stack = createStackNavigator();
+const today = new Date().toISOString().split('T')[0];
+const fastDate = getPastDate(3);
+const futureDates = getFutureDates(9);
+const dates = [fastDate, today].concat(futureDates);
+const themeColor = 'green';
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
+function getFutureDates(days) {
+  const array = [];
+  for (let index = 1; index <= days; index++) {
+    const date = new Date(Date.now() + 864e5 * index); // 864e5 == 86400000 == 24*60*60*1000
+    const dateString = date.toISOString().split('T')[0];
+    array.push(dateString);
+  }
+  return array;
+}
+
+function getPastDate(days) {
+  return new Date(Date.now() - 864e5 * days).toISOString().split('T')[0];
+}
+
+const getTheme = () => {
+  const disabledColor = 'grey';
+
+  return {
+    // arrows
+    arrowColor: 'black',
+    arrowStyle: { padding: 0 },
+    // month
+    monthTextColor: 'black',
+    textMonthFontSize: 16,
+    textMonthFontFamily: 'HelveticaNeue',
+    textMonthFontWeight: 'bold',
+    // day names
+    textSectionTitleColor: 'black',
+    textDayHeaderFontSize: 12,
+    textDayHeaderFontFamily: 'HelveticaNeue',
+    textDayHeaderFontWeight: 'normal',
+    // dates
+    todayTextColor: 'black',
+    dayTextColor: 'black',
+    textDayFontSize: 18,
+    textDayFontFamily: 'HelveticaNeue',
+    textDayFontWeight: 'normal', // 굵은 글씨 대신 일반 글씨로 설정
+    // selected date
+    selectedDayBackgroundColor: themeColor,
+    selectedDayTextColor: 'white',
+    selectedDayStyle: { borderRadius: 5 },
+    // disabled date
+    textDisabledColor: disabledColor,
+    // dot (marked date)
+    dotColor: 'black',
+    selectedDotColor: 'white',
+    disabledDotColor: disabledColor,
+    dotStyle: { marginTop: 0 },
+
+    dayContainerStyle: ({ date }) => {
+      const isCurrentMonth = isSameMonth(new Date(), date);
+      const dotOpacity = isCurrentMonth ? 1 : 0; // 현재 월에 해당하는 날짜의 dot 투명도
+      return {
+        opacity: dotOpacity,
+      };
+    },
+  };
+};
+
+const renderItem = ({ item }) => {
+  const navigation = useNavigation(); // navigation 객체 얻기
+
+  if (_.isEmpty(item)) {
+    return renderEmptyItem();
+  }
+
+  const itemPressed = (item) => {
+    // 아이템 선택 시 동작 처리
+    // 아이템마다 다른 JavaScript 파일로 페이지 전환을 수행합니다.
+    switch (item.title) {
+      case '토익':
+        navigation.navigate('Toeic');
+        break;
+      case '토스':
+        navigation.navigate('ToeicSpeaking');
+        break;
+      
+      default:
+        // 처리할 아이템이 없을 경우에 대한 동작
+        break;
+    }
+  };
+
+  const circleColor = boxColors[boxNames.indexOf(item.title) % boxColors.length];
+
+  return (
+    <TouchableOpacity
+      onPress={() => itemPressed(item)}
+      style={[styles.item, { backgroundColor: 'white' }]}>
+      <View>
+        <Text style={styles.itemtestatus}>{item.teststatus}</Text>
+      </View>
+      <View style={[styles.circle, { backgroundColor: circleColor }]} />
+      <Text style={styles.itemTitleText}>{item.title}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const renderEmptyItem = () => {
+  return (
+    <View style={styles.emptyItem}>
+      <Text style={styles.emptyItemText}>No Events Planned 😴</Text>
+    </View>
+  );
+};
+
+  const getMarkedDates = () => {
+    const boxNames = [ //자격증 리스트
+    "펀드투자권유자문인력",
+    "파생상품투자권유자문인력",
+    "생명보험대리점",
+    "제3보험",
+    "손해보험대리점",
+    "신용분석사",
+    "ADsP",
+    "SQLD",
+    "COS",
+    "COS PRO",
+    "토익",
+    "토스",
+  ];
+
+  const boxColors = [  // 색상 리스트
+    "#B8A6DF", // Pale Purple
+    "#F791B6", // Soft Pink
+    "#89CDD9", // Pale Aqua
+    "#FBA58D", // Coral
+    "#9ED6A1", // Pale Green
+    "#FFB884", // Apricot
+    "#FAC98A", // Peach
+    "#CDA2D9", // Lavender
+    "#9BCBF6", // Powder Blue
+    "#FFCFA6", // Pale Orange
+    "#FFC107", // Amber
+    "#C4E9B5", // Pale Greenish
+  ];
+  const marked = {};
+
+  ITEMS.forEach((item, index) => {
+    if (item.data && item.data.length > 0 && !_.isEmpty(item.data[0])) {
+      const dots = item.data.map((_, dotIndex) => ({
+        key: dotIndex.toString(),
+        color: boxColors[dotIndex % boxColors.length],
+      }));
+
+      marked[item.title] = { marked: true, dots };
+    } else {
+      marked[item.title] = { disabled: true };
+    }
+  });
+
+  marked[today] = { marked: true, dots: [{ key: 'today', color: 'white' }] };
+
+  return marked;
+};
+
+const onDateChanged = (/* date, updateSource */) => {
+};
+
+const onMonthChange = (/* month, updateSource */) => {
+};
+
+export default function MyCalendar(props) {
+  const [selectedIndex, updateIndex] = React.useState(0);
+
+  return (
+    <CalendarProvider
+      date={today}
+      onDateChanged={onDateChanged}
+      onMonthChange={onMonthChange}
+      showTodayButton
+      disabledOpacity={0.6}
+      theme={{
+        todayButtonTextColor: 'white',
+      }}
+      style={{
+      marginTop: 20,}}
+      todayButtonStyle={styles.todayButton}
+      todayBottomMargin={16}>
+      {props.weekView ? (
+        <WeekCalendar firstDay={1} markedDates={getMarkedDates()} />
+      ) : (
+        <ExpandableCalendar
+        
+          minDate={sub(new Date(), {years: 5})}
+          maxDate={add(new Date(), {years: 5})}
+          pastScrollRange={60}
+          futureScrollRange={60}
+          displayLoadingIndicator={false}
+          calendarStyle={[styles.calendar, { paddingHorizontal: screenWidth * 0.01, justifyContent: 'center' }]} // Add paddingHorizontal here
+          theme={getTheme()}
+          disableAllTouchEventsForDisabledDays
+          markingType={'multi-dot'}
+          markedDates={getMarkedDates()} 
+        />
+      )}
+      <AgendaList
+        sections={ITEMS}
+        extraData={selectedIndex}
+        renderItem={item => renderItem(item)}
+      />
+    </CalendarProvider>
+  );
+}
+console.log(dates[0]);
+
+const ITEMS = [
+  {
+    title: dates[0],
+    data: [
+      {
+        teststatus: '시험 접수일',
+        title: '토익',
+        start_date: '2023-06-22',
+        end_date: '2023-06-25',
+      },
+      {
+        teststatus: '시험 접수일',
+        title: '토스',
+        start_date: '2023-06-23',
+        end_date: '2023-06-27',
+      }
+    ],
+  },
+  {
+    title: dates[1],
+    data: [
+      {
+        start_time: '4:00pm',
+        end_time: '4:30pm',
+        title: 'HIIT',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '5:00pm',
+        end_time: '6:30pm',
+        title: 'Boxing',
+        location: 'WEST YMCA',
+      },
+    ],
+  },
+  {
+    title: dates[2],
+    data: [
+      {
+        start_time: '1:00pm',
+        end_time: '4:30pm',
+        title: 'Drills',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '2:00pm',
+        end_time: '3:00pm',
+        title: 'Practice',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '3:00pm',
+        end_time: '4:00pm',
+        title: 'Practice',
+        location: 'WEST YMCA',
+      },
+    ],
+  },
+  {
+    title: dates[3],
+    data: [
+      {
+        start_time: '11:00am',
+        end_time: '12:00am',
+        title: 'Yoga',
+        location: 'WEST YMCA',
+        description:
+          'Enjoy a series of seated and standing yoga poses with chair support. ' +
+          'Designed to increase flexibility, balance and range of movement. ' +
+          'Restorative breathing exercises and a final relaxation will promote stress reduction and mental clarity.',
+      },
+    ],
+  },
+  {
+    title: dates[4],
+    data: [
+      {
+        start_time: '9:00am',
+        end_time: '10:00am',
+        title: 'HIIT',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '10:00am',
+        end_time: '10:30am',
+        title: 'Lunch',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '1:00pm',
+        end_time: '3:00pm',
+        title: 'Press Conference',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '6:00pm',
+        end_time: '8:00pm',
+        title: 'Charity',
+        location: 'WEST YMCA',
+      },
+    ],
+  },
+  {
+    title: dates[5],
+    data: [
+      {
+        start_time: '12:00am',
+        end_time: '1:00pm',
+        title: 'Game Day',
+        location: 'WEST YMCA',
+      },
+    ],
+  },
+  {
+    title: dates[6],
+    data: [
+      {
+        start_time: '12:00pm',
+        end_time: '1:00pm',
+        title: 'Lunch at Applebees with parents',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '3:00pm',
+        end_time: '4:30pm',
+        title: 'Drills',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '7:00pm',
+        end_time: '10:00pm',
+        title: 'Charity Banquet',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '11:00pm',
+        end_time: '11:30pm',
+        title: 'Game Review',
+        location: 'WEST YMCA',
+      },
+    ],
+  },
+  {
+    title: dates[7],
+    data: [
+      {
+        start_time: '1:00pm',
+        end_time: '1:30pm',
+        title: 'Practice',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '2:00pm',
+        end_time: '3:00pm',
+        title: 'Game',
+        location: 'WEST YMCA',
+      },
+      {
+        start_time: '3:00pm',
+        end_time: '3:30pm',
+        title: 'Game Review',
+        location: 'WEST YMCA',
+      },
+    ],
+  },
+  {
+    title: dates[8],
+    data: [
+      {
+        start_time: '12:00am',
+        end_time: '12:30pm',
+        title: 'Muay Thai',
+        location: 'WEST YMCA',
+      },
+    ],
+  },  
+];
+
+
 const styles = StyleSheet.create({
-  //달력 맨 윗줄(sun mon...)과 첫 주 칸 조정
-  headerContainer: {
-    marginTop: -10, // 맨 윗줄과 첫 주 칸 간의 간격 조정
+  calendar: {
+    paddingLeft: 20,
+    paddingRight: 20,
   },
-  week: {
-    marginBottom: -10, // 맨 윗줄과 첫 주 칸 간의 간격 조정
+  item: {
+    padding: 20,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgrey',
+    flexDirection: 'row',
   },
-  //일자 컨테이너 스타일 조정
-  dayContainer: {
+  itemtestatus: {
+    color: 'grey',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  itemEndTime: {
+    color: 'grey',
+    fontSize: 12,
+    // marginTop: 4,
+    marginLeft: 4,
+  },
+  circle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'green', // 동그라미의 색상 설정
+    marginRight: 10,
+  },
+  itemTitleText: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    //칸 크기 조정하는 부분 padding
-    paddingBottom: 40,
-    paddingHorizontal: screenWidth*0.01,
-    marginTop : 0,
-    marginBottom: 0,
-    borderColor: '#000', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께를 1로 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-  },
-  dayTextContainer: {
-    width: 30, // Adjust these values as per your design
-    height: 30, // Adjust these values as per your design
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#d094ea', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께를 1로 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-  },
-  dayText: {
-    fontSize: 10,
-    fontWeight: 'normal',
+    flexWrap: 'wrap',
     color: 'black',
-  },
-  disabledDayText: {
-    color: 'lightgray',
-  },
-  currentDate: {
-    color: 'white',
+    marginLeft: 16,
     fontWeight: 'bold',
-    backgroundColor: 'purple', // 테두리 색상 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5,
+    fontSize: 16,
   },
-
-  modalContainer: {
-    flex: 1,
+  emptyItem: {
+    paddingLeft: 20,
+    height: 52,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgrey',
   },
-  modalContent: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    width: '80%',
-    maxHeight: '80%', // 추가된 속성
-    maxWidth: '90%',
+  emptyItemText: {
+    color: 'grey',
+    fontSize: 14,
+    alignSelf: 'center',
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    maxHeight: '80%',
-    maxWidth: '90%', // 추가된 속성
-  },
-  modalItem: {
-    fontSize: 15,
-    marginBottom: 10,
-  },
-  modalButton: {
-    backgroundColor: '#007AFF',
+  todayButton: {
     padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
+    height: 45,
+    width: 100,
+    backgroundColor: '#e85a19d6',
   },
-  modalButtonText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-
-  additionalModalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  additionalModalContent: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    width: '80%',
-    maxHeight: '80%', // 추가된 속성
-    maxWidth: '90%',
-    alignItems: 'center', // 버튼들을 수직 중앙 정렬
-  },
-  
-  additionalModalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    maxHeight: '80%',
-    maxWidth: '90%', // 추가된 속성
-  },
-  additionalModalItem: {
-    fontSize: 15,
-    marginBottom: 10,
-  },
-  additionalModalButton: {
-    backgroundColor: '#007AFF',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  additionalModalButtonText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-  inputContainer: {
-    borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 5,
-    backgroundColor: '#fafafa',
-    alignItems: 'center',
-    padding: 5,
-    width: 290, // 원하는 너비 설정
-    height: 50,
-  },
-  inputTitleContainer: {
-    height: 60, // 적절한 높이로 설정
-    // 추가적인 스타일 속성들
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
 });
