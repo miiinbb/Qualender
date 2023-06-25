@@ -1,55 +1,58 @@
-import React from "react";
-import { View, Text, Button, StyleSheet, Alert } from "react-native";
-import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
-import { createStackNavigator } from "@react-navigation/stack";
+//Mypage.js
 
-const Stack = createStackNavigator();
+function MyPage ({ onLogin, onBack, onSignup }) {
 
-function Memberout({ navigation }) {
-  const goToMain = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          { name: 'MainCalendar' },
-        ],
-      })
-    );
-  }
 
-  const goAlert = () =>
-    Alert.alert( //여기서 'ㅎㅎㅎ'지우면 확인 누를 시 어플이 종료됩니다..
-      "정말로 탈퇴하실 것입니까?", "제발", [
-        {
-          text: "취소",
-          onPress: () => console.log('Cancel Pressed'),
-          style: "cancel",
-        },
-        { text: "확인",
-          onPress: () => console.log("이메일 변경 완료")},
-      ],
-      { cancelable: false }
-    );
 
   return (
-    <View>
-      <Text>탈퇴하지 마세용....</Text>
-      <View style={styles.buttonContainer}>
-        <Button title="뒤로" onPress={() => navigation.goBack()} />
-        <Button title="확인" onPress={goAlert} />
-      </View>
-      <Button
-        title="메인캘린더로 돌아가기"
-        onPress={() => goToMain()}
-      />
-    </View>
+    <View style={styles.outerContainer}>
+      {/* 아이디 버튼 */}
+      <View style={styles.iconID}>
+        <Icon name="github" size={40} color="purple" style={styles.icon} />
+        <TouchableOpacity onPress={() => console.log('ID Pressed')}>
+          <Text style={styles.idText}>아이디</Text>
+        </TouchableOpacity>
+      </View> </View>
+
   );
-}
+};
+
+//화면 크기에 비례로 디자인 적용하기 위해 실행
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: "row",
+  outerContainer: { //하늘색 부분
+    flex: 1,
+    height: height,
+    width: width,
+    justifyContent: 'center',
+    //alignItems: 'center',
+    borderColor: '#5bd1d7', // 테두리 색상 설정
+    borderWidth: 2, // 테두리 두께 설정
+    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
+    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
+
+  iconID: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    borderColor: '#9eeb47',
+    borderWidth: 2,
+    marginTop: 1,
+    marginBottom: 10, // 아이디 박스와 다른 버튼 간의 간격 조정
+  },
+  icon: {
+    marginRight: 10, // 아이콘과 텍스트 사이 간격을 조정
+  },
+  idText: {
+    fontSize: 20,
+    textAlign: 'left',
+    alignItems: 'center'
+  },
+  
 });
 
-export default Memberout;
+export default MyPage;

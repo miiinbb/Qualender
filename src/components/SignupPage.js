@@ -11,10 +11,6 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
 
-  const handleBack = () => {
-    navigation.goBack();
-  };
-
   const handleSignup = () => {
     console.log('회원가입 버튼이 클릭되었습니다.');
     console.log('Username:', username);
@@ -42,7 +38,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
 
     try {
       // Send the registration request to the server
-      const response = await fetch('http://localhost:3000/register', {
+      const response = await fetch('http://143.248.253.51:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,55 +76,37 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
   };
 
-  const checkUsernameAvailability = async () => {
+  const checkNameAvailability = async () => {
+    console.log('checkname is called');
     try {
-      const response = await fetch(`http://localhost:3000/check-username?username=${username}`, {
-        method: 'GET',
+      const response = await fetch('http://143.248.253.51:3000/name', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          nickname: nickname,
+        }),
       });
-
+      console.log(response);
       if (response.ok) {
         const { available } = await response.json();
         if (available) {
-          Alert.alert('성공', '사용하실 수 있는 ID입니다');
+          Alert.alert('성공', '사용하실 수 있는 이름입니다');
         } else {
-          Alert.alert('오류', '사용하실 수 없는 ID입니다');
+          Alert.alert('오류', '다른 사용자가 이미 사용중인 이름입니다');
         }
       } else {
-        Alert.alert('오류', '아이디 확인 중 오류가 발생했습니다.');
+        Alert.alert('오류', '확인 중 오류가 발생했습니다.');
       }
     } catch (error) {
-      Alert.alert('오류', '아이디 확인 중 오류가 발생했습니다.');
-    }
-  };
-
-  const checkNicknameAvailability = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/check-nickname?nickname=${nickname}`, {
-        method: 'GET',
-      });
-
-      if (response.ok) {
-        const { available } = await response.json();
-        if (available) {
-          Alert.alert('성공', '사용하실 수 있는 닉네임입니다');
-        } else {
-          Alert.alert('오류', '사용하실 수 없는 닉네임입니다');
-        }
-      } else {
-        Alert.alert('오류', '닉네임 확인 중 오류가 발생했습니다.');
-      }
-    } catch (error) {
-      Alert.alert('오류', '닉네임 확인 중 오류가 발생했습니다.');
+      Alert.alert('오류', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도하세요.');
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Back button */}
-      <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
-
       <Text style={styles.title}>회원가입</Text>
 
       <View style={styles.inputContainer}>
@@ -141,7 +119,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             style={styles.input}
             placeholder="아이디를 입력하세요"
           />
-          <TouchableOpacity style={styles.smallButton} onPress={checkUsernameAvailability}>
+          <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
             <Text style={styles.smallButtonText}>중복 확인</Text>
           </TouchableOpacity>
         </View>
@@ -184,7 +162,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             style={styles.input}
             placeholder="닉네임을 입력하세요"
           />
-          <TouchableOpacity style={styles.smallButton} onPress={checkNicknameAvailability}>
+          <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
             <Text style={styles.smallButtonText}>중복 확인</Text>
           </TouchableOpacity>
         </View>
@@ -220,12 +198,6 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingTop: 80,
   },
-  backButton: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    zIndex: 1,
-  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -238,6 +210,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
+    fontWeight: 'bold',
     marginBottom: 5,
     padding: 5,
   },
@@ -282,7 +255,6 @@ const styles = StyleSheet.create({
   },
   smallButtonText: {
     color: 'white',
-    fontWeight: 'bold',
     fontSize: 12,
   },
 });
