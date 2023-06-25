@@ -87,12 +87,12 @@ function MyPage ({ onLogin, onBack, onSignup }) {
 
       {/* 회원정보변경 메뉴 버튼 */}
       <View style={styles.memberInfoManagement}>
-        <Button title="회원정보 변경" onPress={clickMemberInfoChange} />
+        <Button title="회원정보 변경" color='black' onPress={clickMemberInfoChange} />
       </View> 
 
       <View style={styles.backToMain}>
         <Button
-          title="메인캘린더로 돌아가기"
+          title="메인캘린더로 돌아가기" color='black'
           onPress={() => goToMain()}
         />
       </View> 
@@ -110,22 +110,20 @@ const styles = StyleSheet.create({
     width: width,
     justifyContent: 'center',
     //alignItems: 'center',
-    borderColor: '#5bd1d7', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
+    // borderColor: '#5bd1d7', // 테두리 색상 설정
+    // borderWidth: 2, // 테두리 두께 설정
+    // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
+    // padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
 
-  iconID: {
+  iconID: { //아이콘과 아이디가 들어있는 부분분
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
+    marginVertical: 20,
+    marginHorizontal: 15,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    borderColor: '#9eeb47',
-    borderWidth: 2,
-    marginTop: 1,
-    marginBottom: 10, // 아이디 박스와 다른 버튼 간의 간격 조정
   },
   icon: {
     marginRight: 10, // 아이콘과 텍스트 사이 간격을 조정
@@ -140,10 +138,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     height: height*0.2,
-    borderRadius: 5,
-    borderColor: '#FFDAB9', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
+    // borderRadius: 5,
+    // borderColor: '#FFDAB9', // 테두리 색상 설정
+    // borderWidth: 2, // 테두리 두께 설정
+    // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
     marginBottom: 10,
   },
 
@@ -184,24 +182,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   memberInfoManagement: { //'회원정보변경'버튼
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    backgroundColor: '#F0FFF0',
-    marginBottom: 10,
+    marginTop: 20,
+    paddingVertical:5,
   },
 
   memberInfoManagementText: {
-    color: '#000000', //검은색으로 바꿈
+    color: 'black', //검은색으로 바꿈
     fontSize: 16,
     fontWeight: 'bold',
   },
 
   backToMain:{
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 5,
     borderRadius: 5,
-    backgroundColor: '#FDEDEC',
     marginBottom: 300,
   }
   

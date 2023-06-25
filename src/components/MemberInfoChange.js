@@ -70,7 +70,7 @@ function MemberInfoChange() {
         </TouchableOpacity>
       </View>
       <Button
-        title="메인캘린더로 돌아가기"
+        title="메인캘린더로 돌아가기" color='black'
         onPress={() => goToMain()}
       />
     </View>
