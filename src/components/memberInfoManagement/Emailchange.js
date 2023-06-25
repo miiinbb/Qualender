@@ -3,12 +3,18 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, } from "react-native";
 import { Picker, } from "@react-native-picker/picker";
 import DropDownPicker from 'react-native-dropdown-picker';
+import {useForm, Controller} from 'react-hook-form';
 
 function Emailchange({ navigation }) {
   const [newEmail, setNewEmail] = useState("");
-  const [selectedDomain, setSelectedDomain] = useState("");
+  const { handleSubmit, control } = useForm();
   const [open, setOpen] = useState(false);
-  const [eventTitle, setEventTitle] = useState({}); // 일정 제목 상태 변수 추가
+  const [value, setValue] = useState({});
+  const [domain, setDomain] = useState([
+    { label: "naver.com", value: "@naver.com" },
+    { label: "gmail.com", value: "@gmail.com" },
+    { label: "daum.net", value: "@daum.net" },
+  ]);
 
   const goAlert = () =>
     Alert.alert( //여기서 'ㅎㅎㅎ'지우면 확인 누를 시 어플이 종료됩니다..
@@ -37,24 +43,34 @@ function Emailchange({ navigation }) {
           secureTextEntry={true}
         />
         <Text style={[styles.atSymbol,{ fontSize: 20 }]}>@</Text>
-        <DropDownPicker
-          open={open}
-          value={eventTitle}
-          items={[
-            { label: "naver.com", value: "@naver.com" },
-            { label: "gmail.com", value: "@gmail.com" },
-            { label: "daum.net", value: "@daum.net" },
-          ]}
-          setOpen={setOpen}
-          placeholder="도메인 선택"
-          value={selectedDomain}
-          containerStyle={styles.dropbox} //dropdown 컨테이너 모양
-          style={styles.dropbox} //main input field 모양
-          itemStyle={styles.dropboxItem} //dropdown list의 내용의 모양
-          dropDownStyle={styles.dropboxDropdown} //dropdown list가 열렸을 때의 모양
-          onChangeItem={(item) => setSelectedDomain(item.value)}
+        <Controller
+        name="domain"
+        defaultValue=""
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <View style={styles.dropdownDomain}>
+            <DropDownPicker
+              style={styles.dropbox} //main input field 모양
+              open={open}
+              value={value}
+              items={domain}
+              setOpen={setOpen}
+              setValue={onChange}
+              setItems={setDomain}
+              placeholder="도메인 선택"
+              placeholderStyle={styles.placeholderStyles}
+              // zIndex={3000}
+              // zIndexInverse={1000}
+              // containerStyle={styles.dropbox} //dropdown 컨테이너 모양
+              itemStyle={styles.dropboxItem} //dropdown list의 내용의 모양
+              dropDownStyle={styles.dropboxDropdown} //dropdown list가 열렸을 때의 모양
+              onChangeItem={(item) => setSelectedDomain(item.value)}
+            />
+          </View>
+        )}
         />
       </View>
+
       <View style={styles.buttonContainer}>
         <Button title="돌아가기" onPress={() => navigation.goBack()} />
         <Button title="확인" onPress={goAlert} />
@@ -93,6 +109,14 @@ const styles = StyleSheet.create({
   atSymbol: { //@ 텍스트
     marginBottom:10,
     alignSelf: "center",
+  },
+  placeholderStyles: {
+    color: "silver",
+  },
+  dropdownDomain: {
+    marginHorizontal: 10,
+    width: "50%",
+    marginBottom: 15,
   },
   dropbox: {
     width: "43%",

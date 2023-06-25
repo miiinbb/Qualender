@@ -27,6 +27,7 @@
     "react": "18.2.0",
     "react-datepicker": "^4.12.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.45.0",
     "react-native": "0.71.8",
     "react-native-add-calendar-event": "^4.2.0",
     "react-native-calendar-picker": "^7.1.4",
