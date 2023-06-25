@@ -12,7 +12,6 @@ import {
 } from '@react-navigation/drawer';
 import Animated from 'react-native-reanimated';
 import 'react-native-gesture-handler';
-
 import MyCalendar from './src/components/MyCalendar';
 import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page';
@@ -25,6 +24,18 @@ import Passwordchange from './src/components/memberInfoManagement/Passwordchange
 import Phonenumberchange from './src/components/memberInfoManagement/Phonenumberchange';
 import Emailchange from './src/components/memberInfoManagement/Emailchange';
 import Memberout from './src/components/memberInfoManagement/Memberout';
+import Toeic from './src/components/Certificatelist/Toeic';
+import ToeicSpeaking from './src/components/Certificatelist/ToeicSpeaking';
+import adsp from './src/components/Certificatelist/adsp';
+import cos from './src/components/Certificatelist/cos';
+import cospro from './src/components/Certificatelist/cospro';
+import credit from './src/components/Certificatelist/credit';
+import derived from './src/components/Certificatelist/derived';
+import fund from './src/components/Certificatelist/fund';
+import lifeinsurance from './src/components/Certificatelist/lifeinsurance';
+import nonlifeinsurance from './src/components/Certificatelist/nonlifeinsurance';
+import sqld from './src/components/Certificatelist/sqld';
+import thirdinsurance from './src/components/Certificatelist/thirdinsurance';
 
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
@@ -33,7 +44,7 @@ const Stack = createStackNavigator();
 //기능명은 main, js명은 my
 function MainCalendar() {  
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -20 }}>
       <MyCalendar />
     </View>
   );
@@ -100,7 +111,10 @@ const Drawer = createDrawerNavigator();
 function MyDrawer() {
   return (
     <Drawer.Navigator
+      initialRouteName='메인캘린더'
       useLegacyImplementation
+      //drawer 오른쪽 방향으로 바꾸는 코드..이지만 실행하면 뭔가 충돌나서 일단 멈춤
+      //screenOptions={{drawerPosition: 'right'}}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
@@ -116,17 +130,6 @@ function MyDrawer() {
       />
       <Drawer.Screen name="마이캘린더" component={PersonalCalendar1} />
       <Drawer.Screen name="마이페이지" component={MyPage1} />
-      {/* <Drawer.Screen name="LoginPage" component={LoginPage1}
-        options={{ 
-          headerShown: true,
-          headerTitle: '로그인 페이지',
-          headerTitleStyle: {
-          fontWeight: 'bold',
-          },
-          drawerLabel: () => null,
-          activeTintColor: 'transparent',
-          inactiveTintColor: 'transparent',
-           }} /> */}
     </Drawer.Navigator>
   );
 }
@@ -136,15 +139,27 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
         <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
-        <Stack.Screen name="LoginPage" component={LoginPage1} />
-        <Stack.Screen name="SignupPage" component={SignupPage} />
-        <Stack.Screen name="ObtainedList" component={ObtainedList} />
-        <Stack.Screen name="Favorites" component={Favorites} />
-        <Stack.Screen name="MemberInfoChange" component={MemberInfoChange} />
-        <Stack.Screen name="Passwordchange" component={Passwordchange} />
-        <Stack.Screen name="Phonenumberchange" component={Phonenumberchange} />
-        <Stack.Screen name="Emailchange" component={Emailchange} />
-        <Stack.Screen name="Memberout" component={Memberout} />
+        <Stack.Screen name="MainCalendar" component={MyDrawer} options={{headerShown: false, title:'뒤로'}}/>
+        <Stack.Screen name="LoginPage" component={LoginPage1} options={{title:'로그인'}}/>
+        <Stack.Screen name="SignupPage" component={SignupPage} options={{title:'회원가입'}}/>
+        <Stack.Screen name="ObtainedList" component={ObtainedList} options={{title:'취득한 자격증'}}/>
+        <Stack.Screen name="Favorites" component={Favorites} options={{title:'즐겨찾기'}}/>
+        <Stack.Screen name="MemberInfoChange" component={MemberInfoChange} options={{title:'회원정보 변경'}}/>
+        <Stack.Screen name="Passwordchange" component={Passwordchange} options={{title:'비밀번호 변경'}}/>
+        <Stack.Screen name="Phonenumberchange" component={Phonenumberchange} options={{title:'연락처 변경'}}/>
+        <Stack.Screen name="Emailchange" component={Emailchange} options={{title:'이메일 변경'}}/>
+        <Stack.Screen name="Toeic" component={Toeic} options={{title:'토익'}}/>
+        <Stack.Screen name="ToeicSpeaking" component={ToeicSpeaking} options={{title:'토익 스피킹'}}/>
+        <Stack.Screen name="adsp" component={ToeicSpeaking} options={{title:'데이터분석준전문가(ADsP)'}}/>
+        <Stack.Screen name="cos" component={ToeicSpeaking} options={{title:'COS'}}/>
+        <Stack.Screen name="cospro" component={ToeicSpeaking} options={{title:'COS PRO'}}/>
+        <Stack.Screen name="credit" component={ToeicSpeaking} options={{title:'신용분석사'}}/>
+        <Stack.Screen name="derived" component={ToeicSpeaking} options={{title:'파생상품투자권유자문인력'}}/>
+        <Stack.Screen name="fund" component={ToeicSpeaking} options={{title:'펀드투자권유자문인력'}}/>
+        <Stack.Screen name="lifeinsurance" component={ToeicSpeaking} options={{title:'생명보험대리점'}}/>
+        <Stack.Screen name="nonlifeinsurance" component={ToeicSpeaking} options={{title:'손해보험대리점'}}/>
+        <Stack.Screen name="sqld" component={ToeicSpeaking} options={{title:'SQLD'}}/>
+        <Stack.Screen name="thirdinsurance" component={ToeicSpeaking} options={{title:'제3보험'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

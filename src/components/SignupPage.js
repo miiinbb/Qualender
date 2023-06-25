@@ -1,12 +1,12 @@
 //SignupPage.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
+import { View, TextInput, Button, Alert, TouchableOpacity, Text, Dimensions, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [password2, setPassword2] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -16,45 +16,139 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   };
 
   const handleSignup = () => {
-    // 회원가입 버튼이 클릭되었을 때 실행되는 로직을 작성합니다.
     console.log('회원가입 버튼이 클릭되었습니다.');
     console.log('Username:', username);
     console.log('Password:', password);
     console.log('PhoneNumber:', phoneNumber);
     console.log('Nickname:', nickname);
     console.log('Email:', email);
-    onSignup();
+    registerUser();
+  };
+
+  const registerUser = async () => {
+    console.log('registerUser is called');
+
+    if (password !== confirmPassword) {
+      console.log('Password and confirm password do not match');
+      Alert.alert('Error', '비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    if (!username || !password || !confirmPassword || !phoneNumber || !nickname || !email) {
+      console.log('Missing input fields');
+      Alert.alert('Error', 'Please fill in all the required fields');
+      return;
+    }
+
+    try {
+      // Send the registration request to the server
+      const response = await fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          phoneNumber: phoneNumber,
+          nickname: nickname,
+          email: email,
+        }),
+      });
+
+      if (response.ok) {
+        Alert.alert('성공', '회원가입에 성공하셨습니다!', [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Clear input fields and navigate to the main calendar screen
+              setUsername('');
+              setPassword('');
+              setConfirmPassword('');
+              setPhoneNumber('');
+              setNickname('');
+              setEmail('');
+              navigation.navigate('MainCalendar');
+            },
+          },
+        ]);
+      } else {
+        Alert.alert('오류', '회원가입에 실패하셨습니다');
+      }
+    } catch (error) {
+      Alert.alert('오류', '회원가입에 실패하셨습니다');
+    }
+  };
+
+  const checkUsernameAvailability = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/check-username?username=${username}`, {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        const { available } = await response.json();
+        if (available) {
+          Alert.alert('성공', '사용하실 수 있는 ID입니다');
+        } else {
+          Alert.alert('오류', '사용하실 수 없는 ID입니다');
+        }
+      } else {
+        Alert.alert('오류', '아이디 확인 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      Alert.alert('오류', '아이디 확인 중 오류가 발생했습니다.');
+    }
+  };
+
+  const checkNicknameAvailability = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/check-nickname?nickname=${nickname}`, {
+        method: 'GET',
+      });
+
+      if (response.ok) {
+        const { available } = await response.json();
+        if (available) {
+          Alert.alert('성공', '사용하실 수 있는 닉네임입니다');
+        } else {
+          Alert.alert('오류', '사용하실 수 없는 닉네임입니다');
+        }
+      } else {
+        Alert.alert('오류', '닉네임 확인 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      Alert.alert('오류', '닉네임 확인 중 오류가 발생했습니다.');
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* 뒤로가기 버튼 */}
+      {/* Back button */}
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
-      {/* 제목 */}
       <Text style={styles.title}>회원가입</Text>
 
       <View style={styles.inputContainer}>
-      {/* 아이디 입력 */}
-        <Text style={styles.label}>아이디</Text>
+      {/* Username input */}
+      <Text style={styles.label}>아이디</Text>
         <View style={styles.inputWithButton}>
           <TextInput
             value={username}
-            onChangeText={text => setUsername(text)}
+            onChangeText={(text) => setUsername(text)}
             style={styles.input}
             placeholder="아이디를 입력하세요"
           />
-          <TouchableOpacity style={styles.smallButton}>
-          <Text style={styles.smallButtonText}>중복 확인</Text>
+          <TouchableOpacity style={styles.smallButton} onPress={checkUsernameAvailability}>
+            <Text style={styles.smallButtonText}>중복 확인</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.inputContainer}>
-      {/* 비밀번호 입력 */}
-      <Text style={styles.label}>비밀번호</Text>
+        <Text style={styles.label}>비밀번호</Text>
         <TextInput
           value={password}
           onChangeText={text => setPassword(text)}
@@ -63,8 +157,8 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
           secureTextEntry={true}
         />
         <TextInput
-          value={password2}
-          onChangeText={text => setPassword2(text)}
+          value={confirmPassword}
+          onChangeText={text => setConfirmPassword(text)}
           style={styles.input}
           placeholder="비밀번호를 다시 입력하세요"
           secureTextEntry={true}
@@ -72,7 +166,6 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
       </View>
 
       <View style={styles.inputContainer}>
-      {/* 연락처 입력 */}
         <Text style={styles.label}>연락처</Text>
         <TextInput
           value={phoneNumber}
@@ -83,23 +176,21 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
       </View>
 
       <View style={styles.inputContainer}>
-      {/* 닉네임 입력 */}
         <Text style={styles.label}>닉네임</Text>
         <View style={styles.inputWithButton}>
-        <TextInput
-          value={nickname}
-          onChangeText={text => setNickname(text)}
-          style={styles.input}
-          placeholder="닉네임을 입력하세요"
-        />
-        <TouchableOpacity style={styles.smallButton}>
-          <Text style={styles.smallButtonText}>중복 확인</Text>
+          <TextInput
+            value={nickname}
+            onChangeText={text => setNickname(text)}
+            style={styles.input}
+            placeholder="닉네임을 입력하세요"
+          />
+          <TouchableOpacity style={styles.smallButton} onPress={checkNicknameAvailability}>
+            <Text style={styles.smallButtonText}>중복 확인</Text>
           </TouchableOpacity>
-      </View>
+        </View>
       </View>
 
       <View style={styles.inputContainer}>
-      {/* 이메일 입력 */}
         <Text style={styles.label}>이메일</Text>
         <TextInput
           value={email}
@@ -108,7 +199,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
           placeholder="이메일을 입력하세요"
         />
       </View>
-      {/* 회원가입 확인 버튼 */}
+
       <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
         <Text style={styles.signupButtonText}>회원가입</Text>
       </TouchableOpacity>
@@ -126,43 +217,28 @@ const styles = StyleSheet.create({
     bottom: screenWidth * 0.05,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#5bd1d7',
-    borderWidth: 2,
-    borderRadius: 5,
     padding: 5,
-    paddingTop: 80,  // 제목, 뒤로가기 버튼과 ID 입력창 사이에 여백을 추가했습니다.
+    paddingTop: 80,
   },
   backButton: {
     position: 'absolute',
     top: 20,
     left: 20,
     zIndex: 1,
-    borderColor: '#f0bf4c',
-    borderWidth: 2,
-    borderRadius: 5,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    borderColor: '#c6beee',
-    borderWidth: 2,
-    borderRadius: 5,
     padding: 5,
   },
   inputContainer: {
     marginBottom: 20,
-    borderColor: '#eb94cf',
-    borderWidth: 2,
-    borderRadius: 3,
     padding: 5,
   },
   label: {
     fontSize: 16,
     marginBottom: 5,
-    borderColor: 'red',
-    borderWidth: 2,
-    borderRadius: 5,
     padding: 5,
   },
   input: {
@@ -178,9 +254,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    borderColor: '#110746',
-    borderWidth: 2,
-    borderRadius: 5,
     padding: 5,
   },
   signupButtonText: {
@@ -191,7 +264,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: 250,  // ID 입력창과 다른 입력창들의 너비를 동일하게 했습니다.
+    width: 250,
   },
   button: {
     paddingHorizontal: 15,
@@ -201,14 +274,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   smallButton: {
-    paddingHorizontal: 6,  // Reduced padding
-    paddingVertical: 5,   // Reduced padding
-    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 6,
+    paddingVertical: 5,
+    backgroundColor: '#008080',
     marginLeft: 5,
     borderRadius: 5,
   },
   smallButtonText: {
-    fontSize: 12,  // Reduced font size
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 12,
   },
 });
 

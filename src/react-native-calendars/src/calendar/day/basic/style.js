@@ -10,7 +10,7 @@ export default function styleConstructor(theme = {}) {
         },
         base: {
             width: 32,
-            height: 80,
+            height: 40,
             alignItems: 'center'
         },
         text: {

@@ -1,4 +1,4 @@
-//Mypage.js
+//MemberInfoChange.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
@@ -27,11 +27,6 @@ function MemberInfoChange() {
   
   return (
     <View>
-      <Text>회원정보변경!</Text>
-      <Button
-        title="Go to Login"
-        onPress={() => navigation.navigate('LoginPage')}
-      />
       {/* 비밀번호 변경 버튼 */}
       <TouchableOpacity
         style={[styles.memberInfoManagement, { backgroundColor: 'lightgrey' }]}
@@ -63,6 +58,10 @@ function MemberInfoChange() {
       >
         <Text style={styles.memberInfoManagementText}>회원 탈퇴</Text>
       </TouchableOpacity>
+      <Button
+        title="메인캘린더로 돌아가기"
+        onPress={() => navigation.navigate('MainCalendar')}
+      />
     </View>
   );
 }

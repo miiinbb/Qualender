@@ -1,6 +1,6 @@
 //Login_page.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
@@ -13,8 +13,33 @@ function LoginPage ({ onLogin, onBack, }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    navigation.navigate('MyCalendar');
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        }),
+      });
+
+      if (response.ok) {
+        // 로그인 성공 시 처리할 로직
+        console.log('로그인 성공');
+        navigation.navigate('MyCalendar');
+      } else {
+        // 로그인 실패 시 처리할 로직
+        console.log('로그인 실패');
+        Alert.alert('로그인 실패', '유효한 아이디와 비밀번호를 입력하세요.');
+      }
+    } catch (error) {
+      // 로그인 실패 시 처리할 로직
+      console.log('로그인 실패:', error);
+      Alert.alert('로그인 실패', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도하세요.');
+    }
   };
 
   const clickSignup = () => {
@@ -90,43 +115,24 @@ const styles = StyleSheet.create({
     bottom: screenWidth*0.05,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#5bd1d7', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
   backButton: {
     position: 'absolute',
     top: 20,
     left: 20,
     zIndex: 1,
-    borderColor: '#f0bf4c', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
   },
   title: {//'로그인'이라고 적혀있는 부분
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    borderColor: '#c6beee', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
   inputContainer: {////아이디, 비밀번호 글자부분 + 입력 부분 각각(분홍색 부분)
     marginBottom: 20,
-    borderColor: '#eb94cf', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
   label: { //'아이디''비밀번호'라고 적혀있는 부분분
     fontSize: 16,
     marginBottom: 5,
-    borderColor: 'red', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
   input: { //아이디, 비밀번호 입력하는 부분만
     borderWidth: 1,
@@ -140,11 +146,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#007AFF',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
-    borderColor: '#9eeb47', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
   loginButtonText: { //하단 '로그인', '카톡로그인' 텍스트 같이
     color: '#fff',
@@ -156,11 +157,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#007AFF',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
-    borderColor: '#ADD8E6', // 블루로 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
   kakaologinButtonText: { //하단 '카톡로그인' 텍스트 같이
       color: '#000000', //검은색으로 바꿈 
@@ -172,11 +168,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgrey',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
-    borderColor: '#110746', // 테두리 색상 설정
-    borderWidth: 2, // 테두리 두께 설정
-    borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
 
   signupButtonText: {
