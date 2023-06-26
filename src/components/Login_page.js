@@ -58,6 +58,7 @@ function LoginPage ({ onLogin, onBack, }) {
 
 
   return (
+    <View style={styles.pageContainer}>
     <View style={styles.container}>
       {/* 제목 */}
       <Text style={styles.title}>로그인</Text>
@@ -86,19 +87,20 @@ function LoginPage ({ onLogin, onBack, }) {
       </View>
 
       {/* 로그인 버튼 */}
-      <View style={styles.loginButton}>
-        <Button title="로그인" onPress={handleLogin}/>
+      <View style={[styles.loginButton, {marginTop: 20}]}>
+        <Button title="로그인" onPress={handleLogin} color="white"/>
       </View>
 
-      {/* 카카오톡으로 로그인하기 버튼 */}
+      {/* 카카오톡으로 로그인하기 버튼
       <TouchableOpacity style={[styles.kakaologinButton, { backgroundColor: 'yellow' }]}>
         <Text style={styles.kakaologinButtonText}>카카오톡으로 로그인하기</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* 회원가입하기 버튼 */}
-      <View style={styles.signupButton}>
-        <Button title="회원가입하기" onPress={clickSignup} />
+      <View style={[styles.signupButton, {marginTop: 10}]}>
+        <Button title="회원가입하기" onPress={clickSignup} color="white"/>
       </View>
+    </View>
     </View>
   );
 };
@@ -108,13 +110,18 @@ const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: -30,
+  },
   container: { //하늘색 부분
     flex: 1,
-    //position: 'absolute',
-    top: screenHeight*0.05,
-    bottom: screenWidth*0.05,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 90,
+    backgroundColor: 'white',
   },
   backButton: {
     position: 'absolute',
@@ -124,7 +131,7 @@ const styles = StyleSheet.create({
   },
   title: {//'로그인'이라고 적혀있는 부분
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     marginBottom: 20,
   },
   inputContainer: {////아이디, 비밀번호 글자부분 + 입력 부분 각각(분홍색 부분)
@@ -139,40 +146,45 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     paddingVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 5,
     width: 250,
   },
   loginButton: { //하단 '로그인', '카톡로그인'버튼 같이
-    backgroundColor: '#007AFF',
-    paddingVertical: 10,
+    backgroundColor: '#17375E',
+    paddingVertical: 1,
     paddingHorizontal: 20,
+    padding: 5,
+    width: 250,
+    alignItems: "center",
   },
   loginButtonText: { //하단 '로그인', '카톡로그인' 텍스트 같이
-    color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    color: 'white',
+    fontWeight: 'normal',
   },
 
-  kakaologinButton: { //하단 '카톡로그인'버튼 
-    backgroundColor: '#007AFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  kakaologinButtonText: { //하단 '카톡로그인' 텍스트 같이
-      color: '#000000', //검은색으로 바꿈 
-      fontSize: 16,
-      fontWeight: 'bold',
-  },
+  // kakaologinButton: { //하단 '카톡로그인'버튼 
+  //   backgroundColor: '#007AFF',
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 20,
+  // },
+  // kakaologinButtonText: { //하단 '카톡로그인' 텍스트 같이
+  //     color: '#000000', //검은색으로 바꿈 
+  //     fontSize: 16,
+  //     fontWeight: 'bold',
+  // },
   
-  signupButton: { //'회원가입'버튼
-    backgroundColor: 'lightgrey',
-    paddingVertical: 10,
+  signupButton: {
+    backgroundColor: '#17375E',
+    paddingVertical: 1,
     paddingHorizontal: 20,
+    padding: 5,
+    width: 250,
+    alignItems: "center",
   },
-
   signupButtonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    color: 'white',
+    fontWeight: 'normal',
   },
   
 });

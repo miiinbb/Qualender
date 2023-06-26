@@ -120,6 +120,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   };
 
   return (
+    <View style={styles.pageContainer}>
     <View style={styles.container}>
       <Text style={styles.title}>회원가입</Text>
 
@@ -129,7 +130,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
           <TextInput
             value={username}
             onChangeText={(text) => setUsername(text)}
-            style={styles.input}
+            style={styles.inputidandnickname}
             placeholder="아이디를 입력하세요"
           />
           <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
@@ -144,7 +145,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
           <TextInput
             value={nickname}
             onChangeText={text => setNickname(text)}
-            style={styles.input}
+            style={styles.inputidandnickname}
             placeholder="닉네임을 입력하세요"
           />
           <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
@@ -165,7 +166,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
         <TextInput
           value={confirmPassword}
           onChangeText={text => setConfirmPassword(text)}
-          style={styles.input}
+          style={[styles.input, {marginTop: 10}]}
           placeholder="비밀번호를 다시 입력하세요"
           secureTextEntry={true}
         />
@@ -191,9 +192,10 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
         />
       </View>
 
-      <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
+      <TouchableOpacity style={[styles.signupButton, {marginTop: 10}]} onPress={handleSignup}>
         <Text style={styles.signupButtonText}>회원가입</Text>
       </TouchableOpacity>
+    </View>
     </View>
   );
 };
@@ -202,18 +204,22 @@ const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
+  pageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: -30,
+  },
   container: {
-    position: 'absolute',
-    top: screenHeight * 0.05,
-    bottom: screenWidth * 0.05,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 5,
-    paddingTop: 80,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 90,
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     marginBottom: 20,
     padding: 5,
   },
@@ -223,7 +229,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     marginBottom: 5,
     padding: 5,
   },
@@ -232,19 +238,27 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     paddingVertical: 8,
     paddingHorizontal: 12,
-    borderRadius: 5,
     width: 250,
   },
+  inputidandnickname: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    width: 180,    
+  },
   signupButton: {
-    backgroundColor: '#9eeb47',
+    backgroundColor: '#17375E',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
     padding: 5,
+    width: 250,
+    alignItems: "center",
   },
   signupButtonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    color: 'white',
+    fontWeight: 'normal',
   },
   inputWithButton: {
     flexDirection: 'row',
@@ -257,14 +271,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: '#f0f0f0',
     marginLeft: 10,
-    borderRadius: 5,
   },
   smallButton: {
-    paddingHorizontal: 6,
-    paddingVertical: 5,
-    backgroundColor: '#008080',
+    paddingHorizontal: 12,
+    paddingVertical: 9.5,
+    backgroundColor: '#17375E',
     marginLeft: 5,
-    borderRadius: 5,
   },
   smallButtonText: {
     color: 'white',
