@@ -37,7 +37,7 @@ function MemberInfoChange() {
   
   return (
 
-      <View style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.outerBox}>
         {/* 비밀번호 변경 버튼 */}
         <TouchableOpacity
@@ -102,30 +102,28 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: "center",
     alignItems: "center",
-    padding: 90,
     backgroundColor: 'white',
+    height: height,
   },
 
   outerBox: { //변경 버튼 4개 들어있는 박스
     height: height*0.25,
-    marginTop: -70,
-    marginBottom: 450,
-    marginLeft: -200,
+    marginTop: height*0.01,
+    marginBottom: height*0.5,
+    width:"100%",
     flexDirection: 'column',
     justifyContent: 'space-evenly',
   },
 
-  memberInfoManagement: { //'회원가입'버튼
+  memberInfoManagement: { //각 변경 버튼
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
 
   memberInfoManagementText: {
-  color: '#000000', //검은색으로 바꿈
+    color: '#000000', //검은색으로 바꿈
     fontSize: 20,
-    // fontWeight: 'bold',
-    // textDecorationLine: 'underline',
   },
   
   gotomainButton: {

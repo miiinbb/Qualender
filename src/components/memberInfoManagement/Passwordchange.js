@@ -33,9 +33,10 @@ function Passwordchange({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.passwordtext}></View>
-      <Text style={[styles.title, {marginBottom: 0, textAlign:'left', marginLeft: -220}]}>앞으로 사용하실</Text>
-      <Text style={[styles.title, {textAlign: 'left', marginLeft: -113}]}>새로운 비밀번호를 입력해주세요</Text>
+      <View style={{marginBottom: 20, marginRight: width*0.25,}}>
+        <Text style={styles.title}>앞으로 사용하실</Text>
+        <Text style={styles.title}>새로운 비밀번호를 입력해주세요</Text>
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -69,11 +70,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: height * 0.5,
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 17,
-    marginBottom: 40,
-    // borderWidth:1,
+    textAlign:'left',
   },
   inputContainer: {
     width: "80%",

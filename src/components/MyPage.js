@@ -12,8 +12,6 @@ const Stack = createStackNavigator();
 
 function MyPage ({ onLogin, onBack, onSignup }) {
   const navigation = useNavigation();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
 
   const goToMain = () => {
@@ -58,7 +56,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
 
   return (
     <View style={styles.outerContainer}>
-      {/* 아이디 버튼 */}
+      {/*닉네임 버튼 */}
       <View style={styles.iconID}>
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
@@ -86,7 +84,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       </View>
 
       {/* 회원정보변경 메뉴 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement, {marginTop: 320}]} onPress={clickMemberInfoChange}>
+      <TouchableOpacity style={[styles.memberInfoManagement]} onPress={clickMemberInfoChange}>
         <Text style={styles.gotomainButtonText}>회원정보 변경</Text>
       </TouchableOpacity>
       
@@ -140,11 +138,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     height: height*0.2,
-    // borderRadius: 5,
-    // borderColor: '#FFDAB9', // 테두리 색상 설정
-    // borderWidth: 2, // 테두리 두께 설정
-    // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    marginBottom: 10,
+    marginBottom: height*0.33,
   },
 
   favorites:{//즐겨찾기 메뉴 버튼
@@ -154,10 +148,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'mistyrose',
     borderWidth: 2,
     borderColor: '#17375E',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    // marginRight: width*0.1,
-    // borderRadius: 5,
   },
   favText:{//즐겨찾기텍스트
     fontSize: 23,
@@ -175,9 +165,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'mintcream',
     borderWidth: 2,
     borderColor: '#17375E',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    // borderRadius: 5,
   },
   obtText:{//취득한 텍스트
     fontSize: 23,

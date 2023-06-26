@@ -35,7 +35,7 @@ function Emailchange() {
 
   return (
     <View style={styles.container}>
-      <View style={{marginBottom: 20, marginRight: width*0.3,}}>
+      <View style={{marginBottom: 20, marginRight: width*0.25,}}>
         <Text style={styles.title}>이메일 변경을 위해</Text>
         <Text style={styles.title}>새로운 이메일 주소를 입력해주세요</Text>
       </View>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   title: {
-    fontSize: 15,
+    fontSize: 17,
     textAlign:'left',
   },
   inputContainer: {
