@@ -7,14 +7,17 @@ import {useForm, Controller} from 'react-hook-form';
 
 function Emailchange() {
   const [newEmail, setNewEmail] = useState("");
+  const [onlyDomain, setOnlyDomain] = useState("");
   const { handleSubmit, control } = useForm();
   const [open, setOpen] = useState(false);
   const [domain, setDomain] = useState([
-    { label: "naver.com", value: "@naver.com" },
-    { label: "gmail.com", value: "@gmail.com" },
-    { label: "daum.net", value: "@daum.net" },
+    { label: "naver.com", value: "naver.com" },
+    { label: "gmail.com", value: "gmail.com" },
+    { label: "daum.net", value: "daum.net" },
     { label: "직접 입력", value: " " },
   ]);
+  const [selectedDomain, setSelectedDomain] = useState('');
+
 
   const goAlert = () =>
     Alert.alert( //여기서 ""지우면 확인 누를 시 어플이 종료됩니다..
@@ -32,9 +35,9 @@ function Emailchange() {
 
   return (
     <View style={styles.container}>
-      <View style={{flex:1, marginBottom:10, paddingHorizontal: 10,}}>
-      <Text style={styles.title}>이메일 변경을 위해</Text>
-      <Text style={styles.title}>새로운 이메일 주소를 입력해주세요</Text>
+      <View style={{marginBottom: 20, marginRight: width*0.3,}}>
+        <Text style={styles.title}>이메일 변경을 위해</Text>
+        <Text style={styles.title}>새로운 이메일 주소를 입력해주세요</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -43,16 +46,14 @@ function Emailchange() {
           placeholderTextColor="silver"
           value={newEmail}
           onChangeText={(text) => setNewEmail(text)}
-          secureTextEntry={true}
         />
         <Text style={[styles.atSymbol,{ fontSize: 20 }]}>@</Text>
         <TextInput
           style={styles.input}
           placeholder="도메인 주소"
           placeholderTextColor="silver"
-          value={newEmail}
-          onChangeText={(text) => setNewEmail(text)}
-          secureTextEntry={true}
+          value={selectedDomain !== '' ? selectedDomain : onlyDomain} // 드롭다운 선택 라벨 또는 직접 입력한 도메인 값을 표시합니다.
+          onChangeText={(text) => setNewEmail(text.split('@')[0])}
         />
       </View>
       <Controller
@@ -67,16 +68,20 @@ function Emailchange() {
               value={value}
               items={domain}
               setOpen={setOpen}
-              setValue={onChange}
+              setValue={(value) => {
+                setSelectedDomain(value);
+                setOnlyDomain(domain.find((item) => item.value === value)?.label || ""); // 선택한 라벨을 저장합니다.
+                onChange(value);
+              }}
               setItems={setDomain}
               placeholder="도메인 선택"
               placeholderStyle={styles.placeholderStyles}
-              // zIndex={3000}
-              // zIndexInverse={1000}
               containerStyle={styles.dropbox} //dropdown 컨테이너 모양
               itemStyle={styles.dropboxItem} //dropdown list의 내용의 모양
               dropDownStyle={styles.dropboxDropdown} //dropdown list가 열렸을 때의 모양
-              onChangeItem={(item) => setSelectedDomain(item.value)}
+              onChangeItem={(item) => {
+                setSelectedDomain(item.value);
+              }}
             />
           </View>
         )}
@@ -101,7 +106,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   title: {
-    fontSize: 15,
+    fontSize: 17,
+    textAlign:'left',
   },
   inputContainer: {
     flexDirection: 'row',

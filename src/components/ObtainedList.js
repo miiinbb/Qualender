@@ -74,6 +74,9 @@ function ObtainedList({ navigation }) {
           </TouchableOpacity>
         ))}
       </View>
+      <TouchableOpacity style={[styles.saveButton, {marginTop: 10}]} onPress={''}>
+        <Text style={styles.saveButtonText}>저장</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -108,6 +111,19 @@ const styles = StyleSheet.create({
   },
   unselectedBoxText: {
     color: "white",
+  },
+  saveButton: {
+    backgroundColor: '#17375E',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: 100,
+    alignItems: "center",
+  },
+  saveButtonText: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 'normal',
   },
 });
 

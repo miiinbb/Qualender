@@ -1,6 +1,6 @@
 //App.js
-import * as React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 import {
@@ -135,6 +135,24 @@ function MyDrawer() {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    // 초기화 작업 수행
+    // 예: 데이터 불러오기, 네트워크 요청 등
+
+    // 초기화 작업이 완료되면 로딩 상태 변경
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={styles.text}>로딩 중...</Text>
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
@@ -170,5 +188,13 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingHorizontal: 16,
     paddingTop: 16,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    marginTop: 10,
   },
 });
