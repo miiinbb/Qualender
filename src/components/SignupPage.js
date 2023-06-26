@@ -121,7 +121,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             const userInfoString = await AsyncStorage.getItem('userInfo');
             if (userInfoString) {
               const userInfo = JSON.parse(userInfoString);
-              console.log('사용자 정보:', result.userInfo);
+              console.log('사용자 정보:', userInfo);
               // 여기서 userInfo를 활용하여 필요한 작업을 수행합니다.
             } else {
               console.log('저장된 사용자 정보 없음');

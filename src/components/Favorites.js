@@ -6,8 +6,32 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
-function ObtainedList({ navigation }) {
+function Favorites({ navigation }) {
   const [selectedBoxes, setSelectedBoxes] = useState([]);
+
+  const handleSave = async () => {
+    // const username = '제발요'; // 실제 사용자명 값으로 변경
+    const data = { username, selectedBoxes };
+  
+    try {
+      const response = await fetch('http://192.168.0.29:3000/saveBoxes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message);
+      } else {
+        console.error('Network response was not ok.');
+      }
+    } catch (error) {
+      console.error('Error occurred while making the request:', error);
+    }
+  };
 
   const handleBoxPress = (name) => {
     const isSelected = selectedBoxes.includes(name);
@@ -78,6 +102,9 @@ function ObtainedList({ navigation }) {
           <Text style={styles.saveButtonText}>저장</Text>
         </TouchableOpacity> 
       </View>
+      <TouchableOpacity style={[styles.saveButton, {marginTop: 10}]} onPress={handleSave}>
+        <Text style={styles.saveButtonText}>저장</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -131,4 +158,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ObtainedList;
+export default Favorites;

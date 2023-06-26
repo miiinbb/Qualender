@@ -77,6 +77,9 @@ function ObtainedList({ navigation }) {
           <Text style={styles.saveButtonText}>저장</Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity style={[styles.saveButton, {marginTop: 10}]} onPress={''}>
+        <Text style={styles.saveButtonText}>저장</Text>
+      </TouchableOpacity>
     </View>
   );
 }

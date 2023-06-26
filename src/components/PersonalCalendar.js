@@ -254,7 +254,7 @@ export default function MyCalendar(props) {
       style={{
       marginTop: 0,}}
       todayButtonStyle={styles.todayButton}
-      todayBottomMargin={16}>
+      todayBottomMargin={10}>
       {props.weekView ? (
         <WeekCalendar firstDay={1} markedDates={getMarkedDates()} />
       ) : (

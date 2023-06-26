@@ -29,7 +29,6 @@ function LoginPage ({ onLogin, onBack}) {
     }
   }, [route.params]);
 
-
   const handleLogin = async () => {
     try {
       const response = await fetch('http://192.168.0.29:3000/login', {
@@ -55,14 +54,14 @@ function LoginPage ({ onLogin, onBack}) {
             if (username && password && email && phoneNumber && nickname) {
               // AsyncStorage를 사용하여 사용자 정보 저장
               try {
-                const userData = {
+                const userInfo = {
                   username: username,
                   password: password,
                   email: email,
                   phoneNumber: phoneNumber,
                   nickname: nickname
                 };
-                await AsyncStorage.setItem('userData', JSON.stringify(userData));
+                await AsyncStorage.setItem('userInfo', JSON.stringify(result.userInfo));
               } catch (error) {
                 console.log('사용자 정보 저장 실패:', error);
               }
