@@ -56,13 +56,15 @@ function Memberout({ navigation }) {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Button title="돌아가기" onPress={() => navigation.goBack()} />
-        <Button title="탈퇴하기" onPress={goAlert} />
+        {/* <Button title="돌아가기" onPress={() => navigation.goBack()} /> */}
+        <Button title="탈퇴하기" onPress={goAlert} color="silver" />
       </View>
-      <Button
-        title="메인캘린더로 돌아가기"
-        onPress={() => goToMain()}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          title="메인캘린더로 돌아가기" color="white"
+          onPress={() => goToMain()}
+        />
+      </View>
     </View>
   );
 }
@@ -74,6 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: height * 0.45,
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 20,
@@ -93,7 +96,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   buttonContainer: {
-    flexDirection: "row",
+    // flexDirection: "row",
+    backgroundColor: '#17375E',
+    paddingVertical: 3,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: "80%",
+    alignItems: "center",
     marginBottom: 10,
   },
 });
