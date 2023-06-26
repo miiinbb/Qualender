@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, TouchableOpacity, Text, Dimensions, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {useForm, Controller} from 'react-hook-form';
 
 const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [username, setUsername] = useState('');
@@ -11,6 +13,16 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [isUsernameValid, setIsUsernameValid] = useState(false);
+  const { handleSubmit, control } = useForm();
+  const [open, setOpen] = useState(false);
+  const [domain, setDomain] = useState([
+    { label: "naver.com", value: "naver.com" },
+    { label: "gmail.com", value: "gmail.com" },
+    { label: "daum.net", value: "daum.net" },
+    { label: "직접 입력", value: " " },
+  ]);
+  const [onlyDomain, setOnlyDomain] = useState("");
+  const [selectedDomain, setSelectedDomain] = useState('');
 
   const handleSignup = () => {
     registerUser();
@@ -111,11 +123,12 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   };
 
   return (
-    <View style={styles.pageContainer}>
     <View style={styles.container}>
-      <Text style={styles.title}>회원가입</Text>
-
       <View style={styles.inputContainer}>
+        <View style={{marginBottom: 20, marginRight: width*0.3,}}>
+          <Text style={styles.title}>회원가입을 위해</Text>
+          <Text style={styles.title}>아래 항목들을 채워주세요</Text>
+        </View>
       <Text style={styles.label}>아이디</Text>
         <View style={styles.inputWithButton}>
           <TextInput
@@ -123,6 +136,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             onChangeText={(text) => setUsername(text)}
             style={styles.inputidandnickname}
             placeholder="아이디를 입력하세요"
+            placeholderTextColor="silver"
           />
           <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
             <Text style={styles.smallButtonText}>중복 확인</Text>
@@ -138,6 +152,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             onChangeText={text => setNickname(text)}
             style={styles.inputidandnickname}
             placeholder="닉네임을 입력하세요"
+            placeholderTextColor="silver"
           />
           <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
             <Text style={styles.smallButtonText}>중복 확인</Text>
@@ -151,14 +166,16 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
           value={password}
           onChangeText={handlePasswordChange}
           style={styles.input}
-          placeholder="비밀번호를 입력하세요"
+          placeholder="새로운 비밀번호"
+          placeholderTextColor="silver"
           secureTextEntry={true}
         />
         <TextInput
           value={confirmPassword}
           onChangeText={text => setConfirmPassword(text)}
           style={[styles.input, {marginTop: 10}]}
-          placeholder="비밀번호를 다시 입력하세요"
+          placeholder="비밀번호 확인"
+          placeholderTextColor="silver"
           secureTextEntry={true}
         />
       </View>
@@ -169,17 +186,57 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
           value={phoneNumber}
           onChangeText={text => setPhoneNumber(text)}
           style={styles.input}
-          placeholder="연락처를 입력하세요"
+          placeholder="형식: 01012341234, 숫자만 입력"
+          placeholderTextColor="silver"
         />
       </View>
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>이메일</Text>
-        <TextInput
-          value={email}
-          onChangeText={text => setEmail(text)}
-          style={styles.input}
-          placeholder="이메일을 입력하세요"
+        <View style={styles.emailInputContainer}>
+          <TextInput
+            value={email}
+            onChangeText={text => setEmail(text)}
+            style={styles.emailInput}
+            placeholder="이메일을 입력하세요"
+            placeholderTextColor="silver"
+          />
+          <Text style={[styles.atSymbol,{ fontSize: 20 }]}>@</Text>
+          <TextInput
+            style={styles.emailInput}
+            placeholder="도메인 주소"
+            placeholderTextColor="silver"
+            value={selectedDomain !== '' ? selectedDomain : onlyDomain} // 드롭다운 선택 라벨 또는 직접 입력한 도메인 값을 표시합니다.
+            onChangeText={(text) => setNewEmail(text.split('@')[0])}
+          />
+        </View>
+        <Controller
+          name="domain"
+          defaultValue=""
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <View style={{alignSelf: 'center',}}>
+              <DropDownPicker
+                style={styles.dropbox} //main input field 모양(dropdown컨테이너 모양)
+                open={open}
+                value={value}
+                items={domain}
+                setOpen={setOpen}
+                setValue={(value) => {
+                  setSelectedDomain(value);
+                  setOnlyDomain(domain.find((item) => item.value === value)?.label || ""); // 선택한 라벨을 저장합니다.
+                  onChange(value);
+                }}
+                setItems={setDomain}
+                placeholder="도메인 선택"
+                placeholderStyle={styles.placeholderStyles}
+                containerStyle={{ width: '100%'}}
+                onChangeItem={(item) => {
+                  setSelectedDomain(item.value);
+                }}
+              />
+            </View>
+          )}
         />
       </View>
 
@@ -187,56 +244,94 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
         <Text style={styles.signupButtonText}>회원가입</Text>
       </TouchableOpacity>
     </View>
-    </View>
   );
 };
 
-const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
-  pageContainer: {
+  container: { //이 화면 자체 영역
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: -30,
+    // padding: 90,
+    paddingVertical:30,
+    backgroundColor:'white',
   },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 90,
-    backgroundColor: 'white',
-  },
-  title: {
-    fontSize: 24,
+  title: { //맨 위 '회원가입을 위해~' 부분
     fontWeight: 'normal',
-    marginBottom: 20,
-    padding: 5,
+    padding: 2,
+    fontSize: 15,
+    color: '#17375E',
   },
-  inputContainer: {
+  inputContainer: { //각 항목 lable, input박스를 포함하는 영역
     marginBottom: 20,
-    padding: 5,
+    width: width*0.8,
+    // backgroundColor: 'azure', 
   },
-  label: {
+  label: { //아이디, 닉네임, 비밀번호, 연락처, 이메일이라고 적힌 부분
     fontSize: 16,
     fontWeight: 'normal',
     marginBottom: 5,
     padding: 5,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    width: 250,
+  inputWithButton: { //input박스와 중복확인을 포함하는 영역
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // backgroundColor: 'chartreuse', 
   },
-  inputidandnickname: {
+  inputidandnickname: { //아이디, 닉네임 input 박스 영역
+    borderWidth: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    width: "70%", 
+    // backgroundColor: 'cadetblue', 
+  },
+  smallButton: { //중복확인 버튼
+    paddingHorizontal: 12,
+    paddingVertical: 9.5,
+    backgroundColor: '#17375E',
+    marginLeft: 5,
+  },
+  smallButtonText: {
+    color: 'white',
+    fontSize: 12,
+  },
+  input: { //비밀번호, 연락처 input 박스 영역
     borderWidth: 1,
     borderColor: 'gray',
     paddingVertical: 8,
     paddingHorizontal: 12,
-    width: 180,    
+    // backgroundColor: 'burlywood', 
+  },
+  emailInputContainer:{ //이메일을 입력하세요, @, 도메인주소를 포함하는 영역
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginBottom: "3%",
+    // backgroundColor: 'blueviolet', 
+  },
+  emailInput:{ //이메일 input부분에서 input 박스 두 개 영역
+    width: "46%",
+    borderWidth: 1,
+    borderColor: "gray",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    // backgroundColor: 'bisque', 
+  },
+  atSymbol: { //@ 텍스트
+    marginBottom:"1.5%",
+    alignSelf: "center",
+  },
+  dropbox: { //'도메인 선택' 칸
+    borderRadius: 0,
+    alignItems: "center",
+    width: "100%",
+    // height: 10,
+  },  
+  placeholderStyles: { //'도메인 선택' 텍스트
+    color: "silver",
+    paddingHorizontal: 12,
   },
   signupButton: {
     backgroundColor: '#17375E',
@@ -250,28 +345,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     fontWeight: 'normal',
-  },
-  inputWithButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: 250,
-  },
-  button: {
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    backgroundColor: '#f0f0f0',
-    marginLeft: 10,
-  },
-  smallButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 9.5,
-    backgroundColor: '#17375E',
-    marginLeft: 5,
-  },
-  smallButtonText: {
-    color: 'white',
-    fontSize: 12,
   },
 });
 

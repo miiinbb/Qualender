@@ -71,6 +71,7 @@ function LoginPage ({ onLogin, onBack, }) {
           onChangeText={text => setUsername(text)}
           style={styles.input}
           placeholder="아이디를 입력하세요"
+          placeholderTextColor="silver"
         />
       </View>
 
@@ -82,6 +83,7 @@ function LoginPage ({ onLogin, onBack, }) {
           onChangeText={text => setPassword(text)}
           style={styles.input}
           placeholder="비밀번호를 입력하세요"
+          placeholderTextColor="silver"
           secureTextEntry={true}
         />
       </View>
