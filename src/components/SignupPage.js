@@ -1,9 +1,11 @@
 //SignupPage.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, TouchableOpacity, Text, Dimensions, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Alert, TouchableOpacity, Text, Dimensions, StyleSheet, ScrollView  } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {useForm, Controller} from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
 
 const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [username, setUsername] = useState('');
@@ -24,10 +26,51 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [onlyDomain, setOnlyDomain] = useState("");
   const [selectedDomain, setSelectedDomain] = useState('');
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     registerUser();
+
+    const userInfo = {
+      username: username,
+      password: password,
+      email: email,
+      phoneNumber: phoneNumber,
+      nickname: nickname,
+    };
+
+    // 사용자 정보를 AsyncStorage에 저장
+    try {
+      await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+      console.log('사용자 정보 저장 성공');
+    } catch (error) {
+      console.log('사용자 정보 저장 실패:', error);
+    }
+
+    loadUserInfo(); // 수정된 부분
+
+    navigation.navigate('LoginPage', { // params를 객체로 전달
+      username: username,
+      password: password,
+      email: email,
+      phoneNumber: phoneNumber,
+      nickname: nickname,
+    });
   };
 
+  const loadUserInfo = async () => {
+    try {
+      const userInfoString = await AsyncStorage.getItem('userInfo');
+      if (userInfoString) {
+        const userInfo = JSON.parse(userInfoString);
+        console.log('불러온 사용자 정보:', userInfo);
+        // 여기서 userInfo를 활용하여 필요한 작업을 수행합니다.
+      } else {
+        console.log('저장된 사용자 정보 없음');
+      }
+    } catch (error) {
+      console.log('사용자 정보 불러오기 실패:', error);
+    }
+  };
+  
   const registerUser = async () => {
     if (password !== confirmPassword) {
       console.log('Password and confirm password do not match');
@@ -42,7 +85,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
 
     try {
-      const response = await fetch('http://143.248.253.49:3000/register', {
+      const response = await fetch('http://192.168.0.29:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,10 +111,26 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
               setPhoneNumber('');
               setNickname('');
               setEmail('');
-              navigation.navigate('MyCalendar');
+              navigation.navigate('LoginPage');
             },
           },
         ]);
+        
+        const loadUserInfo = async () => {
+          try {
+            const userInfoString = await AsyncStorage.getItem('userInfo');
+            if (userInfoString) {
+              const userInfo = JSON.parse(userInfoString);
+              console.log('사용자 정보:', result.userInfo);
+              // 여기서 userInfo를 활용하여 필요한 작업을 수행합니다.
+            } else {
+              console.log('저장된 사용자 정보 없음');
+            }
+          } catch (error) {
+            console.log('사용자 정보 불러오기 실패:', error);
+          }
+        };
+        loadUserInfo();
       } else {
         Alert.alert('오류', '회원가입에 실패하셨습니다');
       }
@@ -83,7 +142,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const checkNameAvailability = async () => {
     console.log('checkname is called');
     try {
-      const response = await fetch('http://143.248.253.49:3000/name', {
+      const response = await fetch('http://192.168.0.29:3000/name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,7 +182,8 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView>
+      <View style={styles.container}>
       <View style={styles.inputContainer}>
         <View style={{marginBottom: 20, marginRight: width*0.3,}}>
           <Text style={styles.title}>회원가입을 위해</Text>
@@ -244,9 +304,9 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
         <Text style={styles.signupButtonText}>회원가입</Text>
       </TouchableOpacity>
     </View>
+    </ScrollView>
   );
 };
-
 
 const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -255,7 +315,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     // padding: 90,
-    paddingVertical:30,
+    paddingVertical:50,
     backgroundColor:'white',
   },
   title: { //맨 위 '회원가입을 위해~' 부분
