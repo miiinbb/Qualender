@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, } from 'react-native';
 import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 function MemberInfoChange() {
   const navigation = useNavigation();
@@ -35,14 +36,18 @@ function MemberInfoChange() {
     };
   
   return (
-    <View >
+
+      <View style={styles.container}>
       <View style={styles.outerBox}>
         {/* 비밀번호 변경 버튼 */}
         <TouchableOpacity
           style={[styles.memberInfoManagement,]}
           onPress={handlePasswordchange}
         >
-          <Text style={styles.memberInfoManagementText}>- 비밀번호 변경</Text>
+        <View style={styles.memberInfoManagementContainer}>
+          <Icon name="lock" size={23} color="black" />
+          <Text style={[styles.memberInfoManagementText, { marginLeft: 20 }]}>비밀번호 변경</Text>
+        </View>
         </TouchableOpacity>
 
         {/* 연락처 변경 버튼 */}
@@ -50,7 +55,10 @@ function MemberInfoChange() {
           style={[styles.memberInfoManagement,]}
           onPress={handlePhonenumberchange}
         >
-          <Text style={styles.memberInfoManagementText}>- 연락처 변경</Text>
+        <View style={styles.memberInfoManagementContainer}>
+          <Icon name="phone" size={23} color="black" />
+          <Text style={[styles.memberInfoManagementText, { marginLeft: 20 }]}>연락처 변경</Text>
+        </View>
         </TouchableOpacity>
 
         {/* 이메일 변경 버튼 */}
@@ -58,7 +66,10 @@ function MemberInfoChange() {
           style={[styles.memberInfoManagement,]}
           onPress={handleEmailchange}
         >
-          <Text style={styles.memberInfoManagementText}>- 이메일 변경</Text>
+        <View style={styles.memberInfoManagementContainer}>
+          <Icon name="envelope" size={23} color="black" />
+          <Text style={[styles.memberInfoManagementText, { marginLeft: 20 }]}>이메일 변경</Text>
+        </View>
         </TouchableOpacity>
 
         {/* 회원 탈퇴 버튼 */}
@@ -66,27 +77,42 @@ function MemberInfoChange() {
           style={[styles.memberInfoManagement,]}
           onPress={handleMemberout}
         >
-          <Text style={styles.memberInfoManagementText}>- 회원 탈퇴</Text>
+        <View style={styles.memberInfoManagementContainer}>
+          <Icon name="user-circle" size={23} color="black" />
+          <Text style={[styles.memberInfoManagementText, { marginLeft: 20 }]}>회원 탈퇴</Text>
+        </View>
         </TouchableOpacity>
       </View>
-      <Button
-        title="메인캘린더로 돌아가기" color='black'
-        onPress={() => goToMain()}
-      />
+      <TouchableOpacity style={[styles.gotomainButton, {marginTop: 10}]} onPress={goToMain}>
+        <Text style={styles.gotomainButtonText}>메인캘린더로 돌아가기</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
+
+
 const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
+  memberInfoManagementContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  container: {
+    flex: 1,
+    // justifyContent: "center",
+    alignItems: "center",
+    padding: 90,
+    backgroundColor: 'white',
+  },
+
   outerBox: { //변경 버튼 4개 들어있는 박스
     height: height*0.25,
-    marginTop: 20,
-    marginBottom: 30,
-    marginLeft: 5,
+    marginTop: -70,
+    marginBottom: 450,
+    marginLeft: -200,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    borderRadius: 5,
   },
 
   memberInfoManagement: { //'회원가입'버튼
@@ -97,11 +123,26 @@ const styles = StyleSheet.create({
 
   memberInfoManagementText: {
   color: '#000000', //검은색으로 바꿈
-    fontSize: 17,
-    fontWeight: 'bold',
+    fontSize: 20,
+    // fontWeight: 'bold',
     // textDecorationLine: 'underline',
   },
-    
+  
+  gotomainButton: {
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: width*0.9,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  gotomainButtonText: {
+    fontSize: 17,
+    color: 'white',
+    fontWeight: 'normal',
+  },
+
   });
 
 export default MemberInfoChange;

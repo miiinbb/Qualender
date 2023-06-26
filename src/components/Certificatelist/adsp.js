@@ -68,20 +68,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonContainer: {
-    marginTop: 20,
-    width: windowWidth * 0.8,
-    alignSelf: "center",
-    backgroundColor: "#007AFF",
-    borderRadius: 10,
-    paddingVertical: 15,
-    marginBottom: 20,
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: windowWidth*0.9,
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
-    alignSelf: "center",
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 17,
+    color: 'white',
+    fontWeight: 'normal',
   },
+
   imageMargin: {
     height: -100,
   }
