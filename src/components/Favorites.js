@@ -1,13 +1,37 @@
 //Favorites.js
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions, } from "react-native";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
-function ObtainedList({ navigation }) {
+function Favorites({ navigation }) {
   const [selectedBoxes, setSelectedBoxes] = useState([]);
+
+  const handleSave = async () => {
+    // const username = '제발요'; // 실제 사용자명 값으로 변경
+    const data = { username, selectedBoxes };
+  
+    try {
+      const response = await fetch('http://192.168.0.29:3000/saveBoxes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message);
+      } else {
+        console.error('Network response was not ok.');
+      }
+    } catch (error) {
+      console.error('Error occurred while making the request:', error);
+    }
+  };
 
   const handleBoxPress = (name) => {
     const isSelected = selectedBoxes.includes(name);
@@ -52,8 +76,8 @@ function ObtainedList({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🐣 즐겨찾기한 자격증 🐣</Text>
       <View style={styles.boxContainer}>
+        <Text style={styles.title}>🐣 즐겨찾기한 자격증 🐣</Text>
         {boxNames.map((name, index) => (
           <TouchableOpacity
             key={index}
@@ -72,12 +96,17 @@ function ObtainedList({ navigation }) {
               {name}
             </Text>
           </TouchableOpacity>
+
         ))}
+        <TouchableOpacity style={[styles.saveButton, {marginTop: 10}]} onPress={''}>
+          <Text style={styles.saveButtonText}>저장</Text>
+        </TouchableOpacity> 
       </View>
     </View>
   );
 }
 
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -87,15 +116,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: height*0.02,
   },
   boxContainer: {
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: 'space-evenly',
   },
   box: {
-    width: 300,
-    height: 40,
+    width: width*0.84,
+    height: height*0.047,
     marginVertical: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -109,6 +139,20 @@ const styles = StyleSheet.create({
   unselectedBoxText: {
     color: "white",
   },
+  saveButton: {
+    backgroundColor: '#17375E',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: 100,
+    alignItems: "center",
+    marginBottom:height*0.02,
+  },
+  saveButtonText: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 'normal',
+  },
 });
 
-export default ObtainedList;
+export default Favorites;

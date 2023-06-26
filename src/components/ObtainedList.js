@@ -1,6 +1,6 @@
 //ObtainedList.js
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions, } from "react-native";
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -16,7 +16,7 @@ function ObtainedList({ navigation }) {
       setSelectedBoxes(selectedBoxes.filter((boxName) => boxName !== name));
     } else {
       // Add the box to selected boxes
-      setSelectedBoxes([...selectedBoxes, name]);
+      setSelectedBoxes([selectedBoxes, name]);
     }
   };
 
@@ -52,8 +52,8 @@ function ObtainedList({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>📚 자격증을 채워주세요 📚</Text>
       <View style={styles.boxContainer}>
+      <Text style={styles.title}>📚 자격증을 채워주세요 📚</Text>
         {boxNames.map((name, index) => (
           <TouchableOpacity
             key={index}
@@ -73,11 +73,15 @@ function ObtainedList({ navigation }) {
             </Text>
           </TouchableOpacity>
         ))}
+        <TouchableOpacity style={[styles.saveButton, {marginTop: 10}]} onPress={''}>
+          <Text style={styles.saveButtonText}>저장</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -87,15 +91,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: height*0.02,
   },
   boxContainer: {
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: 'space-evenly',
   },
   box: {
-    width: 300,
-    height: 40,
+    width: width*0.84,
+    height: height*0.047,
     marginVertical: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -108,6 +113,20 @@ const styles = StyleSheet.create({
   },
   unselectedBoxText: {
     color: "white",
+  },
+  saveButton: {
+    backgroundColor: '#17375E',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: 100,
+    alignItems: "center",
+    marginBottom:height*0.02,
+  },
+  saveButtonText: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 'normal',
   },
 });
 

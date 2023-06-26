@@ -1,21 +1,38 @@
 //Login_page.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import { useRoute, NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
-function LoginPage ({ onLogin, onBack, }) {
+function LoginPage ({ onLogin, onBack}) {
   const navigation = useNavigation();
+  const route = useRoute();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [nickname, setNickname] = useState('');
+
+  useEffect(() => {
+    if (route.params) {
+      const { username, password, email, phoneNumber, nickname } = route.params;
+      setUsername(username);
+      setPassword(password);
+      setEmail(email);
+      setPhoneNumber(phoneNumber);
+      setNickname(nickname);
+    }
+  }, [route.params]);
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch('http://192.168.0.29:3000/login', {
+        // http://143.248.253.49:3000/register
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,13 +44,41 @@ function LoginPage ({ onLogin, onBack, }) {
       });
 
       if (response.ok) {
-        // 로그인 성공 시 처리할 로직
-        console.log('로그인 성공');
-        navigation.navigate('MyCalendar');
+        const result = await response.json();
+        if (result.availableLogin) {
+          // 로그인 성공 시 처리할 로직
+          console.log('로그인 성공');
+          if (result.userInfo) {
+            console.log('사용자 정보:', result.userInfo);
+            const { username, password, email, phoneNumber, nickname } = result.userInfo;
+            if (username && password && email && phoneNumber && nickname) {
+              // AsyncStorage를 사용하여 사용자 정보 저장
+              try {
+                const userInfo = {
+                  username: username,
+                  password: password,
+                  email: email,
+                  phoneNumber: phoneNumber,
+                  nickname: nickname
+                };
+                await AsyncStorage.setItem('userInfo', JSON.stringify(result.userInfo));
+              } catch (error) {
+                console.log('사용자 정보 저장 실패:', error);
+              }
+            }
+          } else {
+            console.log('사용자 정보 없음');
+          }
+          navigation.navigate('MainCalendar');
+        } else {
+          // 로그인 실패 시 처리할 로직
+          console.log('로그인 실패');
+          Alert.alert('로그인 실패', '유효한 아이디와 비밀번호를 입력하세요.');
+        }
       } else {
-        // 로그인 실패 시 처리할 로직
+        // 서버에서 응답이 실패한 경우 처리할 로직
         console.log('로그인 실패');
-        Alert.alert('로그인 실패', '유효한 아이디와 비밀번호를 입력하세요.');
+        Alert.alert('로그인 실패', '네트워크 오류가 발생했습니다. 잠시 후 다시 시도하세요.');
       }
     } catch (error) {
       // 로그인 실패 시 처리할 로직
@@ -45,16 +90,6 @@ function LoginPage ({ onLogin, onBack, }) {
   const clickSignup = () => {
     navigation.navigate('SignupPage'); // 회원가입 페이지로 이동
   };
-
-  const handleKakaoLogin = async () => {
-    try {
-      const token = await KakaoLoginButton.login();
-      // 로그인 성공 시 처리할 로직
-      console.log('카카오톡으로 로그인 성공:', token.accessToken);
-    } catch (error) {
-      // 로그인 실패 시 처리할 로직
-      console.log('카카오톡 로그인 실패:', error);
-    }};
 
 
   return (
@@ -71,6 +106,7 @@ function LoginPage ({ onLogin, onBack, }) {
           onChangeText={text => setUsername(text)}
           style={styles.input}
           placeholder="아이디를 입력하세요"
+          placeholderTextColor="silver"
         />
       </View>
 
@@ -82,6 +118,7 @@ function LoginPage ({ onLogin, onBack, }) {
           onChangeText={text => setPassword(text)}
           style={styles.input}
           placeholder="비밀번호를 입력하세요"
+          placeholderTextColor="silver"
           secureTextEntry={true}
         />
       </View>
@@ -90,11 +127,6 @@ function LoginPage ({ onLogin, onBack, }) {
       <View style={[styles.loginButton, {marginTop: 20}]}>
         <Button title="로그인" onPress={handleLogin} color="white"/>
       </View>
-
-      {/* 카카오톡으로 로그인하기 버튼
-      <TouchableOpacity style={[styles.kakaologinButton, { backgroundColor: 'yellow' }]}>
-        <Text style={styles.kakaologinButtonText}>카카오톡으로 로그인하기</Text>
-      </TouchableOpacity> */}
 
       {/* 회원가입하기 버튼 */}
       <View style={[styles.signupButton, {marginTop: 10}]}>
@@ -162,17 +194,6 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
   },
 
-  // kakaologinButton: { //하단 '카톡로그인'버튼 
-  //   backgroundColor: '#007AFF',
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 20,
-  // },
-  // kakaologinButtonText: { //하단 '카톡로그인' 텍스트 같이
-  //     color: '#000000', //검은색으로 바꿈 
-  //     fontSize: 16,
-  //     fontWeight: 'bold',
-  // },
-  
   signupButton: {
     backgroundColor: '#17375E',
     paddingVertical: 1,

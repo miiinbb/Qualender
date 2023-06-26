@@ -12,8 +12,6 @@ const Stack = createStackNavigator();
 
 function MyPage ({ onLogin, onBack, onSignup }) {
   const navigation = useNavigation();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
 
   const goToMain = () => {
@@ -58,20 +56,20 @@ function MyPage ({ onLogin, onBack, onSignup }) {
 
   return (
     <View style={styles.outerContainer}>
-      {/* 아이디 버튼 */}
+      {/*닉네임 버튼 */}
       <View style={styles.iconID}>
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
-          <Text style={styles.idText}>팀퀄린더_아이디</Text>
+          <Text style={styles.idText}>깔깔마녀(닉네임)</Text>
         </TouchableOpacity>
       </View> 
       <View style={styles.innerContainer}>
         {/* 즐겨찾기 메뉴 버튼 */}
-        <View style={styles.favorites}>
+        <View style={[styles.favorites, {marginRight: 10}]}>
           <TouchableOpacity onPress={() => {clickFavorites(); console.log('Favorites Pressed');}}>
             <Text style={styles.favText}>즐겨찾기</Text>
             <Text/><Text/>
-            <Text style={styles.favNum}>⭐️  3개</Text>
+            <Text style={[styles.favNum, {textDecorationLine: 'underline'}]}>⭐️ 3개</Text>
           </TouchableOpacity>
         </View>  
 
@@ -80,22 +78,19 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           <TouchableOpacity onPress={() => {clickObtained(); console.log('Obtained Pressed');}}>
             <Text style={styles.obtText}>취득한 자격증</Text>
             <Text/><Text/>
-            <Text style={styles.obtNum}>❤️  5개</Text>
+            <Text style={[styles.obtNum, {textDecorationLine: 'underline'}]}>❤️ 5개</Text>
           </TouchableOpacity>
         </View>        
       </View>
 
       {/* 회원정보변경 메뉴 버튼 */}
-      <View style={styles.memberInfoManagement}>
-        <Button title="회원정보 변경" color='black' onPress={clickMemberInfoChange} />
-      </View> 
-
-      <View style={styles.backToMain}>
-        <Button
-          title="메인캘린더로 돌아가기" color='black'
-          onPress={() => goToMain()}
-        />
-      </View> 
+      <TouchableOpacity style={[styles.memberInfoManagement]} onPress={clickMemberInfoChange}>
+        <Text style={styles.gotomainButtonText}>회원정보 변경</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={[styles.gotomainButton, {marginTop: 10}]} onPress={goToMain}>
+        <Text style={styles.gotomainButtonText}>메인캘린더로 돌아가기</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -109,7 +104,8 @@ const styles = StyleSheet.create({
     height: height,
     width: width,
     justifyContent: 'center',
-    //alignItems: 'center',
+    backgroundColor: 'white',
+    alignItems: 'center',
     // borderColor: '#5bd1d7', // 테두리 색상 설정
     // borderWidth: 2, // 테두리 두께 설정
     // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
@@ -119,11 +115,15 @@ const styles = StyleSheet.create({
   iconID: { //아이콘과 아이디가 들어있는 부분분
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
+    marginTop: -60,
     marginVertical: 20,
     marginHorizontal: 15,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    // borderRadius: 5,
+    borderWidth:1,
+    borderColor:'lightgray',
+    width: width*0.9,
   },
   icon: {
     marginRight: 10, // 아이콘과 텍스트 사이 간격을 조정
@@ -138,22 +138,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     height: height*0.2,
-    // borderRadius: 5,
-    // borderColor: '#FFDAB9', // 테두리 색상 설정
-    // borderWidth: 2, // 테두리 두께 설정
-    // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    marginBottom: 10,
+    marginBottom: height*0.33,
   },
 
   favorites:{//즐겨찾기 메뉴 버튼
     width: width*0.44,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    backgroundColor: '#c6beee',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    // marginRight: width*0.1,
-    borderRadius: 5,
+    backgroundColor: 'mistyrose',
+    borderWidth: 2,
+    borderColor: '#17375E',
   },
   favText:{//즐겨찾기텍스트
     fontSize: 23,
@@ -168,10 +162,9 @@ const styles = StyleSheet.create({
     width: width*0.44,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    backgroundColor: '#ADD8E6',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    backgroundColor: 'mintcream',
+    borderWidth: 2,
+    borderColor: '#17375E',
   },
   obtText:{//취득한 텍스트
     fontSize: 23,
@@ -181,22 +174,37 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: 'center',
   },
-  memberInfoManagement: { //'회원정보변경'버튼
-    marginTop: 20,
-    paddingVertical:5,
+  memberInfoManagement: { //'회원가입'버튼
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: width*0.9,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   memberInfoManagementText: {
-    color: 'black', //검은색으로 바꿈
-    fontSize: 16,
-    fontWeight: 'bold',
+  color: '#000000', //검은색으로 바꿈
+    fontSize: 20,
+    // fontWeight: 'bold',
+    // textDecorationLine: 'underline',
   },
-
-  backToMain:{
-    paddingVertical: 5,
-    borderRadius: 5,
-    marginBottom: 300,
-  }
+  
+  gotomainButton: {
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: width*0.9,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  gotomainButtonText: {
+    fontSize: 17,
+    color: 'white',
+    fontWeight: 'normal',
+  },
   
 });
 

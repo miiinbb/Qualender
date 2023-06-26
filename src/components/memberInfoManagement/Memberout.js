@@ -36,33 +36,30 @@ function Memberout({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>회원 탈퇴</Text>
+      <View style={{marginBottom: 20, marginRight: width*0.25,}}>
+        <Text style={styles.title}>회원 탈퇴를 위해</Text>
+        <Text style={styles.title}>기존 비밀번호를 입력해주세요</Text>
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={newPassword}
           onChangeText={(text) => setNewPassword(text)}
-          placeholder="기존 비밀번호"
+          placeholder="비밀번호를 입력하세요"
           placeholderTextColor="silver"
-          secureTextEntry={true}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="비밀번호 확인"
-          placeholderTextColor="silver"
-          value={confirmPassword}
-          onChangeText={(text) => setConfirmPassword(text)}
           secureTextEntry={true}
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Button title="돌아가기" onPress={() => navigation.goBack()} />
-        <Button title="탈퇴하기" onPress={goAlert} />
+        {/* <Button title="돌아가기" onPress={() => navigation.goBack()} /> */}
+        <Button title="탈퇴하기" onPress={goAlert} color="silver" />
       </View>
-      <Button
-        title="메인캘린더로 돌아가기"
-        onPress={() => goToMain()}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          title="메인캘린더로 돌아가기" color="white"
+          onPress={() => goToMain()}
+        />
+      </View>
     </View>
   );
 }
@@ -74,10 +71,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: height * 0.45,
+    backgroundColor: 'white',
   },
   title: {
-    fontSize: 20,
-    marginBottom: 20,
+    fontSize: 17,
+    textAlign:'left',
   },
   inputContainer: {
     width: "80%",
@@ -93,7 +91,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   buttonContainer: {
-    flexDirection: "row",
+    // flexDirection: "row",
+    backgroundColor: '#17375E',
+    paddingVertical: 3,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: "80%",
+    alignItems: "center",
     marginBottom: 10,
   },
 });
