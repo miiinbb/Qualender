@@ -1,6 +1,6 @@
 //Passwordchange.js
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, } from "react-native";
+import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, TouchableOpacity } from "react-native";
 
 function Passwordchange({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
@@ -33,7 +33,9 @@ function Passwordchange({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>비밀번호 변경</Text>
+      <View style={styles.passwordtext}></View>
+      <Text style={[styles.title, {marginBottom: 0, textAlign:'left', marginLeft: -220}]}>앞으로 사용하실</Text>
+      <Text style={[styles.title, {textAlign: 'left', marginLeft: -113}]}>새로운 비밀번호를 입력해주세요</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -52,10 +54,10 @@ function Passwordchange({ navigation }) {
           secureTextEntry={true}
         />
       </View>
-      <View style={styles.buttonContainer}>
-        <Button title="돌아가기" onPress={() => navigation.goBack()} />
-        <Button title="확인" onPress={goAlert} />
-      </View>
+        <TouchableOpacity style={[styles.buttonContainer, {marginTop: 10}]} onPress={goAlert}>
+          <Text style={styles.buttonContainerText}>확인</Text>
+        </TouchableOpacity>
+
     </View>
   );
 }
@@ -69,8 +71,9 @@ const styles = StyleSheet.create({
     paddingBottom: height * 0.5,
   },
   title: {
-    fontSize: 20,
-    marginBottom: 20,
+    fontSize: 17,
+    marginBottom: 40,
+    // borderWidth:1,
   },
   inputContainer: {
     width: "80%",
@@ -86,7 +89,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   buttonContainer: {
-    flexDirection: "row",
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: width*0.8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  buttonContainerText: {
+    fontSize: 17,
+    color: 'white',
+    fontWeight: 'normal',
   },
 });
 

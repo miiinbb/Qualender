@@ -13,18 +13,10 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [isUsernameValid, setIsUsernameValid] = useState(false);
 
   const handleSignup = () => {
-    console.log('회원가입 버튼이 클릭되었습니다.');
-    console.log('Username:', username);
-    console.log('Nickname:', nickname);
-    console.log('Password:', password);
-    console.log('PhoneNumber:', phoneNumber);
-    console.log('Email:', email);
     registerUser();
   };
 
   const registerUser = async () => {
-    console.log('registerUser is called');
-
     if (password !== confirmPassword) {
       console.log('Password and confirm password do not match');
       Alert.alert('오류', '비밀번호와 확인 비밀번호가 일치하지 않습니다.');
@@ -38,8 +30,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
 
     try {
-      // Send the registration request to the server
-      const response = await fetch('http://143.248.253.14:3000/register', {
+      const response = await fetch('http://143.248.253.49:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,10 +51,10 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             onPress: () => {
               // Clear input fields and navigate to the main calendar screen
               setUsername('');
-              setNickname('');
               setPassword('');
               setConfirmPassword('');
               setPhoneNumber('');
+              setNickname('');
               setEmail('');
               navigation.navigate('MyCalendar');
             },
@@ -80,7 +71,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const checkNameAvailability = async () => {
     console.log('checkname is called');
     try {
-      const response = await fetch('http://143.248.253.14:3000/name', {
+      const response = await fetch('http://143.248.253.49:3000/name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
