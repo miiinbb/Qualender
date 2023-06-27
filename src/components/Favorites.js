@@ -24,7 +24,7 @@ function Favorites() {
     const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
-      const response = await fetch('http://192.168.0.30:3000/saveBoxes', {
+      const response = await fetch('http://143.248.253.46:3000/saveBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

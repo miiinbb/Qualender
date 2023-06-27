@@ -10,7 +10,7 @@ import {
 import {add, sub, isSameMonth, eachDayOfInterval} from 'date-fns';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import ITEMS from './Items';
+import ITEMS from './Items2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEvent } from 'react-native-reanimated';
 
@@ -262,7 +262,7 @@ export default function MyCalendar(props) {
       const data = { username: username };
   
       try {
-        const response = await fetch('http://192.168.0.30:3000/personal', {
+        const response = await fetch('http://143.248.253.46:3000/personal', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
