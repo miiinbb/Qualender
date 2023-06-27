@@ -1,19 +1,37 @@
 //Mypage.js
-import React, { useState } from 'react';
+import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
 import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuthContext from './AuthContext';
 
 const Stack = createStackNavigator();
 
 function MyPage ({ onLogin, onBack, onSignup }) {
   const navigation = useNavigation();
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
+  const { user } = useContext(AuthContext);
+  const [username, setUsername] = useState('');
+  const userNickname = user ? user.nickname : '';
 
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        console.log("getData", value);
+        setUsername(value);
+        return value;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  console.log('유저 정보:', user);
   const goToMain = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -60,9 +78,10 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       <View style={styles.iconID}>
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
-          <Text style={styles.idText}>깔깔마녀(닉네임)</Text>
+          <Text style={styles.idText}>{`${userNickname}`}</Text>
         </TouchableOpacity>
       </View> 
+      {/* console.log(user) */}
       <View style={styles.innerContainer}>
         {/* 즐겨찾기 메뉴 버튼 */}
         <View style={[styles.favorites, {marginRight: 10}]}>
