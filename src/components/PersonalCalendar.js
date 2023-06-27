@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Platform, Dimensions, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {
   ExpandableCalendar,
@@ -11,6 +11,8 @@ import {add, sub, isSameMonth, eachDayOfInterval} from 'date-fns';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ITEMS from './Items';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEvent } from 'react-native-reanimated';
 
 const Stack = createStackNavigator();
 const today = new Date().toISOString().split('T')[0];
@@ -239,7 +241,55 @@ const onMonthChange = (/* month, updateSource */) => {
 };
 
 export default function MyCalendar(props) {
-  const [selectedIndex, updateIndex] = React.useState(0);
+  const [selectedIndex, updateIndex] = useState(0);
+  const [username, setUsername] = useState('');
+  const [calendarList, setCalendarlist] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('username');
+        if (value !== null) {
+          setUsername(value);
+          return value;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  
+    const getUserInfo = async () => {
+      const data = { username: username };
+  
+      try {
+        const response = await fetch('http://192.168.0.30:3000/personal', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.message);
+          const _item = ITEMS.map((data) => {
+            data.data = data.data.filter(e => result.data.includes(e.title));
+            return data;
+          })
+          .filter(data=>data.data.length != 0)
+          setCalendarlist(_item);
+        } else {
+          console.error('Network response was not ok.');
+        }
+      } catch (error) {
+        console.error('Error occurred while making the request:', error);
+      }
+    };
+
+    getData();
+    getUserInfo();
+  },[]);
 
   return (
     <CalendarProvider
@@ -272,15 +322,15 @@ export default function MyCalendar(props) {
           markedDates={getMarkedDates()} 
         />
       )}
+      <Text>{username}</Text>
       <AgendaList
-        sections={ITEMS}
-        extraData={selectedIndex}
+        sections={calendarList}
+        extraData={calendarList}
         renderItem={item => renderItem(item)}
       />
     </CalendarProvider>
   );
 }
-console.log(dates[0]);
 
 const styles = StyleSheet.create({
   calendar: {

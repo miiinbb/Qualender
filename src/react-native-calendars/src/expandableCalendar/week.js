@@ -33,7 +33,6 @@ const Week = React.memo((props) => {
     }else{
         dayProps.markingType = 'multi-dot';
     }
-    console.log("in week", dayProps.markingType, isOpen)
     const currXdate = useMemo(() => parseDate(current), [current]);
     const renderDay = (day, id) => {
         // hide extra days

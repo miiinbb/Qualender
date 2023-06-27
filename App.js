@@ -3,6 +3,7 @@ import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -51,8 +52,10 @@ const signIn = (userInfo) => {
   setUserNickname(userInfo.nickname); // Set the user's nickname
 };
 //기능명은 main, js명은 my
-function MainCalendar() {  
+function MainCalendar() {
+  const { user } = useContext(AuthContext);
   const [userNickname, setUserNickname] = useState('');
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -20 }}>
       <MyCalendar userNickname={userNickname}/>
@@ -107,12 +110,11 @@ function CustomDrawerContent(props) {
           {/* 헤더 부분 */}
           <View style={styles.headerContainer}>
           <Icon name="heart" size={24} color="pink" />
-            <TouchableOpacity onPress={handleLoginPress}>
-              <Text 
-                style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
-                  {userNickname ? `안녕하세요, ${userNickname}님` : '로그인을 해주세요.'}
-              </Text>
-            </TouchableOpacity>
+          <TouchableOpacity onPress={handleLoginPress}>
+            <Text style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
+              {userNickname ? `안녕하세요, ${userNickname}님` : '로그인을 해주세요.'}
+            </Text>
+          </TouchableOpacity>
           </View>
           <DrawerItemList {...props} />
       </Animated.View>
@@ -170,6 +172,7 @@ export default function App() {
     };
     getUserInfo();
   }, []);
+  console.log('유저 정보:', user);
   return (
     <AuthContext.Provider value={{ user, signIn }}>
     <NavigationContainer>

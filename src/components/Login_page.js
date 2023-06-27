@@ -29,6 +29,14 @@ function LoginPage ({ onLogin, onBack}) {
     }
   }, [route.params]);
 
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('username', value);
+    } catch (e) {
+      Alert.alert("failed to save username", e);
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const response = await fetch('http://192.168.0.30:3000/login', {
@@ -47,29 +55,30 @@ function LoginPage ({ onLogin, onBack}) {
         const result = await response.json();
         if (result.availableLogin) {
           // 로그인 성공 시 처리할 로직
-          console.log('로그인 성공');
-          if (result.userInfo) {
-            console.log('사용자 정보:', result.userInfo);
-            const { username, password, email, phoneNumber, nickname } = result.userInfo;
-            if (username && password && email && phoneNumber && nickname) {
-              // AsyncStorage를 사용하여 사용자 정보 저장
-              try {
-                const userInfo = {
-                  username: username,
-                  password: password,
-                  email: email,
-                  phoneNumber: phoneNumber,
-                  nickname: nickname
-                };
-                await AsyncStorage.setItem('userInfo', JSON.stringify(result.userInfo));
+          // console.log('로그인 성공');
+          // if (result.userInfo) {
+          //   console.log('사용자 정보:', result.userInfo);
+          //   const { username, password, email, phoneNumber, nickname } = result.userInfo;
+          //   if (username && password && email && phoneNumber && nickname) {
+          //     // AsyncStorage를 사용하여 사용자 정보 저장
+          //     try {
+          //       const userInfo = {
+          //         username: username,
+          //         password: password,
+          //         email: email,
+          //         phoneNumber: phoneNumber,
+          //         nickname: nickname
+          //       };
+          //       await AsyncStorage.setItem('userInfo', JSON.stringify(result.userInfo));
 
-              } catch (error) {
-                console.log('사용자 정보 저장 실패:', error);
-              }
-            }
-          } else {
-            console.log('사용자 정보 없음');
-          }
+          //     } catch (error) {
+          //       console.log('사용자 정보 저장 실패:', error);
+          //     }
+          //   }
+          // } else {
+          //   console.log('사용자 정보 없음');
+          // }
+          storeData(username);
           navigation.navigate('MainCalendar');
         } else {
           // 로그인 실패 시 처리할 로직

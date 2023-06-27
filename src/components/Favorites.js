@@ -1,12 +1,27 @@
 //Favorites
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Favorites() {
   const [selectedFavoritesBoxes, setselectedFavoritesBoxes] = useState([]);
+  const [username, setUsername] = useState('');
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        console.log("getData", value);
+        setUsername(value);
+        return value;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const handleSave = async () => {
-    const data = { selectedFavoritesBoxes };
+    const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
       const response = await fetch('http://192.168.0.30:3000/saveBoxes', {
@@ -73,9 +88,12 @@ function Favorites() {
     handleSave();
   };
 
+  getData();
+
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
+      <Text style={styles.title}>{username}</Text>
         <Text style={styles.title}>🐣 즐겨찾기한 자격증 🐣</Text>
         {boxNames.map((name, index) => (
           <TouchableOpacity
