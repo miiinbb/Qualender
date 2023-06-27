@@ -31,7 +31,7 @@ function LoginPage ({ onLogin, onBack}) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.0.29:3000/login', {
+      const response = await fetch('http://192.168.0.30:3000/login', {
         // http://143.248.253.49:3000/register
         method: 'POST',
         headers: {
@@ -88,7 +88,14 @@ function LoginPage ({ onLogin, onBack}) {
   };
 
   const clickSignup = () => {
-    navigation.navigate('SignupPage'); // 회원가입 페이지로 이동
+    navigation.navigate('SignupPage', {
+      // 회원가입 페이지로 이동 시 회원가입 정보 전달
+      username: username,
+      password: password,
+      email: email,
+      phoneNumber: phoneNumber,
+      nickname: nickname
+    });
   };
 
 

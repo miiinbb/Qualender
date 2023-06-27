@@ -1,27 +1,21 @@
-//Favorites.js
 import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions, } from "react-native";
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 
-const Stack = createStackNavigator();
-
-function Favorites({ navigation }) {
-  const [selectedBoxes, setSelectedBoxes] = useState([]);
+function Favorites() {
+  const [selectedFavoritesBoxes, setselectedFavoritesBoxes] = useState([]);
 
   const handleSave = async () => {
-    // const username = '제발요'; // 실제 사용자명 값으로 변경
-    const data = { username, selectedBoxes };
-  
+    const data = { selectedFavoritesBoxes };
+
     try {
-      const response = await fetch('http://192.168.0.29:3000/saveBoxes', {
+      const response = await fetch('http://192.168.0.30:3000/saveBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log(result.message);
@@ -34,13 +28,13 @@ function Favorites({ navigation }) {
   };
 
   const handleBoxPress = (name) => {
-    const isSelected = selectedBoxes.includes(name);
+    const isSelected = selectedFavoritesBoxes.includes(name);
     if (isSelected) {
       // Remove the box from selected boxes
-      setSelectedBoxes(selectedBoxes.filter((boxName) => boxName !== name));
+      setselectedFavoritesBoxes(selectedFavoritesBoxes.filter((boxName) => boxName !== name));
     } else {
       // Add the box to selected boxes
-      setSelectedBoxes([...selectedBoxes, name]);
+      setselectedFavoritesBoxes([...selectedFavoritesBoxes, name]);
     }
   };
 
@@ -74,6 +68,10 @@ function Favorites({ navigation }) {
     "#C4E9B5", // Pale Greenish
   ];
 
+  const handleSaveButtonPress = () => {
+    handleSave();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
@@ -83,24 +81,23 @@ function Favorites({ navigation }) {
             key={index}
             style={[
               styles.box,
-              selectedBoxes.includes(name) ? { backgroundColor: boxColors[index] } : { backgroundColor: "lightgray" },
+              selectedFavoritesBoxes.includes(name) ? { backgroundColor: boxColors[index] } : { backgroundColor: "lightgray" },
             ]}
             onPress={() => handleBoxPress(name)}
           >
             <Text
               style={[
                 styles.boxText,
-                selectedBoxes.includes(name) ? styles.selectedBoxText : styles.unselectedBoxText,
+                selectedFavoritesBoxes.includes(name) ? styles.selectedBoxText : styles.unselectedBoxText,
               ]}
             >
               {name}
             </Text>
           </TouchableOpacity>
-
         ))}
-        <TouchableOpacity style={[styles.saveButton, {marginTop: 10}]} onPress={''}>
+        <TouchableOpacity style={[styles.saveButton, { marginTop: 10 }]} onPress={handleSaveButtonPress}>
           <Text style={styles.saveButtonText}>저장</Text>
-        </TouchableOpacity> 
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -116,7 +113,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: height*0.02,
+    marginBottom: height * 0.02,
   },
   boxContainer: {
     flexDirection: "column",
@@ -124,8 +121,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   box: {
-    width: width*0.84,
-    height: height*0.047,
+    width: width * 0.84,
+    height: height * 0.047,
     marginVertical: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -146,7 +143,7 @@ const styles = StyleSheet.create({
     padding: 5,
     width: 100,
     alignItems: "center",
-    marginBottom:height*0.02,
+    marginBottom: height * 0.02,
   },
   saveButtonText: {
     fontSize: 16,

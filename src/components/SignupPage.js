@@ -47,12 +47,8 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
 
     loadUserInfo(); // 수정된 부분
 
-    navigation.navigate('LoginPage', { // params를 객체로 전달
-      username: username,
-      password: password,
-      email: email,
-      phoneNumber: phoneNumber,
-      nickname: nickname,
+    navigation.navigate('LoginPage', {
+      userInfo: userInfo, // 회원가입 정보를 전달
     });
   };
 
@@ -85,7 +81,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
 
     try {
-      const response = await fetch('http://192.168.0.29:3000/register', {
+      const response = await fetch('http://192.168.0.30:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -142,7 +138,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const checkNameAvailability = async () => {
     console.log('checkname is called');
     try {
-      const response = await fetch('http://192.168.0.29:3000/name', {
+      const response = await fetch('http://192.168.0.30:3000/name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
