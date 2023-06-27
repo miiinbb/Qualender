@@ -13,7 +13,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [email, setEmail] = useState('');
+  const [emailID, setEmail] = useState('');
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const { handleSubmit, control } = useForm();
   const [open, setOpen] = useState(false);
@@ -27,7 +27,8 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [selectedDomain, setSelectedDomain] = useState('');
 
   const handleSignup = async () => {
-    registerUser();
+    const email = `${emailID}@${selectedDomain}`; //emailID와 도메인 합쳐서 저장
+    registerUser(email);
 
     const userInfo = {
       username: username,
@@ -48,7 +49,8 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     loadUserInfo(); // 수정된 부분
 
     navigation.navigate('LoginPage', {
-      userInfo: userInfo, // 회원가입 정보를 전달
+      username: username, // 회원가입 정보 중 username을 전달
+      password: password, // 회원가입 정보 중 password를 전달
     });
   };
 
@@ -67,7 +69,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
   };
   
-  const registerUser = async () => {
+  const registerUser = async (email) => {
     if (password !== confirmPassword) {
       console.log('Password and confirm password do not match');
       Alert.alert('오류', '비밀번호와 확인 비밀번호가 일치하지 않습니다.');
@@ -81,7 +83,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
 
     try {
-      const response = await fetch('http://192.168.0.30:3000/register', {
+      const response = await fetch('http://143.248.253.46:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -138,7 +140,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const checkNameAvailability = async () => {
     console.log('checkname is called');
     try {
-      const response = await fetch('http://192.168.0.30:3000/name', {
+      const response = await fetch('http://143.248.253.46:3000/name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -244,6 +246,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
           style={styles.input}
           placeholder="형식: 01012341234, 숫자만 입력"
           placeholderTextColor="silver"
+          keyboardType="numeric"
         />
       </View>
 
@@ -251,7 +254,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
         <Text style={styles.label}>이메일</Text>
         <View style={styles.emailInputContainer}>
           <TextInput
-            value={email}
+            value={emailID}
             onChangeText={text => setEmail(text)}
             style={styles.emailInput}
             placeholder="이메일을 입력하세요"

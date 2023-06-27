@@ -1,3 +1,4 @@
+//Favorites
 import React, { useState } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 

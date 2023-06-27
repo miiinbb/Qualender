@@ -62,6 +62,7 @@ function LoginPage ({ onLogin, onBack}) {
                   nickname: nickname
                 };
                 await AsyncStorage.setItem('userInfo', JSON.stringify(result.userInfo));
+
               } catch (error) {
                 console.log('사용자 정보 저장 실패:', error);
               }

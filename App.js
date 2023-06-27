@@ -1,5 +1,5 @@
 //App.js
-import * as React from 'react';
+import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
@@ -12,6 +12,8 @@ import {
 } from '@react-navigation/drawer';
 import Animated from 'react-native-reanimated';
 import 'react-native-gesture-handler';
+import AuthContext from './src/components/AuthContext';
+import { UserProvider } from './src/components/UserContext'; // 추가된 부분
 import MyCalendar from './src/components/MyCalendar';
 import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page';
@@ -41,20 +43,29 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브
 
 const Stack = createStackNavigator();
 
+// 로그인 상태를 관리하기 위한 Context 생성
+// const AuthContext = React.createContext();
+const signIn = (userInfo) => {
+  // 로그인 처리 로직
+  setUser(userInfo);
+  setUserNickname(userInfo.nickname); // Set the user's nickname
+};
 //기능명은 main, js명은 my
 function MainCalendar() {  
+  const [userNickname, setUserNickname] = useState('');
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -20 }}>
-      <MyCalendar />
+      <MyCalendar userNickname={userNickname}/>
     </View>
   );
 }
 
 //기능명은 personal1, js명은 personal
 function PersonalCalendar1() {
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <PersonalCalendar />
+      <PersonalCalendar/>
     </View>
   );
 }
@@ -76,8 +87,11 @@ function LoginPage1({navigation}) {
 }
 
 function CustomDrawerContent(props) {
+  // const [userNickname, setUserNickname] = useState('');
   const navigation = useNavigation();
   const progress = useDrawerProgress();
+  const { user } = useContext(AuthContext);
+  const userNickname = user ? user.nickname : '';
   const translateX = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
     outputRange: [-100, 0],
@@ -96,7 +110,7 @@ function CustomDrawerContent(props) {
             <TouchableOpacity onPress={handleLoginPress}>
               <Text 
                 style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
-                로그인을 해주세요.
+                  {userNickname ? `안녕하세요, ${userNickname}님` : '로그인을 해주세요.'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -135,7 +149,29 @@ function MyDrawer() {
 }
 
 export default function App() {
+  const [user, setUser] = useState(null);
+
+  const signIn = (userInfo) => {
+    // 로그인 처리 로직
+    setUser(userInfo);
+  };
+  useEffect(() => {
+    // AsyncStorage에서 사용자 정보를 가져와서 로그인 상태를 설정
+    const getUserInfo = async () => {
+      try {
+        const userInfoString = await AsyncStorage.getItem('userInfo');
+        if (userInfoString) {
+          const userInfo = JSON.parse(userInfoString);
+          signIn(userInfo);
+        }
+      } catch (error) {
+        console.log('사용자 정보 가져오기 실패:', error);
+      }
+    };
+    getUserInfo();
+  }, []);
   return (
+    <AuthContext.Provider value={{ user, signIn }}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
         <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
@@ -163,6 +199,7 @@ export default function App() {
         <Stack.Screen name="Thirdinsurance" component={Thirdinsurance} options={{title:'제3보험'}}/>
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthContext.Provider>
   );
 }
 
