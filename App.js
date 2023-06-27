@@ -125,6 +125,18 @@ function CustomDrawerContent(props) {
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
+  const navigation = useNavigation();
+  {/* 수정해야하는부분임 */}
+  const { user } = useContext(AuthContext);
+  {/* 수정해야하는부분임 */}
+  const handlePersonalCalendarPress = () => {
+    if (!user) {
+      // 로그인하지 않은 경우 알림 대화상자 표시
+      alert('로그인이 필요합니다.');
+    } else {
+      navigation.navigate('마이캘린더');
+    }
+  };
   return (
     <Drawer.Navigator
       initialRouteName='메인캘린더'
@@ -144,7 +156,8 @@ function MyDrawer() {
           },
         }}
       />
-      <Drawer.Screen name="마이캘린더" component={PersonalCalendar1} />
+      {/* 수정해야하는부분임 */}
+      <Drawer.Screen name="마이캘린더" component={PersonalCalendar1} onPress={handlePersonalCalendarPress} />
       <Drawer.Screen name="마이페이지" component={MyPage1} />
     </Drawer.Navigator>
   );
