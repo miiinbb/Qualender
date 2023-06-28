@@ -31,7 +31,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     }
   };
 
-  console.log('유저 정보:', user);
+  console.log('유저 정보:', username);
   const goToMain = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -72,13 +72,16 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     return <SignupPage onSignup={handleTogglePage} onBack={handleBack} />;
   }
 
+  getData();
+
   return (
     <View style={styles.outerContainer}>
       {/*닉네임 버튼 */}
       <View style={styles.iconID}>
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
-          <Text style={styles.idText}>{`${userNickname}`}</Text>
+          <Text style={styles.idText}>{userNickname ? `${userNickname}` : '로그인을 해주세요.'}</Text>
+
         </TouchableOpacity>
       </View> 
       {/* console.log(user) */}

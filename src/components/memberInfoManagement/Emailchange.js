@@ -4,6 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, } from "r
 import { Picker, } from "@react-native-picker/picker";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {useForm, Controller} from 'react-hook-form';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Emailchange() {
   const [newEmail, setNewEmail] = useState("");
@@ -17,7 +18,47 @@ function Emailchange() {
     { label: "직접 입력", value: " " },
   ]);
   const [selectedDomain, setSelectedDomain] = useState('');
+  const [username, setUsername] = useState('');
 
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        console.log("getData", value);
+        setUsername(value);
+        return value;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleEmailChange = async () => {
+    const email = `${newEmail}@${selectedDomain}`;
+    const data = { username: username, newEmail: email };
+  
+    try {
+      const response = await fetch('http://192.168.0.30:3000/email-change', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message);
+        // 비밀번호 변경 성공 후 다른 화면으로 이동하거나 알림 메시지를 보여줄 수 있습니다.
+      } else {
+        console.error('Network response was not ok.');
+        // 비밀번호 변경 실패 시 알림 메시지를 보여줄 수 있습니다.
+      }
+    } catch (error) {
+      console.error('Error occurred while making the request:', error);
+    }
+  };
 
   const goAlert = () =>
     Alert.alert( //여기서 ""지우면 확인 누를 시 어플이 종료됩니다..
@@ -28,12 +69,14 @@ function Emailchange() {
           style: "cancel",
         },
         { text: "확인",
-          onPress: () => console.log("이메일 변경 완료")},
+          onPress: handleEmailChange},
       ],
       { cancelable: false }
     );
 
-  return (
+    getData();
+
+    return (
     <View style={styles.container}>
       <View style={{marginBottom: 20, marginRight: width*0.25,}}>
         <Text style={styles.title}>이메일 변경을 위해</Text>

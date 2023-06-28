@@ -99,10 +99,25 @@ function CustomDrawerContent(props) {
     inputRange: [0, 1],
     outputRange: [-100, 0],
   });
+  const [username, setUsername] = useState('');
 
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        console.log("getData", value);
+        setUsername(value);
+        return value;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const handleLoginPress = () => {
     navigation.navigate(LoginPage);
   };
+
+  getData();
 
   return (
     <DrawerContentScrollView {...props}>
