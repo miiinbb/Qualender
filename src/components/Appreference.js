@@ -194,7 +194,6 @@ app.post('/getObtainedBoxes', async (req, res) => { //취득자격증 페이지�
 app.post('/favorites', async (req, res) => { //마이페이지에서 즐겨찾기 개수 가져올 때 사용
   const { username } = req.body;
   console.log("favorites", username);
-  const user = new User({username});
 
   try {
     const user = await User.findOne({ username }); 
@@ -301,7 +300,7 @@ app.post('/email-change', async (req, res) => {
   }
 });
 
-app.delete('/delete-account', async (req, res) => {
+app.delete('/delete-account', async (req, res) => { //회원탈퇴
   const { username, password } = req.body;
 
   try {

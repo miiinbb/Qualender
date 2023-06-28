@@ -19,19 +19,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [username, setUsername] = useState('');
   const userNickname = user ? user.nickname : '';
 
-  // const getData = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem('username');
-  //     if (value !== null) {
-  //       console.log("getData", value);
-  //       setUsername(value);
-  //       return value;
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
   console.log('유저 정보:', user);
   const goToMain = () => {
     navigation.dispatch(
@@ -104,11 +91,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           console.log(result.message);
           console.log(result.data);
           console.log('즐겨찾기 개수: ' +count);
-          // const filteredItems = ITEMS.map((data) => {
-          //   data.data = data.data.filter(e => result.data.includes(e.title));
-          //   return data;
-          // })
-          // .filter(data=>data.data.length != 0)
         } else {
           console.error('Network response was not ok.');
         }
