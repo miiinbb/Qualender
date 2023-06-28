@@ -109,7 +109,7 @@ app.post('/schedule', async (req, res) => {
   }
 });
 
-app.post('/saveFavoritesBoxes', async (req, res) => {
+app.post('/saveFavoritesBoxes', async (req, res) => { //즐겨찾기 페이지에서 사용
   const { username, selectedFavoritesBoxes } = req.body;
   const user = new User({username, selectedFavoritesBoxes});
 
@@ -134,7 +134,7 @@ app.post('/saveFavoritesBoxes', async (req, res) => {
   }
 });
 
-app.post('/getFavoritesBoxes', async (req, res) => {
+app.post('/getFavoritesBoxes', async (req, res) => { //즐겨찾기 페이지에서 사용
   const { username } = req.body;
 
   try {
@@ -150,7 +150,7 @@ app.post('/getFavoritesBoxes', async (req, res) => {
   }
 });
 
-app.post('/saveObtainedBoxes', async (req, res) => {
+app.post('/saveObtainedBoxes', async (req, res) => { //취득자격증 페이지에서 사용
   const { username, selectedObtainedBoxes } = req.body;
   const user = new User({username, selectedObtainedBoxes});
 
@@ -175,7 +175,7 @@ app.post('/saveObtainedBoxes', async (req, res) => {
   }
 });
 
-app.post('/getObtainedBoxes', async (req, res) => {
+app.post('/getObtainedBoxes', async (req, res) => { //취득자격증 페이지에서 사용
   const { username } = req.body;
 
   try {
@@ -191,7 +191,27 @@ app.post('/getObtainedBoxes', async (req, res) => {
   }
 });
 
-app.post('/personal', async (req, res) => {
+app.post('/favorites', async (req, res) => { //마이페이지에서 즐겨찾기 개수 가져올 때 사용
+  const { username } = req.body;
+  console.log("favorites", username);
+  const user = new User({username});
+
+  try {
+    const user = await User.findOne({ username }); 
+    console.log(user.selectedFavoritesBoxes);
+
+    if (user) {
+      res.status(200).json({ message: '선택한 박스 정보 불러옴', data: user.selectedFavoritesBoxes });
+    } else {
+      res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+  } catch (error) {
+    res.status(500).send('선택한 박스 정보 저장 중 에러 발생');
+    console.log(error);
+  }
+});
+
+app.post('/personal', async (req, res) => { //마이캘린더(personal calendar.js에서 사용
   const { username } = req.body;
   console.log("in personal", username);
   const user = new User({username});
@@ -281,7 +301,7 @@ app.post('/email-change', async (req, res) => {
   }
 });
 
-app.delete('/delete-account', async (req, res) => {
+app.delete('/delete-account', async (req, res) => { //
   const { username, password } = req.body;
 
   try {
