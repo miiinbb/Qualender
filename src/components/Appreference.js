@@ -301,7 +301,7 @@ app.post('/email-change', async (req, res) => {
   }
 });
 
-app.delete('/delete-account', async (req, res) => { //회원탈퇴
+app.delete('/delete-account', async (req, res) => {
   const { username, password } = req.body;
 
   try {
