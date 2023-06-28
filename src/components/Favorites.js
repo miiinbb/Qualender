@@ -1,5 +1,5 @@
 //Favorites
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,32 +7,50 @@ function Favorites() {
   const [selectedFavoritesBoxes, setselectedFavoritesBoxes] = useState([]);
   const [username, setUsername] = useState('');
 
-  const getData = async () => { //username에 해당하는 정보를 가져옴
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
-        // console.log("getData", value);
+        console.log("getData", value);
         setUsername(value);
-        return value;
+        // 즐겨찾기 목록 가져오기
+        const response = await fetch('http://143.248.253.32:3000/getFavoritesBoxes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: value }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.selectedFavoritesBoxes);
+          setselectedFavoritesBoxes(result.selectedFavoritesBoxes);
+        } else {
+          console.error('Network response was not ok.');
+        }
       }
     } catch (e) {
       console.log(e);
     }
   };
 
-  const handleSave = async () => { //즐겨찾기한 자격증 내용을 db에 저장함
+  const handleSave = async () => {
     const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
-      const response = await fetch('http://143.248.253.46:3000/saveBoxes', {
+      const response = await fetch('http://143.248.253.32:3000/saveFavoritesBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
-      console.log(data);
-      
+
       if (response.ok) {
         const result = await response.json();
         console.log(result.message);
@@ -42,7 +60,7 @@ function Favorites() {
     } catch (error) {
       console.error('Error occurred while making the request:', error);
     }
-  }; 
+  };
 
   const handleBoxPress = (name) => {
     const isSelected = selectedFavoritesBoxes.includes(name);
@@ -88,8 +106,6 @@ function Favorites() {
   const handleSaveButtonPress = () => {
     handleSave();
   };
-
-  getData();
 
   return (
     <View style={styles.container}>
