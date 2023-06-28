@@ -7,11 +7,11 @@ function Favorites() {
   const [selectedFavoritesBoxes, setselectedFavoritesBoxes] = useState([]);
   const [username, setUsername] = useState('');
 
-  const getData = async () => {
+  const getData = async () => { //username에 해당하는 정보를 가져옴
     try {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
-        console.log("getData", value);
+        // console.log("getData", value);
         setUsername(value);
         return value;
       }
@@ -20,7 +20,7 @@ function Favorites() {
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async () => { //즐겨찾기한 자격증 내용을 db에 저장함
     const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
@@ -31,7 +31,8 @@ function Favorites() {
         },
         body: JSON.stringify(data),
       });
-
+      console.log(data);
+      
       if (response.ok) {
         const result = await response.json();
         console.log(result.message);
@@ -41,7 +42,7 @@ function Favorites() {
     } catch (error) {
       console.error('Error occurred while making the request:', error);
     }
-  };
+  }; 
 
   const handleBoxPress = (name) => {
     const isSelected = selectedFavoritesBoxes.includes(name);
