@@ -1,5 +1,5 @@
 //Obtained
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,13 +7,32 @@ function ObtainedList() {
   const [selectedObtainedBoxes, setselectedObtainedBoxes] = useState([]);
   const [username, setUsername] = useState('');
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
         console.log("getData", value);
         setUsername(value);
-        return value;
+        // 즐겨찾기 목록 가져오기
+        const response = await fetch('http://143.248.253.32:3000/getObtainedBoxes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: value }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.selectedObtainedBoxes);
+          setselectedObtainedBoxes(result.selectedObtainedBoxes);
+        } else {
+          console.error('Network response was not ok.');
+        }
       }
     } catch (e) {
       console.log(e);
@@ -21,10 +40,10 @@ function ObtainedList() {
   };
 
   const handleSave = async () => {
-    const data = { username: username, selectedObtainedBoxes : selectedObtainedBoxes };
+    const data = { username : username, selectedObtainedBoxes : selectedObtainedBoxes };
 
     try {
-      const response = await fetch('http://143.248.253.46:3000/saveObtainedCertificate', {
+      const response = await fetch('http://143.248.253.32:3000/saveObtainedBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,8 +106,6 @@ function ObtainedList() {
   const handleSaveButtonPress = () => {
     handleSave();
   };
-
-  getData();
 
   return (
     <View style={styles.container}>
