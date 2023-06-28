@@ -79,7 +79,13 @@ function LoginPage ({ onLogin, onBack}) {
           //   console.log('사용자 정보 없음');
           // }
           storeData(username);
+          if (result.userInfo && result.userInfo.nickname) {
+            setNickname(result.userInfo.nickname);
+          } else {
+            setNickname(''); // 닉네임이 없는 경우 초기화
+          }
           navigation.navigate('MainCalendar');
+          console.log('로그인하였습니다.',username);
         } else {
           // 로그인 실패 시 처리할 로직
           console.log('로그인 실패');
