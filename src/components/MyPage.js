@@ -60,6 +60,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   }
 
   const [counted, setCounted] = useState(0);
+  const [counted2, setCounted2] = useState(0);
   useEffect(() => {
     const getData = async () => {
       try {
@@ -76,6 +77,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     const getUserInfo = async () => {
       const data = { username: username };
       let count = 0;
+      let count2 = 0;
       try {
         const response = await fetch('http://143.248.253.46:3000/favorites', {
           method: 'POST',
@@ -87,24 +89,25 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   
         if (response.ok) {
           const result = await response.json();
-          count = result.data.length;
+          count = result.data.selectedFavorites.length;
+          count2 = result.data.selectedObtained.length;
           console.log(result.message);
           console.log(result.data);
-          console.log('즐겨찾기 개수: ' +count);
+          // console.log('즐겨찾기 개수: ' +count);
+          // console.log('취득자격 개수: ' +count2);
         } else {
           console.error('Network response was not ok.');
         }
       } catch (error) {
         console.error('Error occurred while making the request:', error);
       }
-      console.log('즐겨찾기 개수2: ' +count);
-      return count;
+      return [count, count2];
     };
 
     getData();
     getUserInfo().then(counted => {
-      console.log('count 값:', counted);
-      setCounted(counted);
+      setCounted(counted[0]);
+      setCounted2(counted[1]);
     });
   },[navigation]);
   console.log('외부에서 사용할 count 값:', counted);
@@ -134,7 +137,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           <TouchableOpacity onPress={() => {clickObtained(); console.log('Obtained Pressed');}}>
             <Text style={styles.obtText}>취득한 자격증</Text>
             <Text/><Text/>
-            <Text style={[styles.obtNum, {textDecorationLine: 'underline'}]}>❤️ {counted}개</Text>
+            <Text style={[styles.obtNum, {textDecorationLine: 'underline'}]}>❤️ {counted2}개</Text>
           </TouchableOpacity>
         </View>        
       </View>

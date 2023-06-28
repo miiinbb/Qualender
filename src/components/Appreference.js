@@ -200,7 +200,11 @@ app.post('/favorites', async (req, res) => { //마이페이지에서 즐겨찾�
     console.log(user.selectedFavoritesBoxes);
 
     if (user) {
-      res.status(200).json({ message: '선택한 박스 정보 불러옴', data: user.selectedFavoritesBoxes });
+      res.status(200).json({ message: '선택한 박스 정보 불러옴', 
+      data: {
+        selectedFavorites: user.selectedFavoritesBoxes,
+        selectedObtained: user.selectedObtainedBoxes,
+      } });
     } else {
       res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     }
