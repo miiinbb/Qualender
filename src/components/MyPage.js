@@ -6,6 +6,7 @@ import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
 import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ITEMS from './Items2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './AuthContext';
 
@@ -30,8 +31,8 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       console.log(e);
     }
   };
-
   console.log('유저 정보:', username);
+
   const goToMain = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -42,7 +43,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       })
     );
   }
-
   const handleBack = () => {
     onBack(); // 뒤로가기 버튼이 눌렸을 때 onBack 함수 호출
   };
@@ -72,7 +72,58 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     return <SignupPage onSignup={handleTogglePage} onBack={handleBack} />;
   }
 
-  getData();
+  const [counted, setCounted] = useState(0);
+  const [counted2, setCounted2] = useState(0);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('username');
+        if (value !== null) {
+          setUsername(value);
+          return value;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  
+    const getUserInfo = async () => {
+      const data = { username: username };
+      let count = 0;
+      let count2 = 0;
+      try {
+        const response = await fetch('http://143.248.253.46:3000/favorites', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          count = result.data.selectedFavorites.length;
+          count2 = result.data.selectedObtained.length;
+          console.log(result.message);
+          console.log(result.data);
+          // console.log('즐겨찾기 개수: ' +count);
+          // console.log('취득자격 개수: ' +count2);
+        } else {
+          console.error('Network response was not ok.');
+        }
+      } catch (error) {
+        console.error('Error occurred while making the request:', error);
+      }
+      return [count, count2];
+    };
+
+    getData();
+    getUserInfo().then(counted => {
+      setCounted(counted[0]);
+      setCounted2(counted[1]);
+    });
+  },[navigation]);
+  console.log('외부에서 사용할 count 값:', counted);
 
   return (
     <View style={styles.outerContainer}>
@@ -81,7 +132,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
           <Text style={styles.idText}>{userNickname ? `${userNickname}` : '로그인을 해주세요.'}</Text>
-
         </TouchableOpacity>
       </View> 
       {/* console.log(user) */}
@@ -91,7 +141,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           <TouchableOpacity onPress={() => {clickFavorites(); console.log('Favorites Pressed');}}>
             <Text style={styles.favText}>즐겨찾기</Text>
             <Text/><Text/>
-            <Text style={[styles.favNum, {textDecorationLine: 'underline'}]}>⭐️ 3개</Text>
+            <Text style={[styles.favNum, {textDecorationLine: 'underline'}]}>⭐️ {counted}개</Text>
           </TouchableOpacity>
         </View>  
 
@@ -100,7 +150,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           <TouchableOpacity onPress={() => {clickObtained(); console.log('Obtained Pressed');}}>
             <Text style={styles.obtText}>취득한 자격증</Text>
             <Text/><Text/>
-            <Text style={[styles.obtNum, {textDecorationLine: 'underline'}]}>❤️ 5개</Text>
+            <Text style={[styles.obtNum, {textDecorationLine: 'underline'}]}>❤️ {counted2}개</Text>
           </TouchableOpacity>
         </View>        
       </View>
@@ -119,7 +169,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
 
 //화면 크기에 비례로 디자인 적용하기 위해 실행
 const { height, width } = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   outerContainer: { //하늘색 부분
     flex: 1,
