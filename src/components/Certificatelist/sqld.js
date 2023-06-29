@@ -1,9 +1,10 @@
-import React from "react";
+
+import React, { useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const sqldImage1 = require("../../../assets/sqld1.jpeg");
-const sqldImage2 = require("../../../assets/sqld2.jpeg");
-const sqldImage3 = require("../../../assets/sqld3.jpeg");
-const sqldImage4 = require("../../../assets/sqld4.jpeg");
+import { PinchGestureHandler, State } from "react-native-gesture-handler";
+
+const sqldImage1 = require("../../../assets/sqld11.png");
+
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -13,23 +14,53 @@ function Sqld({ navigation }) {
     Linking.openURL("https://www.dataq.or.kr/www/sub/a_04.do");
   };
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.contentContainer}>
-        <View style={styles.imageContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>시험 상세 정보</Text>
-          </View>
-          <Image source={sqldImage1} style={styles.image} resizeMode="contain" />
-          <Image source={sqldImage2} style={styles.image} resizeMode="contain" />
-          <Image source={sqldImage3} style={styles.image} resizeMode="contain" />
-          <Image source={sqldImage4} style={styles.image} resizeMode="contain" />
+//줌기능
+const [scale, setScale] = useState(1);
+
+const onPinchGestureEvent = event => {
+  if (event.nativeEvent.scale !== 0) {
+    setScale(event.nativeEvent.scale);
+  }
+};
+
+const onPinchHandlerStateChange = event => {
+  if (event.nativeEvent.oldState === State.ACTIVE) {
+    setScale(prevScale => Math.max(1, prevScale));
+  }
+};
+
+return (
+  <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.contentContainer}>
+      <View style={styles.imageContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>시험 상세 정보</Text>
         </View>
-        <TouchableOpacity style={styles.buttonContainer} onPress={link}>
-          <Text style={styles.buttonText}>시험 접수</Text>
-        </TouchableOpacity>
+        <PinchGestureHandler
+          onGestureEvent={onPinchGestureEvent}
+          onHandlerStateChange={onPinchHandlerStateChange}
+        >
+          <Image
+            source={sqldImage1}
+            style={[
+              styles.image,
+              {
+                transform: [
+                  {
+                    scale: scale,
+                  },
+                ],
+              },
+            ]}
+            resizeMode="contain"
+          />
+        </PinchGestureHandler>
       </View>
-    </ScrollView>
+      <TouchableOpacity style={styles.buttonContainer} onPress={link}>
+        <Text style={styles.buttonText}>시험 접수</Text>
+      </TouchableOpacity>
+    </View>
+  </ScrollView>
   );
 }
 
@@ -46,7 +77,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: windowWidth, // 이미지 너비를 화면 너비의 90%로 설정
-    height: windowHeight * 2,
+    height: windowHeight * 4.6,
     aspectRatio: 0.8, // 이미지의 가로 세로 비율
     maxWidth: "100%",
     maxHeight: "200%",
@@ -67,13 +98,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: 10,
     width: windowWidth * 0.8,
     alignSelf: "center",
     backgroundColor: "#007AFF",
     borderRadius: 10,
     paddingVertical: 15,
-    marginBottom: 20,
+    marginBottom:0,
   },
   buttonText: {
     alignSelf: "center",
