@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     backgroundColor: 'mistyrose',
     borderWidth: 2,
-    borderColor: '#17375E',
+    borderColor: '#141B38',
   },
   favText:{//즐겨찾기텍스트
     fontSize: 23,
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     backgroundColor: 'mintcream',
     borderWidth: 2,
-    borderColor: '#17375E',
+    borderColor: '#141B38',
   },
   obtText:{//취득한 텍스트
     fontSize: 23,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   memberInfoManagement: { //'회원가입'버튼
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 17,
     paddingHorizontal: 20,
     padding: 5,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   
   gotomainButton: {
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 17,
     paddingHorizontal: 20,
     padding: 5,

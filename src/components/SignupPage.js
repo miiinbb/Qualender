@@ -83,7 +83,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
 
     try {
-      const response = await fetch('http://143.248.253.46:3000/register', {
+      const response = await fetch('http://172.30.1.35:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const checkNameAvailability = async () => {
     console.log('checkname is called');
     try {
-      const response = await fetch('http://143.248.253.46:3000/name', {
+      const response = await fetch('http://172.30.1.35:3000/name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     padding: 2,
     fontSize: 15,
-    color: '#17375E',
+    color: '#141B38',
   },
   inputContainer: { //각 항목 lable, input박스를 포함하는 영역
     marginBottom: 20,
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
   smallButton: { //중복확인 버튼
     paddingHorizontal: 12,
     paddingVertical: 9.5,
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     marginLeft: 5,
   },
   smallButtonText: {

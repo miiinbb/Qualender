@@ -81,7 +81,7 @@ function Memberout({ navigation }) {
           return;
         }
     
-        const response = await fetch('http://192.168.0.30:3000/delete-account', {
+        const response = await fetch('http://172.30.1.35:3000/delete-account', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     // flexDirection: "row",
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 3,
     paddingHorizontal: 20,
     padding: 5,

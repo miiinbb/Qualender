@@ -19,7 +19,7 @@ const today = new Date().toISOString().split('T')[0];
 const fastDate = getPastDate(3);
 const futureDates = getFutureDates(9);
 const dates = [fastDate, today].concat(futureDates);
-const themeColor = '#17375E';
+const themeColor = '#141B38';
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
@@ -262,7 +262,7 @@ export default function MyCalendar(props) {
       const data = { username: username };
   
       try {
-        const response = await fetch('http://143.248.253.46:3000/personal', {
+        const response = await fetch('http://172.30.1.35:3000/personal', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -322,7 +322,7 @@ export default function MyCalendar(props) {
           markedDates={getMarkedDates()} 
         />
       )}
-      <Text>{username}</Text>
+      {/* <Text>{username}</Text> */}
       <AgendaList
         sections={calendarList}
         extraData={calendarList}

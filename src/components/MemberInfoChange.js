@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   
   gotomainButton: {
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 17,
     paddingHorizontal: 20,
     padding: 5,

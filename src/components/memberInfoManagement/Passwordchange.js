@@ -25,7 +25,7 @@ function Passwordchange({ navigation }) {
     const data = { username: username, newPassword: newPassword, confirmPassword: confirmPassword };
   
     try {
-      const response = await fetch('http://192.168.0.30:3000/password-change', {
+      const response = await fetch('http://172.30.1.35:3000/password-change', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   buttonContainer: {
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 17,
     paddingHorizontal: 20,
     padding: 5,

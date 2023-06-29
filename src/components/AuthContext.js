@@ -8,16 +8,21 @@ export const AuthContextProvider = ({ children }) => {
 
   const signIn = (userInfo) => {
     setUser(userInfo);
-    setUserNickname(userInfo.nickname); // 사용자의 닉네임 설정
+    setUserNickname(userInfo.nickname);
   };
 
   const signOut = () => {
     setUser(null);
-    setUserNickname(''); // 닉네임 초기화
+    setUserNickname('');
+  };
+
+  const updateNickname = (newNickname) => {
+    setUserNickname(newNickname);
+    console.log("룰루랄라", userNickname); // Move the `console.log` here
   };
 
   return (
-    <AuthContext.Provider value={{ user, userNickname, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, userNickname, signIn, signOut, updateNickname }}>
       {children}
     </AuthContext.Provider>
   );

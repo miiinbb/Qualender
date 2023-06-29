@@ -39,7 +39,7 @@ function LoginPage ({ onLogin, onBack}) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://192.168.0.30:3000/login', {
+      const response = await fetch('http://172.30.1.35:3000/login', {
         // http://143.248.253.49:3000/register
         method: 'POST',
         headers: {
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     width: 250,
   },
   loginButton: { //하단 '로그인', '카톡로그인'버튼 같이
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 1,
     paddingHorizontal: 20,
     padding: 5,
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
 
   signupButton: {
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 1,
     paddingHorizontal: 20,
     padding: 5,

@@ -24,7 +24,7 @@ function Favorites() {
     const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
-      const response = await fetch('http://192.168.0.30:3000/saveBoxes', {
+      const response = await fetch('http://172.30.1.35:3000/saveBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ function Favorites() {
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
-      <Text style={styles.title}>{username}</Text>
+      {/* <Text style={styles.title}>{username}</Text> */}
         <Text style={styles.title}>🐣 즐겨찾기한 자격증 🐣</Text>
         {boxNames.map((name, index) => (
           <TouchableOpacity
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   saveButton: {
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 10,
     paddingHorizontal: 20,
     padding: 5,

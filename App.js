@@ -48,7 +48,7 @@ const Stack = createStackNavigator();
 //기능명은 main, js명은 my
 function MainCalendar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { user, userNickname, signOut } = useContext(AuthContext);
+  const { user, userNickname, updateNickname, signOut } = useContext(AuthContext);
   // const [userNickname, setUserNickname] = useState('');
 
   useEffect(() => {
@@ -57,7 +57,8 @@ function MainCalendar() {
         const value = await AsyncStorage.getItem('username');
         if (value !== null) {
           setIsLoggedIn(true);
-          setUserNickname(value);
+          updateNickname(value); // Use the `updateNickname` function to update the user's nickname
+          // console.log("룰루랄라",userNickname)
         } else {
           setIsLoggedIn(false);
         }
@@ -67,7 +68,7 @@ function MainCalendar() {
     };
 
     getData();
-  }, []);
+  }, [updateNickname]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -20 }}>
@@ -130,18 +131,18 @@ function CustomDrawerContent(props) {
   
     getData();
   }, []);
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('username');
-      if (value !== null) {
-        console.log("getData", value);
-        setUserNickname(value);
-        return value;
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const getData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('username');
+  //     if (value !== null) {
+  //       console.log("getData", value);
+  //       setUserNickname(value);
+  //       return value;
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   const handleLoginPress = () => {
     navigation.navigate(LoginPage);
@@ -213,17 +214,17 @@ function MyDrawer() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
-        name="메인캘린더"
+        name="메인퀄린더"
         component={MainCalendar}
         options={{
           headerShown: true,
-          headerTitle: '메인캘린더',
+          headerTitle: '메인퀄린더',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
         }}
       />
-      <Drawer.Screen name="마이캘린더" component={PersonalCalendar1} />
+      <Drawer.Screen name="마이퀄린더" component={PersonalCalendar1} />
       <Drawer.Screen name="마이페이지" component={MyPage1} />
     </Drawer.Navigator>
   );
@@ -267,8 +268,8 @@ export default function App() {
     getUserInfo();
   }, []);
 
-  console.log('유저 정보:', user);
-  console.log('checking:',user);
+  console.log('유저 정보:', userNickname);
+  console.log('checking:',userNickname);
   return (
     <AuthContextProvider value={{ user, setUser, signIn, signOut }}>
     <UserProvider>

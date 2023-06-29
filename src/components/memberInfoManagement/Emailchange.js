@@ -39,7 +39,7 @@ function Emailchange() {
     const data = { username: username, newEmail: email };
   
     try {
-      const response = await fetch('http://192.168.0.30:3000/email-change', {
+      const response = await fetch('http://172.30.1.35:3000/email-change', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     // flexDirection: "row",
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 5,
     paddingHorizontal: 20,
     padding: 5,
