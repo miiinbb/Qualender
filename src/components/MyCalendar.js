@@ -1,23 +1,39 @@
 import _ from 'lodash';
 import React from 'react';
-import {Platform, Dimensions, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import { Dimensions, View, Text, TouchableOpacity } from 'react-native';
 import {
   ExpandableCalendar,
   AgendaList,
   CalendarProvider,
   WeekCalendar,
 } from 'react-native-calendars';
-import {add, sub, isSameMonth, eachDayOfInterval} from 'date-fns';
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import {add, sub } from 'date-fns';
+import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ITEMS from './Items';
+import styles, { getTheme } from '../styles/calendar'
+import { boxNames, boxColors, months, day, shortday } from '../data/data';
+
+
+import {LocaleConfig} from 'react-native-calendars';
+
+LocaleConfig.locales['fr'] = {
+  monthNames: months,
+  monthNamesShort: months,
+  dayNames: day,
+  dayNamesShort: shortday,
+  today: "오늘"
+};
+
+LocaleConfig.defaultLocale = 'fr';
+
 
 const Stack = createStackNavigator();
-const today = new Date().toISOString().split('T')[0];
+// const today = new Date().toISOString().split('T')[0];
+const today = new Date();
 const fastDate = getPastDate(3);
 const futureDates = getFutureDates(9);
 const dates = [fastDate, today].concat(futureDates);
-const themeColor = '#17375E';
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
@@ -34,87 +50,6 @@ function getFutureDates(days) {
 function getPastDate(days) {
   return new Date(Date.now() - 864e5 * days).toISOString().split('T')[0];
 }
-
-const getTheme = () => {
-  const disabledColor = 'grey';
-
-  return {
-    // arrows
-    arrowColor: 'black',
-    arrowStyle: { padding: 0 },
-    // month
-    monthTextColor: 'black',
-    textMonthFontSize: 16,
-    textMonthFontFamily: 'HelveticaNeue',
-    textMonthFontWeight: 'bold',
-    // day names
-    textSectionTitleColor: 'black',
-    textDayHeaderFontSize: 12,
-    textDayHeaderFontFamily: 'HelveticaNeue',
-    textDayHeaderFontWeight: 'normal',
-    // dates
-    todayTextColor: 'black',
-    dayTextColor: 'black',
-    textDayFontSize: 18,
-    textDayFontFamily: 'HelveticaNeue',
-    textDayFontWeight: 'normal', // 굵은 글씨 대신 일반 글씨로 설정
-    // selected date
-    selectedDayBackgroundColor: themeColor,
-    selectedDayTextColor: 'white',
-    selectedDayStyle: { borderRadius: 5 },
-    // disabled date
-    textDisabledColor: disabledColor,
-    // dot (marked date)
-    dotColor: 'black',
-    selectedDotColor: 'white',
-    disabledDotColor: disabledColor,
-    dotStyle: { marginTop: 0 },
-
-    dayContainerStyle: ({ date }) => {
-      const isCurrentMonth = isSameMonth(new Date(), date);
-      const dotOpacity = isCurrentMonth ? 1 : 0; // 현재 월에 해당하는 날짜의 dot 투명도
-    
-      // 아이템 배열에서 해당 날짜에 매치되는 아이템들을 찾아서 색상을 가져옴
-      const matchedItems = ITEMS.filter(item => item.title === date.dateString);
-      const dotColors = matchedItems.map(item => boxColors[boxNames.indexOf(item.data[0].title) % boxColors.length]);
-    
-      return {
-        opacity: dotOpacity,
-        backgroundColor: dotColors.length > 0 ? dotColors[0] : 'transparent', // 첫 번째 매치되는 아이템의 색상 사용
-      };
-    },
-  };
-};
-
-const boxNames = [ //자격증 리스트
-"펀드투자권유자문인력",
-"파생상품투자권유자문인력",
-"생명보험대리점",
-"제3보험",
-"손해보험대리점",
-"신용분석사",
-"ADsP",
-"SQLD",
-"COS",
-"COS PRO",
-"토익",
-"토스",
-];
-
-const boxColors = [  // 색상 리스트
-"#B8A6DF", // Pale Purple
-"#F791B6", // Soft Pink
-"#89CDD9", // Pale Aqua
-"#FBA58D", // Coral
-"#9ED6A1", // Pale Green
-"#FFB884", // Apricot
-"#FAC98A", // Peach
-"#CDA2D9", // Lavender
-"#9BCBF6", // Powder Blue
-"#FFCFA6", // Pale Orange
-"#FFC107", // Amber
-"#C4E9B5", // Pale Greenish
-];
 
 const renderItem = ({ item }) => {
   const navigation = useNavigation(); // navigation 객체 얻기
@@ -192,17 +127,17 @@ const renderEmptyItem = () => {
     </View>
   );
 };
-const getDatesInRange = (startDate, endDate) => {
-  const dates = [];
-  const currentDate = new Date(startDate);
+// const getDatesInRange = (startDate, endDate) => {
+//   const dates = [];
+//   const currentDate = new Date(startDate);
 
-  while (currentDate <= endDate) {
-    dates.push(new Date(currentDate));
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
+//   while (currentDate <= endDate) {
+//     dates.push(new Date(currentDate));
+//     currentDate.setDate(currentDate.getDate() + 1);
+//   }
 
-  return dates;
-};
+//   return dates;
+// };
 
 const getMarkedDates = () => {
   const marked = {};
@@ -273,6 +208,7 @@ export default function MyCalendar(props) {
         />
       )}
       <AgendaList
+        dayFormat='MMMM dd dddd'
         sections={ITEMS}
         extraData={selectedIndex}
         renderItem={item => renderItem(item)}
@@ -281,61 +217,3 @@ export default function MyCalendar(props) {
   );
 }
 console.log(dates[0]);
-
-const styles = StyleSheet.create({
-  calendar: {
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  item: {
-    padding: 20,
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: 'lightgrey',
-    flexDirection: 'row',
-  },
-  itemtestatus: {
-    color: 'grey',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  itemEndTime: {
-    color: 'grey',
-    fontSize: 12,
-    // marginTop: 4,
-    marginLeft: 4,
-  },
-  circle: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'navy', // 동그라미의 색상 설정
-    marginRight: 10,
-  },
-  itemTitleText: {
-    flex: 1,
-    flexWrap: 'wrap',
-    color: 'black',
-    marginLeft: 16,
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  emptyItem: {
-    paddingLeft: 20,
-    height: 52,
-    justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: 'lightgrey',
-  },
-  emptyItemText: {
-    color: 'grey',
-    fontSize: 14,
-    alignSelf: 'center',
-  },
-  todayButton: {
-    padding: 10,
-    height: 45,
-    width: 100,
-    backgroundColor: '#e85a19d6',
-  },
-});
