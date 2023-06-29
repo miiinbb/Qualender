@@ -6,7 +6,6 @@ import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
 import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ITEMS from './Items2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './AuthContext';
 
@@ -19,7 +18,20 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [username, setUsername] = useState('');
   const userNickname = user ? user.nickname : '';
 
-  console.log('유저 정보:', user);
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        console.log("getData", value);
+        setUsername(value);
+        return value;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  console.log('유저 정보:', username);
   const goToMain = () => {
     navigation.dispatch(
       CommonActions.reset({
@@ -30,6 +42,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       })
     );
   }
+
   const handleBack = () => {
     onBack(); // 뒤로가기 버튼이 눌렸을 때 onBack 함수 호출
   };
@@ -79,7 +92,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       let count = 0;
       let count2 = 0;
       try {
-        const response = await fetch('http://143.248.253.46:3000/favorites', {
+        const response = await fetch('http://172.30.1.36:3000/favorites', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -119,6 +132,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
           <Text style={styles.idText}>{`${userNickname}`}</Text>
+          <Text style={styles.idText}>{userNickname ? `${userNickname}` : '로그인을 해주세요.'}</Text>
         </TouchableOpacity>
       </View> 
       {/* console.log(user) */}

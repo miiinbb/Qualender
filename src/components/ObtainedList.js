@@ -18,7 +18,7 @@ function ObtainedList() {
         console.log("getData", value);
         setUsername(value);
         // 즐겨찾기 목록 가져오기
-        const response = await fetch('http://143.248.253.32:3000/getObtainedBoxes', {
+        const response = await fetch('http://172.30.1.36:3000/getObtainedBoxes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ function ObtainedList() {
     const data = { username : username, selectedObtainedBoxes : selectedObtainedBoxes };
 
     try {
-      const response = await fetch('http://143.248.253.32:3000/saveObtainedBoxes', {
+      const response = await fetch('http://172.30.1.36:3000/saveObtainedBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,
