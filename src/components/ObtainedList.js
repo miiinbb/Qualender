@@ -1,11 +1,14 @@
 //Obtained
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ObtainedList() {
   const [selectedObtainedBoxes, setselectedObtainedBoxes] = useState([]);
   const [username, setUsername] = useState('');
+  useEffect(() => {
+    getData();
+  }, []);
 
   const getData = async () => {
     try {
@@ -13,7 +16,22 @@ function ObtainedList() {
       if (value !== null) {
         console.log("getData", value);
         setUsername(value);
-        return value;
+        // 즐겨찾기 목록 가져오기
+        const response = await fetch('http://172.30.1.36:3000/getObtainedBoxes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: value }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.selectedObtainedBoxes);
+          setselectedObtainedBoxes(result.selectedObtainedBoxes);
+        } else {
+          console.error('Network response was not ok.');
+        }
       }
     } catch (e) {
       console.log(e);
@@ -21,10 +39,10 @@ function ObtainedList() {
   };
 
   const handleSave = async () => {
-    const data = { username: username, selectedObtainedBoxes : selectedObtainedBoxes };
+    const data = { username : username, selectedObtainedBoxes : selectedObtainedBoxes };
 
     try {
-      const response = await fetch('http://192.168.0.30:3000/saveObtainedCertificate', {
+      const response = await fetch('http://172.30.1.36:3000/saveObtainedBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,8 +106,6 @@ function ObtainedList() {
     handleSave();
   };
 
-  getData();
-
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
@@ -128,6 +144,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,

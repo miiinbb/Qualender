@@ -1,5 +1,5 @@
 //Favorites
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,13 +7,32 @@ function Favorites() {
   const [selectedFavoritesBoxes, setselectedFavoritesBoxes] = useState([]);
   const [username, setUsername] = useState('');
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
         console.log("getData", value);
         setUsername(value);
-        return value;
+        // 즐겨찾기 목록 가져오기
+        const response = await fetch('http://172.30.1.36:3000/getFavoritesBoxes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: value }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.selectedFavoritesBoxes);
+          setselectedFavoritesBoxes(result.selectedFavoritesBoxes);
+        } else {
+          console.error('Network response was not ok.');
+        }
       }
     } catch (e) {
       console.log(e);
@@ -24,7 +43,7 @@ function Favorites() {
     const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
-      const response = await fetch('http://192.168.0.30:3000/saveBoxes', {
+      const response = await fetch('http://172.30.1.36:3000/saveFavoritesBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,8 +107,6 @@ function Favorites() {
     handleSave();
   };
 
-  getData();
-
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
@@ -128,6 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,
