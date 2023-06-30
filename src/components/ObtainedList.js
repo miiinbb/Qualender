@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function ObtainedList() {
   const [selectedObtainedBoxes, setselectedObtainedBoxes] = useState([]);
   const [username, setUsername] = useState('');
-
   useEffect(() => {
     getData();
   }, []);
