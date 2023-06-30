@@ -83,7 +83,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
 
     try {
-      const response = await fetch('http://172.30.1.34/24:3000/register', {
+      const response = await fetch('http://172.30.1.36:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
   const checkNameAvailability = async () => {
     console.log('checkname is called');
     try {
-      const response = await fetch('http://172.30.1.34/24:3000/name', {
+      const response = await fetch('http://172.30.1.36:3000/name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
