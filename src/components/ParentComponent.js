@@ -7,7 +7,7 @@ function ParentComponent() {
     const username = '제발요'; // 실제 사용자명 값으로 변경
     const data = { username, selectedFavoritesBoxes };
 
-    fetch('http://192.168.0.30:3000/saveBoxes', {
+    fetch('http://143.248.254.65:3000/saveBoxes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

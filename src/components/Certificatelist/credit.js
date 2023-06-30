@@ -1,5 +1,7 @@
-import React from "react";
+
+import React, { useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
+import { PinchGestureHandler, State } from "react-native-gesture-handler";
 const creditImage = require("../../../assets/creditimage.jpg");
 
 const windowHeight = Dimensions.get("window").height;
@@ -10,20 +12,54 @@ function Credit({ navigation }) {
     Linking.openURL("https://www.toeicswt.co.kr");
   };
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.contentContainer}>
-        <View style={styles.imageContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>시험 상세 정보</Text>
-          </View>
-          <Image source={creditImage} style={styles.image} resizeMode="contain" />
+  
+//줌기능
+const [scale, setScale] = useState(1);
+
+const onPinchGestureEvent = event => {
+  if (event.nativeEvent.scale !== 0) {
+    setScale(event.nativeEvent.scale);
+  }
+};
+
+const onPinchHandlerStateChange = event => {
+  if (event.nativeEvent.oldState === State.ACTIVE) {
+    setScale(prevScale => Math.max(1, prevScale));
+  }
+};
+
+return (
+  <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.contentContainer}>
+      <View style={styles.imageContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>시험 상세 정보</Text>
         </View>
-        <TouchableOpacity style={styles.buttonContainer} onPress={link}>
-          <Text style={styles.buttonText}>시험 접수</Text>
-        </TouchableOpacity>
+        <PinchGestureHandler
+          onGestureEvent={onPinchGestureEvent}
+          onHandlerStateChange={onPinchHandlerStateChange}
+        >
+          <Image
+            source={creditImage}
+            style={[
+              styles.image,
+              {
+                transform: [
+                  {
+                    scale: scale,
+                  },
+                ],
+              },
+            ]}
+            resizeMode="contain"
+          />
+        </PinchGestureHandler>
       </View>
-    </ScrollView>
+      <TouchableOpacity style={styles.buttonContainer} onPress={link}>
+        <Text style={styles.buttonText}>시험 접수</Text>
+      </TouchableOpacity>
+    </View>
+  </ScrollView>
   );
 }
 
@@ -67,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#007AFF",
     borderRadius: 10,
     paddingVertical: 15,
-    marginBottom: 20,
+    marginBottom: -3,
   },
   buttonText: {
     alignSelf: "center",
