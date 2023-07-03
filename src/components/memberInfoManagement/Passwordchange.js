@@ -25,7 +25,7 @@ function Passwordchange({ navigation }) {
     const data = { username: username, newPassword: newPassword, confirmPassword: confirmPassword };
   
     try {
-      const response = await fetch('http://172.30.1.37:3000/password-change', {
+      const response = await fetch('http://172.30.1.44:3000/password-change', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

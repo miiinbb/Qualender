@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const COSImage1 = require("../../../assets/cos1.png");
-const COSImage2 = require("../../../assets/cos2.png");
-const COSImage3 = require("../../../assets/cos3.png");
+import { PinchGestureHandler, State } from "react-native-gesture-handler";
+const COSImage1 = require("../../../assets/cos.png");
+
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -12,6 +12,22 @@ function Cos({ navigation }) {
     Linking.openURL("https://www.ybmit.com/cos/cos_test.jsp");
   };
 
+  
+//줌기능
+const [scale, setScale] = useState(1);
+
+const onPinchGestureEvent = event => {
+  if (event.nativeEvent.scale !== 0) {
+    setScale(event.nativeEvent.scale);
+  }
+};
+
+const onPinchHandlerStateChange = event => {
+  if (event.nativeEvent.oldState === State.ACTIVE) {
+    setScale(prevScale => Math.max(1, prevScale));
+  }
+};
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.contentContainer}>
@@ -19,9 +35,25 @@ function Cos({ navigation }) {
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>시험 상세 정보</Text>
           </View>
-          <Image source={COSImage1} style={styles.image} resizeMode="contain" />
-          <Image source={COSImage2} style={styles.image} resizeMode="contain" />
-          <Image source={COSImage3} style={styles.image} resizeMode="contain" />
+          <PinchGestureHandler
+            onGestureEvent={onPinchGestureEvent}
+            onHandlerStateChange={onPinchHandlerStateChange}
+          >
+            <Image
+              source={COSImage1}
+              style={[
+                styles.image,
+                {
+                  transform: [
+                    {
+                      scale: scale,
+                    },
+                  ],
+                },
+              ]}
+              resizeMode="contain"
+            />
+          </PinchGestureHandler>
         </View>
         <TouchableOpacity style={styles.buttonContainer} onPress={link}>
           <Text style={styles.buttonText}>자격증 사이트로 이동</Text>
@@ -44,7 +76,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: windowWidth, // 이미지 너비를 화면 너비의 90%로 설정
-    height: windowHeight * 0.6,
+    height: windowHeight * 1.2,//0.6
     aspectRatio: 0.8, // 이미지의 가로 세로 비율
     maxWidth: "100%",
     maxHeight: "200%",

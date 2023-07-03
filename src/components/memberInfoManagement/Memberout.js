@@ -81,7 +81,7 @@ function Memberout({ navigation }) {
           return;
         }
     
-        const response = await fetch('http://172.30.1.37:3000/delete-account', {
+        const response = await fetch('http://172.30.1.44:3000/delete-account', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

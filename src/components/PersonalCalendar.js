@@ -262,7 +262,7 @@ export default function MyCalendar(props) {
       const data = { username: username };
   
       try {
-        const response = await fetch('http://172.30.1.37:3000/personal', {
+        const response = await fetch('http://172.30.1.44:3000/personal', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

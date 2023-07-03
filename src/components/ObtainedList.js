@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function ObtainedList() {
   const [selectedObtainedBoxes, setselectedObtainedBoxes] = useState([]);
   const [username, setUsername] = useState('');
-
   useEffect(() => {
     getData();
   }, []);
@@ -18,7 +17,7 @@ function ObtainedList() {
         console.log("getData", value);
         setUsername(value);
         // 즐겨찾기 목록 가져오기
-        const response = await fetch('http://172.30.1.35:3000/getObtainedBoxes', {
+        const response = await fetch('http://172.30.1.44:3000/getObtainedBoxes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -43,7 +42,7 @@ function ObtainedList() {
     const data = { username : username, selectedObtainedBoxes : selectedObtainedBoxes };
 
     try {
-      const response = await fetch('http://172.30.1.37:3000/saveObtainedBoxes', {
+      const response = await fetch('http://172.30.1.44:3000/saveObtainedBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
