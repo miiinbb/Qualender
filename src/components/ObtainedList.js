@@ -1,6 +1,7 @@
+//ObtainedList.js
 //Obtained
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions, Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ObtainedList() {
@@ -17,7 +18,7 @@ function ObtainedList() {
         console.log("getData", value);
         setUsername(value);
         // 즐겨찾기 목록 가져오기
-        const response = await fetch('http://172.30.1.44:3000/getObtainedBoxes', {
+        const response = await fetch('http://172.30.1.37:3000/getObtainedBoxes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ function ObtainedList() {
     const data = { username : username, selectedObtainedBoxes : selectedObtainedBoxes };
 
     try {
-      const response = await fetch('http://172.30.1.44:3000/saveObtainedBoxes', {
+      const response = await fetch('http://172.30.1.37:3000/saveObtainedBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,6 +60,24 @@ function ObtainedList() {
     } catch (error) {
       console.error('Error occurred while making the request:', error);
     }
+  };
+
+  const handleSaveButtonPress = () => {
+    Alert.alert(
+      '저장',
+      '저장하시겠습니까?',
+      [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '확인',
+          onPress: handleSave,
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const handleBoxPress = (name) => {
@@ -102,9 +121,6 @@ function ObtainedList() {
     "#C4E9B5", // Pale Greenish
   ];
 
-  const handleSaveButtonPress = () => {
-    handleSave();
-  };
 
   return (
     <View style={styles.container}>
@@ -173,7 +189,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   saveButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#17375E',
     paddingVertical: 10,
     paddingHorizontal: 20,
     padding: 5,
@@ -189,3 +205,4 @@ const styles = StyleSheet.create({
 });
 
 export default ObtainedList;
+

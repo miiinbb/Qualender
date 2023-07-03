@@ -23,7 +23,7 @@ function Phonenumberchange({ navigation }) {
     const data = { username: username, newPhonenumber: newNumber };
   
     try {
-      const response = await fetch('http://172.30.1.44:3000/phonenumber-change', {
+      const response = await fetch('http://172.30.1.37:3000/phonenumber-change', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 //SignupPage.js
+//SignupPage.js
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, TouchableOpacity, Text, Dimensions, StyleSheet, ScrollView  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -157,7 +158,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
 
     try {
-      const response = await fetch('http://172.30.1.35:3000/name', {
+      const response = await fetch('http://172.30.1.37:3000/name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -331,7 +332,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     // padding: 90,
-    paddingVertical:50,
+    paddingVertical:80,
     backgroundColor:'white',
   },
   title: { //맨 위 '회원가입을 위해~' 부분

@@ -45,6 +45,22 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브
 
 const Stack = createStackNavigator();
 
+// 스플래시 스크린 컴포넌트
+const SplashScreen = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start', backgroundColor: '#17375E' }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: '10%', marginBottom: 20 }}>
+      <Text style={{ color: '#FFC107', fontSize: 50, fontWeight: 'bold', textAlign: 'left' }}>
+        퀄 린 더
+      </Text>
+      <Image source={require('./assets/logo.png')} style={{ width: 50, height: 50, marginLeft: 10 }} />
+    </View>
+    <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold', textAlign: 'left', marginLeft: '10%', marginTop: '-40%' }}>
+      언제 어디서든 손쉽게 시작하는{'\n'}
+      나만의 자격증 일정 관리 어플,
+    </Text>
+  </View>
+);
+
 //기능명은 main, js명은 my
 function MainCalendar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -219,7 +235,7 @@ function MyDrawer() {
   };
   return (
     <Drawer.Navigator
-      initialRouteName='메인캘린더'
+      initialRouteName='메인퀄린더'
       useLegacyImplementation
       //drawer 오른쪽 방향으로 바꾸는 코드..이지만 실행하면 뭔가 충돌나서 일단 멈춤
       //screenOptions={{drawerPosition: 'right'}}
@@ -246,6 +262,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [userNickname, setUserNickname] = useState('');
   const [data, setData] = useState(''); // 새로운 useState 추가
+  const [showSplash, setShowSplash] = useState(true); // 스플래시 스크린 표시 여부를 저장하는 상태
 
   const signIn = async (userInfo) => {
     // 로그인 처리 로직
@@ -276,9 +293,17 @@ export default function App() {
       } catch (error) {
         console.log('사용자 정보 가져오기 실패:', error);
       }
+      // 2초 후에 스플래시 스크린을 가리도록 설정
+      setTimeout(() => {
+        setShowSplash(false);
+      }, 2500);
     };
     getUserInfo();
   }, []);
+
+  if (showSplash) {
+    return <SplashScreen />;
+  }
 
   console.log('유저 정보:', userNickname);
   console.log('checking:',userNickname);
@@ -287,6 +312,7 @@ export default function App() {
     <UserProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
+        {/* <Stack.Screen name="스플래시" component={SplashScreen} options={{ headerShown: false }} /> */}
         <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
         <Stack.Screen name="MainCalendar" component={MyDrawer} options={{headerShown: false, title:'뒤로'}}/>
         <Stack.Screen name="LoginPage" component={LoginPage1} options={{title:'로그인'}}/>

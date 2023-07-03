@@ -1,3 +1,4 @@
+//MyPage.js
 //Mypage.js
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
@@ -14,23 +15,30 @@ const Stack = createStackNavigator();
 function MyPage ({ onLogin, onBack, onSignup }) {
   const navigation = useNavigation();
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
-  const { user } = useContext(AuthContext);
+  const { user, updateNickname } = useContext(AuthContext);
+  const [userNickname, setUserNickname] = useState('');
   const [username, setUsername] = useState('');
-  const userNickname = user ? user.nickname : '';
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('username');
-      if (value !== null) {
-        console.log("getData", value);
-        setUsername(value);
-        return value;
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('username');
+        if (value !== null) {
+          setIsLoggedIn(true);
+          setUserNickname(value);
+        } else {
+          setIsLoggedIn(false);
+          setUserNickname('');
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
+    };
+  
+    getData();
+  }, []);
+  
   console.log('유저 정보:', username);
   const goToMain = () => {
     navigation.dispatch(
@@ -92,7 +100,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       let count = 0;
       let count2 = 0;
       try {
-        const response = await fetch('http://172.30.1.44:3000/favorites', {
+        const response = await fetch('http://172.30.1.37:3000/favorites', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -131,8 +139,8 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       <View style={styles.iconID}>
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
-          <Text style={styles.idText}>{`${userNickname}`}</Text>
-          <Text style={styles.idText}>{userNickname ? `${userNickname}` : '로그인을 해주세요.'}</Text>
+          <Text style={styles.idText}>{isLoggedIn ?  `${userNickname}님 반갑습니다` : '로그인을 해주세요.'}</Text>
+          
         </TouchableOpacity>
       </View> 
       {/* console.log(user) */}

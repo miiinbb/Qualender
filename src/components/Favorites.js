@@ -1,6 +1,7 @@
+//Favorites.js
 //Favorites
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions, Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Favorites() {
@@ -18,7 +19,7 @@ function Favorites() {
         console.log("getData", value);
         setUsername(value);
         // 즐겨찾기 목록 가져오기
-        const response = await fetch('http://172.30.1.44:3000/getFavoritesBoxes', {
+        const response = await fetch('http://172.30.1.37:3000/getFavoritesBoxes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -39,11 +40,12 @@ function Favorites() {
     }
   };
 
+
   const handleSave = async () => {
     const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
-      const response = await fetch('http://172.30.1.44:3000/saveFavoritesBoxes', {
+      const response = await fetch('http://172.30.1.37:3000/saveFavoritesBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,6 +62,25 @@ function Favorites() {
     } catch (error) {
       console.error('Error occurred while making the request:', error);
     }
+  };
+
+
+  const handleSaveButtonPress = () => {
+    Alert.alert(
+      '저장',
+      '저장하시겠습니까?',
+      [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '확인',
+          onPress: handleSave,
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const handleBoxPress = (name) => {
@@ -102,10 +123,6 @@ function Favorites() {
     "#FFC107", // Amber
     "#C4E9B5", // Pale Greenish
   ];
-
-  const handleSaveButtonPress = () => {
-    handleSave();
-  };
 
   return (
     <View style={styles.container}>
@@ -174,7 +191,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   saveButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#17375E',
     paddingVertical: 10,
     paddingHorizontal: 20,
     padding: 5,

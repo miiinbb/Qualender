@@ -39,7 +39,7 @@ function Emailchange() {
     const data = { username: username, newEmail: email };
   
     try {
-      const response = await fetch('http://172.30.1.44:3000/email-change', {
+      const response = await fetch('http://172.30.1.37:3000/email-change', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
