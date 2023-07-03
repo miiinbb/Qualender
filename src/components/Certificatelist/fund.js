@@ -1,14 +1,29 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const fundImage1 = require("../../../assets/fund_1.jpg");
-const fundImage2 = require("../../../assets/fund_2.jpg");
 
+import React, { useRef, useState } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
+import { PinchGestureHandler, State } from "react-native-gesture-handler";
+
+const fundImage1 = require("../../../assets/fund.png");
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 function Fund({ navigation }) {
   const link = () => {
     Linking.openURL("https://license.kofia.or.kr/examInfo/examYearly.do");
+  };
+
+  const [scale, setScale] = useState(1);
+
+  const onPinchGestureEvent = event => {
+    if (event.nativeEvent.scale !== 0) {
+      setScale(event.nativeEvent.scale);
+    }
+  };
+
+  const onPinchHandlerStateChange = event => {
+    if (event.nativeEvent.oldState === State.ACTIVE) {
+      setScale(prevScale => Math.max(1, prevScale));
+    }
   };
 
   return (
@@ -18,11 +33,28 @@ function Fund({ navigation }) {
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>시험 상세 정보</Text>
           </View>
-          <Image source={fundImage1} style={styles.image} resizeMode="contain" />
-          <Image source={fundImage2} style={styles.image} resizeMode="contain" />
+          <PinchGestureHandler
+            onGestureEvent={onPinchGestureEvent}
+            onHandlerStateChange={onPinchHandlerStateChange}
+          >
+            <Image
+              source={fundImage1}
+              style={[
+                styles.image,
+                {
+                  transform: [
+                    {
+                      scale: scale,
+                    },
+                  ],
+                },
+              ]}
+              resizeMode="contain"
+            />
+          </PinchGestureHandler>
         </View>
         <TouchableOpacity style={styles.buttonContainer} onPress={link}>
-          <Text style={styles.buttonText}>시험 접수</Text>
+          <Text style={styles.buttonText}>자격증 사이트로 이동</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -40,19 +72,15 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 50,
   },
-  image: {
-    width: windowWidth , // 이미지 너비를 화면 너비의 90%로 설정
-    height: windowHeight * 2,
-    aspectRatio: 0.8, // 이미지의 가로 세로 비율
-    maxWidth: "100%",
-    maxHeight: "200%",
+  imageContainer: {
+    marginTop: 20,
+    marginBottom: 20,
   },
   titleContainer: {
-    backgroundColor: "#000000",
+    backgroundColor: "#17375E",
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginTop: -20,
-    // marginBottom: 10,
     height: 50,
     justifyContent: "center",
   },
@@ -62,21 +90,33 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  image: {
+    width: windowWidth * 0.9, // 이미지 너비를 화면 너비의 90%로 설정
+    height: windowHeight * 4.6,
+    aspectRatio: 0.8, // 이미지의 가로 세로 비율
+    maxWidth: "100%",
+    maxHeight: "200%",
+    marginTop: -200,
+    marginBottom: -200,
+  },
   buttonContainer: {
     marginTop: 20,
-    width: windowWidth * 0.8,
+    width: windowWidth * 0.9,
     alignSelf: "center",
-    backgroundColor: "#007AFF",
-    borderRadius: 10,
-    paddingVertical: 15,
+    justifyContent: "center",
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
     marginBottom: 20,
   },
   buttonText: {
     alignSelf: "center",
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 17,
+    color: 'white',
+    fontWeight: 'normal',
   },
 });
 
 export default Fund;
+

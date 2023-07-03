@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^18.0.1",
-    "@react-native-async-storage/async-storage": "^1.18.2",
+    "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-community/datetimepicker": "^6.7.3",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-picker/picker": "2.4.8",
@@ -37,6 +37,7 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.9.0",
+    "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-linking": "^0.0.0",
     "react-native-modal-datetime-picker": "^15.0.1",
     "react-native-reanimated": "~2.14.4",

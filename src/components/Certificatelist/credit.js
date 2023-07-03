@@ -1,29 +1,64 @@
-import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
-const creditImage = require("../../../assets/creditimage.jpg");
 
+import React, { useRef, useState } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
+import { PinchGestureHandler, State } from "react-native-gesture-handler";
+const creditImage = require("../../../assets/creditimage.jpg");
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 function Credit({ navigation }) {
   const link = () => {
-    Linking.openURL("https://www.toeicswt.co.kr");
+    Linking.openURL("https://www.kbi.or.kr/platformWeb/Qual.do?cmd=openPage&pageName=qualTestScheduleList");
   };
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.contentContainer}>
-        <View style={styles.imageContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>시험 상세 정보</Text>
-          </View>
-          <Image source={creditImage} style={styles.image} resizeMode="contain" />
+  
+//줌기능
+const [scale, setScale] = useState(1);
+
+const onPinchGestureEvent = event => {
+  if (event.nativeEvent.scale !== 0) {
+    setScale(event.nativeEvent.scale);
+  }
+};
+
+const onPinchHandlerStateChange = event => {
+  if (event.nativeEvent.oldState === State.ACTIVE) {
+    setScale(prevScale => Math.max(1, prevScale));
+  }
+};
+
+return (
+  <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.contentContainer}>
+      <View style={styles.imageContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>시험 상세 정보</Text>
         </View>
-        <TouchableOpacity style={styles.buttonContainer} onPress={link}>
-          <Text style={styles.buttonText}>시험 접수</Text>
-        </TouchableOpacity>
+        <PinchGestureHandler
+          onGestureEvent={onPinchGestureEvent}
+          onHandlerStateChange={onPinchHandlerStateChange}
+        >
+          <Image
+            source={creditImage}
+            style={[
+              styles.image,
+              {
+                transform: [
+                  {
+                    scale: scale,
+                  },
+                ],
+              },
+            ]}
+            resizeMode="contain"
+          />
+        </PinchGestureHandler>
       </View>
-    </ScrollView>
+      <TouchableOpacity style={styles.buttonContainer} onPress={link}>
+        <Text style={styles.buttonText}>자격증 사이트로 이동</Text>
+      </TouchableOpacity>
+    </View>
+  </ScrollView>
   );
 }
 
@@ -46,7 +81,7 @@ const styles = StyleSheet.create({
     maxHeight: "200%",
   },
   titleContainer: {
-    backgroundColor: "#000000",
+    backgroundColor: "#17375E",
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginTop: -20,
@@ -62,18 +97,20 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
-    width: windowWidth * 0.8,
+    width: windowWidth * 0.9,
     alignSelf: "center",
-    backgroundColor: "#007AFF",
-    borderRadius: 10,
-    paddingVertical: 15,
+    justifyContent: "center",
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
     marginBottom: 20,
   },
   buttonText: {
     alignSelf: "center",
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 17,
+    color: 'white',
+    fontWeight: 'normal',
   },
 });
 

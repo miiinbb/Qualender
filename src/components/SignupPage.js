@@ -82,8 +82,15 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
       return;
     }
 
+    // 비밀번호 생성규칙을 검증합니다.
+    const passwordPattern = /^[a-z0-9]{8,12}$/; // 숫자/영어소문자, 8~12자리
+    if (!passwordPattern.test(password)) {
+      Alert.alert('오류', '비밀번호는 숫자와 영어소문자 조합으로 8~12자리여야 합니다.');
+      return;
+    }
+    
     try {
-      const response = await fetch('http://143.248.253.46:3000/register', {
+      const response = await fetch('http://172.30.1.37:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,8 +146,18 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
 
   const checkNameAvailability = async () => {
     console.log('checkname is called');
+
+    // ID 생성규칙을 검증합니다.
+    const idPattern = /^[a-z0-9]{6,10}$/; // 숫자/영어소문자, 6~10자리
+    if (!idPattern.test(username)) {
+      Alert.alert('오류', '아이디는 숫자와 영어소문자 조합으로 6~10자리여야 합니다.');
+      setUsername('');
+      setIsUsernameValid(false);
+      return;
+    }
+
     try {
-      const response = await fetch('http://143.248.253.46:3000/name', {
+      const response = await fetch('http://172.30.1.35:3000/name', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -193,7 +210,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             value={username}
             onChangeText={(text) => setUsername(text)}
             style={styles.inputidandnickname}
-            placeholder="아이디를 입력하세요"
+            placeholder="아이디(영소문자+숫자 6~10자리)"
             placeholderTextColor="silver"
           />
           <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>
@@ -209,7 +226,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             value={nickname}
             onChangeText={text => setNickname(text)}
             style={styles.inputidandnickname}
-            placeholder="닉네임을 입력하세요"
+            placeholder="비밀번호입력(영소문자+숫자 8~12자리)"
             placeholderTextColor="silver"
           />
           <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>

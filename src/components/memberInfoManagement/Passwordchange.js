@@ -1,22 +1,51 @@
 //Passwordchange.js
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Passwordchange({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState('');
 
-  const handlePasswordChange = () => {
-    if (newPassword === confirmPassword) {
-      // 여기에서 비밀번호 변경 로직을 구현합니다.
-      console.log("비밀번호 변경 완료");
-      // 비밀번호 변경 후 다른 화면으로 이동하거나 알림 메시지를 보여줄 수 있습니다.
-    } else {
-      console.log("비밀번호가 일치하지 않습니다.");
-      // 비밀번호가 일치하지 않을 경우 알림 메시지를 보여줄 수 있습니다.
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        console.log("getData", value);
+        setUsername(value);
+        return value;
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
+  const handlePasswordChange = async () => {
+    const data = { username: username, newPassword: newPassword, confirmPassword: confirmPassword };
+  
+    try {
+      const response = await fetch('http://172.30.1.44:3000/password-change', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message);
+        // 비밀번호 변경 성공 후 다른 화면으로 이동하거나 알림 메시지를 보여줄 수 있습니다.
+      } else {
+        console.error('Network response was not ok.');
+        // 비밀번호 변경 실패 시 알림 메시지를 보여줄 수 있습니다.
+      }
+    } catch (error) {
+      console.error('Error occurred while making the request:', error);
+    }
+  };
+  
   const goAlert = () =>
     Alert.alert( //여기서 '깔깔마녀' 없애면 확인 누를 시 어플이 종료됩니다..
       "정말로 변경하시겠습니까?", "깔깔마녀", [
@@ -26,10 +55,14 @@ function Passwordchange({ navigation }) {
           style: "cancel",
         },
         { text: "확인",
-          onPress: () => console.log("비밀번호 변경 완료")},
+        onPress: handlePasswordChange,
+        // console.log("비밀번호 변경 완료")
+        },
       ],
       { cancelable: false }
     );
+    
+  getData();
 
   return (
     <View style={styles.container}>
@@ -90,7 +123,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   buttonContainer: {
-    backgroundColor: '#17375E',
+    backgroundColor: '#141B38',
     paddingVertical: 17,
     paddingHorizontal: 20,
     padding: 5,

@@ -1,6 +1,6 @@
 //App.js
 import React, {useState,useEffect,useContext} from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +15,7 @@ import Animated from 'react-native-reanimated';
 import 'react-native-gesture-handler';
 import AuthContext from './src/components/AuthContext';
 import { UserProvider } from './src/components/UserContext'; // 추가된 부분
+import { AuthContextProvider } from './src/components/AuthContext';
 import MyCalendar from './src/components/MyCalendar';
 import PersonalCalendar from './src/components/PersonalCalendar';
 import LoginPage from './src/components/Login_page';
@@ -44,17 +45,30 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브
 
 const Stack = createStackNavigator();
 
-// 로그인 상태를 관리하기 위한 Context 생성
-// const AuthContext = React.createContext();
-const signIn = (userInfo) => {
-  // 로그인 처리 로직
-  setUser(userInfo);
-  setUserNickname(userInfo.nickname); // Set the user's nickname
-};
 //기능명은 main, js명은 my
 function MainCalendar() {
-  const { user } = useContext(AuthContext);
-  const [userNickname, setUserNickname] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user, userNickname, updateNickname, signOut } = useContext(AuthContext);
+  // const [userNickname, setUserNickname] = useState('');
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('username');
+        if (value !== null) {
+          setIsLoggedIn(true);
+          updateNickname(value); // Use the `updateNickname` function to update the user's nickname
+          // console.log("룰루랄라",userNickname)
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getData();
+  }, [updateNickname]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -20 }}>
@@ -90,19 +104,76 @@ function LoginPage1({navigation}) {
 }
 
 function CustomDrawerContent(props) {
-  // const [userNickname, setUserNickname] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userNickname, setUserNickname] = useState('');
   const navigation = useNavigation();
   const progress = useDrawerProgress();
-  const { user } = useContext(AuthContext);
-  const userNickname = user ? user.nickname : '';
+  const { user,setUser,signOut } = useContext(AuthContext); // AuthContext 추가
   const translateX = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
     outputRange: [-100, 0],
   });
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('username');
+        if (value !== null) {
+          setIsLoggedIn(true);
+          setUserNickname(value);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  
+    getData();
+  }, []);
+  // const getData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('username');
+  //     if (value !== null) {
+  //       console.log("getData", value);
+  //       setUserNickname(value);
+  //       return value;
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
   const handleLoginPress = () => {
     navigation.navigate(LoginPage);
   };
+
+  const handleLogoutPress = () => {
+    Alert.alert(
+      '로그아웃',
+      '로그아웃 하시겠습니까?',
+      [
+        { text: '취소', style: 'cancel' },
+        { text: '확인', onPress: handleLogoutConfirm },
+      ],
+      { cancelable: false }
+    );
+  };
+  
+
+  const handleLogoutConfirm = async () => {
+    try {
+      await AsyncStorage.removeItem('userInfo');
+      signOut();
+      setUserNickname('');
+      console.log('로그아웃 되었습니다.');
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.log('로그아웃 에러:', error);
+    }
+  };
+
+  // getData();
 
   return (
     <DrawerContentScrollView {...props}>
@@ -112,11 +183,20 @@ function CustomDrawerContent(props) {
           <Icon name="heart" size={24} color="pink" />
           <TouchableOpacity onPress={handleLoginPress}>
             <Text style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
-              {userNickname ? `안녕하세요, ${userNickname}님` : '로그인을 해주세요.'}
+              {isLoggedIn ?  `안녕하세요, ${userNickname}님` : '로그인을 해주세요.'}
             </Text>
           </TouchableOpacity>
           </View>
           <DrawerItemList {...props} />
+            { isLoggedIn && (
+            <DrawerItem
+              label="로그아웃"
+              onPress={handleLogoutPress}
+              icon={({ color, size }) => (
+                <Icon name="sign-out" color={color} size={size} />
+              )}
+              />
+            )}
       </Animated.View>
     </DrawerContentScrollView>
   );
@@ -146,18 +226,17 @@ function MyDrawer() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
-        name="메인캘린더"
+        name="메인퀄린더"
         component={MainCalendar}
         options={{
           headerShown: true,
-          headerTitle: '메인캘린더',
+          headerTitle: '메인퀄린더',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
         }}
       />
-      {/* 수정해야하는부분임 */}
-      <Drawer.Screen name="마이캘린더" component={PersonalCalendar1} onPress={handlePersonalCalendarPress} />
+      <Drawer.Screen name="마이퀄린더" component={PersonalCalendar1} />
       <Drawer.Screen name="마이페이지" component={MyPage1} />
     </Drawer.Navigator>
   );
@@ -165,11 +244,26 @@ function MyDrawer() {
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [userNickname, setUserNickname] = useState('');
+  const [data, setData] = useState(''); // 새로운 useState 추가
 
-  const signIn = (userInfo) => {
+  const signIn = async (userInfo) => {
     // 로그인 처리 로직
+    await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
     setUser(userInfo);
   };
+
+  const signOut = async () => {
+    try {
+      // AsyncStorage에서 사용자 정보 제거
+      await AsyncStorage.removeItem('userInfo');
+      // 사용자 상태를 null로 설정
+      setUser(null);
+    } catch (error) {
+      console.log('로그아웃 에러:', error);
+    }
+  };
+
   useEffect(() => {
     // AsyncStorage에서 사용자 정보를 가져와서 로그인 상태를 설정
     const getUserInfo = async () => {
@@ -177,7 +271,7 @@ export default function App() {
         const userInfoString = await AsyncStorage.getItem('userInfo');
         if (userInfoString) {
           const userInfo = JSON.parse(userInfoString);
-          signIn(userInfo);
+          setUser(userInfo);
         }
       } catch (error) {
         console.log('사용자 정보 가져오기 실패:', error);
@@ -185,9 +279,12 @@ export default function App() {
     };
     getUserInfo();
   }, []);
-  console.log('유저 정보:', user);
+
+  console.log('유저 정보:', userNickname);
+  console.log('checking:',userNickname);
   return (
-    <AuthContext.Provider value={{ user, signIn }}>
+    <AuthContextProvider value={{ user, setUser, signIn, signOut }}>
+    <UserProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
         <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
@@ -215,7 +312,8 @@ export default function App() {
         <Stack.Screen name="Thirdinsurance" component={Thirdinsurance} options={{title:'제3보험'}}/>
       </Stack.Navigator>
     </NavigationContainer>
-    </AuthContext.Provider>
+    </UserProvider>
+    </AuthContextProvider>
   );
 }
 
