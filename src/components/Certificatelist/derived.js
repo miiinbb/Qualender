@@ -55,7 +55,7 @@ return (
         </PinchGestureHandler>
       </View>
       <TouchableOpacity style={styles.buttonContainer} onPress={link}>
-        <Text style={styles.buttonText}>시험 접수</Text>
+        <Text style={styles.buttonText}>자격증 사이트로 이동</Text>
       </TouchableOpacity>
     </View>
   </ScrollView>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginRight: windowWidth * 0.03, // 오른쪽 여백 설정
   },
   titleContainer: {
-    backgroundColor: "#000000",
+    backgroundColor: "#17375E",
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginTop: -20,
@@ -100,18 +100,20 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
-    width: windowWidth * 0.8,
+    width: windowWidth * 0.9,
     alignSelf: "center",
-    backgroundColor: "#007AFF",
-    borderRadius: 10,
-    paddingVertical: 15,
-    marginBottom: -3,
+    justifyContent: "center",
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
+    marginBottom: 20,
   },
   buttonText: {
     alignSelf: "center",
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 17,
+    color: 'white',
+    fontWeight: 'normal',
   },
 });
 
