@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, } from "r
 import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IP from '../../data/IP';
 
 const Stack = createStackNavigator();
 
@@ -81,7 +82,7 @@ function Memberout({ navigation }) {
           return;
         }
     
-        const response = await fetch('http://172.30.1.44:3000/delete-account', {
+        const response = await fetch(`http://${IP}:3000/delete-account`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

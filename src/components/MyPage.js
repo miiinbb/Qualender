@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './AuthContext';
+import IP from '../data/IP';
 
 const Stack = createStackNavigator();
 
@@ -92,7 +93,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       let count = 0;
       let count2 = 0;
       try {
-        const response = await fetch('http://172.30.1.44:3000/favorites', {
+        const response = await fetch(`http://${IP}:3000/favorites`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
