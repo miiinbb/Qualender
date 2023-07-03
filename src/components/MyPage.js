@@ -1,3 +1,4 @@
+//MyPage.js
 //Mypage.js
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
@@ -14,9 +15,11 @@ const Stack = createStackNavigator();
 function MyPage ({ onLogin, onBack, onSignup }) {
   const navigation = useNavigation();
   const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
-  const { user } = useContext(AuthContext);
+  const { user, updateNickname } = useContext(AuthContext);
+  const [userNickname, setUserNickname] = useState('');
   const [username, setUsername] = useState('');
-  const userNickname = user ? user.nickname : '';
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     getUserInfo();
   }, []);
@@ -103,8 +106,8 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       <View style={styles.iconID}>
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
-          <Text style={styles.idText}>{`${userNickname}`}</Text>
-          <Text style={styles.idText}>{userNickname ? `${userNickname}` : '로그인을 해주세요.'}</Text>
+          <Text style={styles.idText}>{isLoggedIn ?  `${userNickname}님 반갑습니다` : '로그인을 해주세요.'}</Text>
+          
         </TouchableOpacity>
       </View> 
       {/* console.log(user) */}

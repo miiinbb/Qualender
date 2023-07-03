@@ -1,6 +1,6 @@
 //ObtainedList.js
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions, Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import IP from '../data/IP';
 
@@ -62,6 +62,24 @@ function ObtainedList() {
     }
   };
 
+  const handleSaveButtonPress = () => {
+    Alert.alert(
+      '저장',
+      '저장하시겠습니까?',
+      [
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+        {
+          text: '확인',
+          onPress: handleSave,
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const handleBoxPress = (name) => {
     const isSelected = selectedObtainedBoxes.includes(name);
     if (isSelected) {
@@ -103,9 +121,6 @@ function ObtainedList() {
     "#C4E9B5", // Pale Greenish
   ];
 
-  const handleSaveButtonPress = () => {
-    handleSave();
-  };
 
   return (
     <View style={styles.container}>
@@ -174,7 +189,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   saveButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#17375E',
     paddingVertical: 10,
     paddingHorizontal: 20,
     padding: 5,
@@ -190,3 +205,4 @@ const styles = StyleSheet.create({
 });
 
 export default ObtainedList;
+
