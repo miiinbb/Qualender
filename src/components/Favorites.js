@@ -18,7 +18,7 @@ function Favorites() {
         console.log("getData", value);
         setUsername(value);
         // 즐겨찾기 목록 가져오기
-        const response = await fetch('http://172.30.1.36:3000/getFavoritesBoxes', {
+        const response = await fetch('http://172.30.1.44:3000/getFavoritesBoxes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ function Favorites() {
     const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
-      const response = await fetch('http://172.30.1.36:3000/saveFavoritesBoxes', {
+      const response = await fetch('http://172.30.1.44:3000/saveFavoritesBoxes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -92,7 +92,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       let count = 0;
       let count2 = 0;
       try {
-        const response = await fetch('http://172.30.1.36:3000/favorites', {
+        const response = await fetch('http://172.30.1.44:3000/favorites', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
