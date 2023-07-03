@@ -4,8 +4,6 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, S
 import { PinchGestureHandler, State } from "react-native-gesture-handler";
 
 const sqldImage1 = require("../../../assets/sqld11.png");
-
-
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 

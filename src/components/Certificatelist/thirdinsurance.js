@@ -14,7 +14,6 @@ function Thirdinsurance({ navigation }) {
    
 //줌기능
 const [scale, setScale] = useState(1);
-
 const onPinchGestureEvent = event => {
   if (event.nativeEvent.scale !== 0) {
     setScale(event.nativeEvent.scale);

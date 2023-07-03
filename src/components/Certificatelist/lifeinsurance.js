@@ -2,9 +2,6 @@ import React, { useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
 import { PinchGestureHandler, State } from "react-native-gesture-handler";
 const insuranceImage1 = require("../../../assets/insurance4.png");
-// const insuranceImage2 = require("../../../assets/insurance2.png");
-// const insuranceImage3 = require("../../../assets/insurance3.png");
-
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 

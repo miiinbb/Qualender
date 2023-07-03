@@ -3,10 +3,6 @@ import React, { useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
 import { PinchGestureHandler, State } from "react-native-gesture-handler";
 const cosproImage1 = require("../../../assets/cospro.png");
-// const cosproImage2 = require("../../../assets/cospro2.png");
-// const cosproImage3 = require("../../../assets/cospro3.png");
-// const cosproImage4 = require("../../../assets/cospro4.png");
-
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 

@@ -3,7 +3,6 @@ import React, { useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
 import { PinchGestureHandler, State } from "react-native-gesture-handler";
 const ToeicSpeakingImage = require("../../../assets/toeicspeakinginfo.jpeg");
-
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 

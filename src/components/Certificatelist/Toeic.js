@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions, Linking, ScrollView } from "react-native";
 import { PinchGestureHandler, State } from "react-native-gesture-handler";
 const ToeicImage = require("../../../assets/toeic_info.jpeg");
-
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
