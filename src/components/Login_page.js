@@ -39,7 +39,7 @@ function LoginPage ({ onLogin, onBack}) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://172.30.1.36:3000/login', {
+      const response = await fetch('http://172.30.1.37:3000/login', {
         // http://172.30.1.36:3000/register
         method: 'POST',
         headers: {
