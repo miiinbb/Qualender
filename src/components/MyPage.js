@@ -1,5 +1,4 @@
 //MyPage.js
-//Mypage.js
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,9 +19,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    getUserInfo();
-  }, []);
   const getUserInfo = async () => {
     const data = { username: username };
     let count = 0;
@@ -41,7 +37,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         count = result.data.selectedFavorites.length;
         count2 = result.data.selectedObtained.length;
         // console.log(result.message);
-        // console.log(result.data);
+        console.log(result.data);
         console.log('즐겨찾기 개수: ' +count);
         console.log('취득자격 개수: ' +count2);
       } else {
@@ -107,7 +103,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         <Icon name="github" size={40} color="purple" style={styles.icon} />
         <TouchableOpacity onPress={() => console.log('ID Pressed')}>
           <Text style={styles.idText}>{isLoggedIn ?  `${userNickname}님 반갑습니다` : '로그인을 해주세요.'}</Text>
-          
         </TouchableOpacity>
       </View> 
       {/* console.log(user) */}
@@ -232,10 +227,8 @@ const styles = StyleSheet.create({
   },
 
   memberInfoManagementText: {
-  color: '#000000', //검은색으로 바꿈
+  color: '#000000',
     fontSize: 20,
-    // fontWeight: 'bold',
-    // textDecorationLine: 'underline',
   },
   
   gotomainButton: {
