@@ -5,6 +5,7 @@ import { Picker, } from "@react-native-picker/picker";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {useForm, Controller} from 'react-hook-form';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IP from '../../data/IP';
 
 function Emailchange() {
   const [newEmail, setNewEmail] = useState("");
@@ -39,7 +40,7 @@ function Emailchange() {
     const data = { username: username, newEmail: email };
   
     try {
-      const response = await fetch('http://172.30.1.37:3000/email-change', {
+      const response = await fetch(`http://${IP}:3000/email-change`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions, TouchableOpacity } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IP from '../../data/IP';
 
 function Passwordchange({ navigation }) {
   const [newPassword, setNewPassword] = useState("");
@@ -25,7 +26,7 @@ function Passwordchange({ navigation }) {
     const data = { username: username, newPassword: newPassword, confirmPassword: confirmPassword };
   
     try {
-      const response = await fetch('http://172.30.1.37:3000/password-change', {
+      const response = await fetch(`http://${IP}:3000/password-change`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

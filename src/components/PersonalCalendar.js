@@ -13,6 +13,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ITEMS from './Items2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEvent } from 'react-native-reanimated';
+import IP from '../data/IP';
 
 const Stack = createStackNavigator();
 const today = new Date().toISOString().split('T')[0];
@@ -262,7 +263,7 @@ export default function MyCalendar(props) {
       const data = { username: username };
   
       try {
-        const response = await fetch('http://172.30.1.37:3000/personal', {
+        const response = await fetch(`http://${IP}:3000/personal`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

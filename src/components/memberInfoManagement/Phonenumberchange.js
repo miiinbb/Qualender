@@ -2,6 +2,7 @@
 import React, { useState, } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, Dimensions,TouchableOpacity } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IP from '../../data/IP';
 
 function Phonenumberchange({ navigation }) {
   const [newNumber, setNewNumber] = useState("");
@@ -23,7 +24,7 @@ function Phonenumberchange({ navigation }) {
     const data = { username: username, newPhonenumber: newNumber };
   
     try {
-      const response = await fetch('http://172.30.1.37:3000/phonenumber-change', {
+      const response = await fetch(`http://${IP}:3000/phonenumber-change`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

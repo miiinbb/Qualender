@@ -3,12 +3,12 @@
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
-import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
+import { useFocusEffect,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './AuthContext';
+import IP from '../data/IP';
 
 const Stack = createStackNavigator();
 
@@ -21,24 +21,38 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('username');
-        if (value !== null) {
-          setIsLoggedIn(true);
-          setUserNickname(value);
-        } else {
-          setIsLoggedIn(false);
-          setUserNickname('');
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-  
-    getData();
+    getUserInfo();
   }, []);
-  
+  const getUserInfo = async () => {
+    const data = { username: username };
+    let count = 0;
+    let count2 = 0;
+    try {
+      const response = await fetch(`http://${IP}:3000/favorites`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        count = result.data.selectedFavorites.length;
+        count2 = result.data.selectedObtained.length;
+        // console.log(result.message);
+        // console.log(result.data);
+        console.log('즐겨찾기 개수: ' +count);
+        console.log('취득자격 개수: ' +count2);
+      } else {
+        console.error('Network response was not ok.');
+      }
+    } catch (error) {
+      console.error('Error occurred while making the request:', error);
+    }
+    return [count, count2];
+  };
+
   console.log('유저 정보:', username);
   const goToMain = () => {
     navigation.dispatch(
@@ -67,10 +81,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     navigation.navigate('MemberInfoChange'); // 회원정보변경으로 이동
   };
 
-  const handleSignup = () => {
-    onSignup(); // 회원가입 버튼이 눌렸을 때 onSignup 함수 호출
-  };
-
   const handleTogglePage = () => {
     setIsSignup(!isSignup); // Toggle between login and signup pages
   };
@@ -83,55 +93,12 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [counted, setCounted] = useState(0);
   const [counted2, setCounted2] = useState(0);
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('username');
-        if (value !== null) {
-          setUsername(value);
-          return value;
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-  
-    const getUserInfo = async () => {
-      const data = { username: username };
-      let count = 0;
-      let count2 = 0;
-      try {
-        const response = await fetch('http://172.30.1.37:3000/favorites', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-  
-        if (response.ok) {
-          const result = await response.json();
-          count = result.data.selectedFavorites.length;
-          count2 = result.data.selectedObtained.length;
-          console.log(result.message);
-          console.log(result.data);
-          // console.log('즐겨찾기 개수: ' +count);
-          // console.log('취득자격 개수: ' +count2);
-        } else {
-          console.error('Network response was not ok.');
-        }
-      } catch (error) {
-        console.error('Error occurred while making the request:', error);
-      }
-      return [count, count2];
-    };
-
-    getData();
     getUserInfo().then(counted => {
       setCounted(counted[0]);
       setCounted2(counted[1]);
     });
   },[navigation]);
-  console.log('외부에서 사용할 count 값:', counted);
+  // console.log('외부에서 사용할 count 값:', counted);
 
   return (
     <View style={styles.outerContainer}>

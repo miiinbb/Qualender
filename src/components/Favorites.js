@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions, Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IP from '../data/IP';
 
 function Favorites() {
   const [selectedFavoritesBoxes, setselectedFavoritesBoxes] = useState([]);
@@ -19,7 +20,7 @@ function Favorites() {
         console.log("getData", value);
         setUsername(value);
         // 즐겨찾기 목록 가져오기
-        const response = await fetch('http://172.30.1.37:3000/getFavoritesBoxes', {
+        const response = await fetch(`http://${IP}:3000/getFavoritesBoxes`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ function Favorites() {
     const data = { username: username, selectedFavoritesBoxes : selectedFavoritesBoxes };
 
     try {
-      const response = await fetch('http://172.30.1.37:3000/saveFavoritesBoxes', {
+      const response = await fetch(`http://${IP}:3000/saveFavoritesBoxes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

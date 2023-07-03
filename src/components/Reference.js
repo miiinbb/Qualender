@@ -1,151 +1,255 @@
-import React, { useState, useCallback } from "react";
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  Text,
-  TouchableOpacity,
-} from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
-import Header from "./components/Header";
-import {useForm, Controller} from 'react-hook-form';
+//Mypage.js
+import React, {useState,useEffect,useContext} from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AuthContext from './AuthContext';
+import IP from '../data/IP';
 
-const Sign = () => {
-  const [genderOpen, setGenderOpen] = useState(false);
-  const [genderValue, setGenderValue] = useState(null);
-  const [gender, setGender] = useState([
-    { label: "Male", value: "male" },
-    { label: "Female", value: "female" },
-    { label: "Prefer Not to Say", value: "neutral" },
-  ]);
-  const [loading, setLoading] = useState(false);
-  const { handleSubmit, control } = useForm();
-  const onSubmit = (data) => {
-    console.log(data, "data");
+const Stack = createStackNavigator();
+
+function MyPage ({ onLogin, onBack, onSignup }) {
+  const navigation = useNavigation();
+  const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
+  const { user } = useContext(AuthContext);
+  const [username, setUsername] = useState('');
+  const userNickname = user ? user.nickname : '';
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+  const getUserInfo = async () => {
+    const data = { username: username };
+    let count = 0;
+    let count2 = 0;
+    try {
+      const response = await fetch(`http://${IP}:3000/favorites`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        count = result.data.selectedFavorites.length;
+        count2 = result.data.selectedObtained.length;
+        // console.log(result.message);
+        // console.log(result.data);
+        console.log('즐겨찾기 개수: ' +count);
+        console.log('취득자격 개수: ' +count2);
+      } else {
+        console.error('Network response was not ok.');
+      }
+    } catch (error) {
+      console.error('Error occurred while making the request:', error);
+    }
+    return [count, count2];
   };
+
+  console.log('유저 정보:', username);
+  const goToMain = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'MainCalendar' },
+        ],
+      })
+    );
+  }
+
+  const handleBack = () => {
+    onBack(); // 뒤로가기 버튼이 눌렸을 때 onBack 함수 호출
+  };
+
+  const clickObtained = () => {
+    navigation.navigate('ObtainedList'); // 회원가입 페이지로 이동
+  };
+
+  const clickFavorites = () => {
+    navigation.navigate('Favorites'); // 즐겨찾기로 이동
+  };
+
+  const clickMemberInfoChange = () => {
+    navigation.navigate('MemberInfoChange'); // 회원정보변경으로 이동
+  };
+
+  const handleTogglePage = () => {
+    setIsSignup(!isSignup); // Toggle between login and signup pages
+  };
+
+  // Render SignupPage if isSignup is true
+  if (isSignup) {
+    return <SignupPage onSignup={handleTogglePage} onBack={handleBack} />;
+  }
+
+  const [counted, setCounted] = useState(0);
+  const [counted2, setCounted2] = useState(0);
+  useEffect(() => {
+    getUserInfo().then(counted => {
+      setCounted(counted[0]);
+      setCounted2(counted[1]);
+    });
+  },[navigation]);
+  // console.log('외부에서 사용할 count 값:', counted);
+
   return (
-    <View style={styles.container}>
-      <Header text="Sign In" />
-      <Text style={styles.label}>Name</Text>
-      <Controller
-        name="name"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            style={styles.input}
-            selectionColor={"#5188E3"}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-      />
+    <View style={styles.outerContainer}>
+      {/*닉네임 버튼 */}
+      <View style={styles.iconID}>
+        <Icon name="github" size={40} color="purple" style={styles.icon} />
+        <TouchableOpacity onPress={() => console.log('ID Pressed')}>
+          <Text style={styles.idText}>{`${userNickname}`}</Text>
+          <Text style={styles.idText}>{userNickname ? `${userNickname}` : '로그인을 해주세요.'}</Text>
+        </TouchableOpacity>
+      </View> 
+      {/* console.log(user) */}
+      <View style={styles.innerContainer}>
+        {/* 즐겨찾기 메뉴 버튼 */}
+        <View style={[styles.favorites, {marginRight: 10}]}>
+          <TouchableOpacity onPress={() => {clickFavorites(); console.log('Favorites Pressed');}}>
+            <Text style={styles.favText}>즐겨찾기</Text>
+            <Text/><Text/>
+            <Text style={[styles.favNum, {textDecorationLine: 'underline'}]}>⭐️ {counted}개</Text>
+          </TouchableOpacity>
+        </View>  
 
-      <Text style={styles.label}>Password</Text>
-      <Controller
-        name="password"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            style={styles.input}
-            secureTextEntry={true}
-            selectionColor={"#5188E3"}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-      />
-      <View>
-
-      <Text style={styles.label}>Gender</Text>
-      <Controller
-        name="gender"
-        defaultValue=""
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <View style={styles.dropdownGender}>
-            <DropDownPicker
-              style={styles.dropdown}
-              open={genderOpen}
-              value={genderValue} //genderValue
-              items={gender}
-              setOpen={setGenderOpen}
-              setValue={setGenderValue}
-              setItems={setGender}
-              placeholder="Select Gender"
-              placeholderStyle={styles.placeholderStyles}
-              onOpen={onGenderOpen}
-              onChangeValue={onChange}
-              zIndex={3000}
-              zIndexInverse={1000}
-            />
-          </View>
-        )}
-      />
-
+        {/* 취득한자격증 메뉴 버튼 */}
+        <View style={styles.ObtainedList}>
+          <TouchableOpacity onPress={() => {clickObtained(); console.log('Obtained Pressed');}}>
+            <Text style={styles.obtText}>취득한 자격증</Text>
+            <Text/><Text/>
+            <Text style={[styles.obtNum, {textDecorationLine: 'underline'}]}>❤️ {counted2}개</Text>
+          </TouchableOpacity>
+        </View>        
       </View>
-      <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-        <Text style={styles.getStarted}>Get Started</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity style={styles.logIn}>
-        <Text style={styles.links}>I have an account</Text>
+      {/* 회원정보변경 메뉴 버튼 */}
+      <TouchableOpacity style={[styles.memberInfoManagement]} onPress={clickMemberInfoChange}>
+        <Text style={styles.gotomainButtonText}>회원정보 변경</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={[styles.gotomainButton, {marginTop: 10}]} onPress={goToMain}>
+        <Text style={styles.gotomainButtonText}>메인캘린더로 돌아가기</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
+//화면 크기에 비례로 디자인 적용하기 위해 실행
+const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
-  container: {
+  outerContainer: { //하늘색 부분
     flex: 1,
+    height: height,
+    width: width,
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    // borderColor: '#5bd1d7', // 테두리 색상 설정
+    // borderWidth: 2, // 테두리 두께 설정
+    // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
+    // padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
-  input: {
-    borderStyle: "solid",
-    borderColor: "#B7B7B7",
-    borderRadius: 7,
-    borderWidth: 1,
-    fontSize: 15,
-    height: 50,
-    marginHorizontal: 10,
-    paddingStart: 10,
-    marginBottom: 15,
+
+  iconID: { //아이콘과 아이디가 들어있는 부분분
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    marginTop: -60,
+    marginVertical: 20,
+    marginHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    // borderRadius: 5,
+    borderWidth:1,
+    borderColor:'lightgray',
+    width: width*0.9,
   },
-  label: {
-    marginBottom: 7,
-    marginStart: 10,
+  icon: {
+    marginRight: 10, // 아이콘과 텍스트 사이 간격을 조정
   },
-  placeholderStyles: {
-    color: "grey",
+  idText: {
+    fontSize: 20,
+    textAlign: 'left',
+    paddingTop: 10,
   },
-  dropdownGender: {
-    marginHorizontal: 10,
-    width: "50%",
-    marginBottom: 15,
+
+  innerContainer:{ //즐겨찾기랑 취득한자격증 버튼을 포함하는 영역
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    height: height*0.2,
+    marginBottom: height*0.33,
   },
-  dropdown: {
-    borderColor: "#B7B7B7",
-    height: 50,
+
+  favorites:{//즐겨찾기 메뉴 버튼
+    width: width*0.44,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    backgroundColor: 'mistyrose',
+    borderWidth: 2,
+    borderColor: '#17375E',
   },
-  getStarted: {
-    backgroundColor: "#5188E3",
-    color: "white",
-    textAlign: "center",
-    marginHorizontal: 60,
-    paddingVertical: 15,
-    borderRadius: 50,
-    marginTop: 20,
+  favText:{//즐겨찾기텍스트
+    fontSize: 23,
+    textAlign: 'center',
   },
-  logIn: {
-    flex: 1,
-    justifyContent: "flex-end",
-    marginBottom: 10,
+  favNum:{//즐겨찾기 갯수
+    fontSize: 17,
+    textAlign: 'center',
   },
-  links: {
-    textAlign: "center",
-    textDecorationLine: "underline",
-    color: "#758580",
+
+  ObtainedList:{//취득한자격증 메뉴 버튼
+    width: width*0.44,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    backgroundColor: 'mintcream',
+    borderWidth: 2,
+    borderColor: '#17375E',
   },
+  obtText:{//취득한 텍스트
+    fontSize: 23,
+    textAlign: 'center',
+  },
+  obtNum:{//취득한 갯수
+    fontSize: 17,
+    textAlign: 'center',
+  },
+  memberInfoManagement: { //'회원가입'버튼
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: width*0.9,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  memberInfoManagementText: {
+  color: '#000000', //검은색으로 바꿈
+    fontSize: 20,
+    // fontWeight: 'bold',
+    // textDecorationLine: 'underline',
+  },
+  
+  gotomainButton: {
+    backgroundColor: '#17375E',
+    paddingVertical: 17,
+    paddingHorizontal: 20,
+    padding: 5,
+    width: width*0.9,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  gotomainButtonText: {
+    fontSize: 17,
+    color: 'white',
+    fontWeight: 'normal',
+  },
+  
 });
 
-export default Sign;
+export default MyPage;
