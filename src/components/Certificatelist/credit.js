@@ -8,7 +8,7 @@ const windowWidth = Dimensions.get("window").width;
 
 function Credit({ navigation }) {
   const link = () => {
-    Linking.openURL("https://www.toeicswt.co.kr");
+    Linking.openURL("https://www.kbi.or.kr/platformWeb/Qual.do?cmd=openPage&pageName=qualTestScheduleList");
   };
 
   
