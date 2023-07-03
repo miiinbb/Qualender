@@ -323,7 +323,6 @@ export default function MyCalendar(props) {
           markedDates={getMarkedDates()} 
         />
       )}
-      <Text>{username}</Text>
       <AgendaList
         sections={calendarList}
         extraData={calendarList}

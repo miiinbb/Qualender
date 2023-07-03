@@ -1,4 +1,4 @@
-//MyPage.js
+//MyPage.js 소영이랑 합쳤더니 안되는 코드
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,18 +18,54 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [userNickname, setUserNickname] = useState('');
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('username');
-      if (value !== null) {
-        console.log("getData", value);
-        setUsername(value);
-        return value;
+  
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('username');
+        if (value !== null) {
+          setIsLoggedIn(true);
+          setUserNickname(value);
+        } else {
+          setIsLoggedIn(false);
+          setUserNickname('');
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
+    };
+  
+    getData();
+  }, []);
+
+  const getUserInfo = async () => {
+    const data = { username: username };
+    let count = 0;
+    let count2 = 0;
+    try {
+      const response = await fetch(`http://${IP}:3000/favorites`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        count = result.data.selectedFavorites.length;
+        count2 = result.data.selectedObtained.length;
+        // console.log(result.message);
+        console.log(result.data);
+        console.log('즐겨찾기 개수: ' +count);
+        console.log('취득자격 개수: ' +count2);
+      } else {
+        console.error('Network response was not ok.');
+      }
+    } catch (error) {
+      console.error('Error occurred while making the request:', error);
     }
+    return [count, count2];
   };
 
   console.log('유저 정보:', username);
@@ -72,55 +108,12 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [counted, setCounted] = useState(0);
   const [counted2, setCounted2] = useState(0);
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('username');
-        if (value !== null) {
-          setUsername(value);
-          return value;
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-  
-    const getUserInfo = async () => {
-      const data = { username: username };
-      let count = 0;
-      let count2 = 0;
-      try {
-        const response = await fetch(`http://${IP}:3000/favorites`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-  
-        if (response.ok) {
-          const result = await response.json();
-          count = result.data.selectedFavorites.length;
-          count2 = result.data.selectedObtained.length;
-          console.log(result.message);
-          console.log(result.data);
-          // console.log('즐겨찾기 개수: ' +count);
-          // console.log('취득자격 개수: ' +count2);
-        } else {
-          console.error('Network response was not ok.');
-        }
-      } catch (error) {
-        console.error('Error occurred while making the request:', error);
-      }
-      return [count, count2];
-    };
-
-    getData();
     getUserInfo().then(counted => {
       setCounted(counted[0]);
       setCounted2(counted[1]);
     });
   },[navigation]);
-  console.log('외부에서 사용할 count 값:', counted);
+  // console.log('외부에서 사용할 count 값:', counted);
 
   return (
     <View style={styles.outerContainer}>
