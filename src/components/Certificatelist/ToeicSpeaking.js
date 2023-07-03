@@ -33,9 +33,6 @@ return (
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>시험 상세 정보</Text>
         </View>
-        <TouchableOpacity style={styles.buttonContainer} onPress={link}>
-          <Text style={styles.buttonText}>자격증 사이트로 이동</Text>
-        </TouchableOpacity>
         <PinchGestureHandler
           onGestureEvent={onPinchGestureEvent}
           onHandlerStateChange={onPinchHandlerStateChange}
