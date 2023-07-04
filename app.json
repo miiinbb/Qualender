@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.qualendar.my-app"
+      // "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
