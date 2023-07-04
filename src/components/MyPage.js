@@ -181,7 +181,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         </View>        
       </View>
 
-      <View style={styles.imageContainer}>
+      <View>
         <Image source={randomPath2} style={[styles.image2]} resizeMode="contain" />
       </View>
 
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   iconID: { //아이콘과 아이디가 들어있는 부분
     flexDirection: 'row',
     backgroundColor:  '#FFF6B5',
-    marginTop: -60,
+    marginTop: -30,
     marginVertical: 20,
     marginHorizontal: 15,
     paddingVertical: 10,
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     height: height*0.2,
-    marginBottom: height*0.2,
+    marginBottom: height*0.14,
   },
 
   favorites:{//즐겨찾기 메뉴 버튼
@@ -294,14 +294,11 @@ const styles = StyleSheet.create({
     width: width*0.9,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: '-10%',
   },
 
   memberInfoManagementText: {
   color: '#000000', //검은색으로 바꿈
     fontSize: 20,
-    // fontWeight: 'bold',
-    // textDecorationLine: 'underline',
   },
   
   gotomainButton: {
@@ -318,17 +315,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'normal',
   },
-  imageContainer: {
-    marginTop: '-40%', // 이미지를 아래쪽으로 내리기 위해 marginTop 추가
-    marginBottom: '2%',
-    marginRight: '-48%',
-    alignItems: 'center', // 수평 가운데 정렬
-  },
   image2: {
-    width: 400, // 이미지의 가로 크기 조정
-    height: 400, // 이미지의 세로 크기 조정
-    marginLeft: '-30%',
-    marginBottom: '-9%',
+    width: width * 0.9, // 이미지의 가로 크기 조정
+    height: height * 0.2, // 이미지의 세로 크기 조정
+    marginLeft: width * 0.03,
+    marginBottom: height * 0.01,
   },
   
 });
