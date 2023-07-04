@@ -40,10 +40,12 @@ import Lifeinsurance from './src/components/Certificatelist/Lifeinsurance';
 import Nonlifeinsurance from './src/components/Certificatelist/Nonlifeinsurance';
 import Sqld from './src/components/Certificatelist/Sqld';
 import Thirdinsurance from './src/components/Certificatelist/Thirdinsurance';
+import IP from './src/data/IP';
 import Icon from 'react-native-vector-icons/FontAwesome'; // 아이콘 라이브러리 import
 
 
 const Stack = createStackNavigator();
+
 
 // 스플래시 스크린 컴포넌트
 const SplashScreen = () => (
@@ -60,63 +62,6 @@ const SplashScreen = () => (
     </Text>
   </View>
 );
-
-const getData = async () => {
-  try {
-    const usernameValue = await AsyncStorage.getItem('username');
-    if (usernameValue !== null) {
-      setIsLoggedIn(true);
-      setUsername(usernameValue); // username 값 설정
-
-      // 사용자 정보 요청
-      const response = await fetch(`http://${IP}:3000/userinfo`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: usernameValue }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        setUserNickname(result.data.nickname); // userNickname 상태를 업데이트합니다.
-      } else {
-        console.error('Network response was not ok.');
-      }
-    } else {
-      setIsLoggedIn(false);
-      setUserNickname('');
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const getUserInfo = async () => {
-  const data = { username: username };
-  let count = 0;
-  let count2 = 0;
-  try {
-    const response = await fetch(`http://${IP}:3000/personal`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      setUserNickname(result.data.nickname);
-
-    } else {
-      console.error('Network response was not ok.');
-    }
-  } catch (error) {
-    console.error('Error occurred while making the request:', error);
-  }
-  return result.data.nickname;
-};
 
 //기능명은 main, js명은 my
 function MainCalendar() {
@@ -170,23 +115,47 @@ function CustomDrawerContent(props) {
     outputRange: [-100, 0],
   });
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('username');
-        if (value !== null) {
-          setIsLoggedIn(true);
-          setUserNickname(value);
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        setIsLoggedIn(true);
+        setUsername(value);
+        const data = { username: value };
+        const response = await fetch(`http://${IP}:3000/personal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
   
-    getData();
-  }, []);
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message);
+        console.log(result.nickname);
+        // const nickname2 = result.nickname
+        setUserNickname(result.nickname);
+        getUserInfo();
+      } else {
+        console.error('Network response was not ok.');
+      }
+      return value;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const getUserInfo = async () => {
+    const data = { nickname : userNickname };
+  };
+  
+  useFocusEffect(
+    React.useCallback(()=>{
+      getData();
+      // getUserInfo();
+    },[navigation]));
+  
 
   const handleLoginPress = () => {
     navigation.navigate(LoginPage);
@@ -217,16 +186,6 @@ function CustomDrawerContent(props) {
     }
   };
 
-  // getData();
-  useFocusEffect(
-    React.useCallback(()=>{
-      getData();
-    //   getUserInfo().then(counted => {
-    //   setCounted(counted[0]);
-    //   setCounted2(counted[1]);
-    // })
-    },
-    [navigation]));
 
   return (
     <DrawerContentScrollView {...props}>
