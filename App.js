@@ -198,6 +198,7 @@ function CustomDrawerContent(props) {
               {isLoggedIn ?  `안녕하세요, ${userNickname}님` : '로그인을 해주세요.'}
             </Text>
           </TouchableOpacity>
+          <View style={styles.headerBottomBorder} />
           </View>
           <View >
             <DrawerItemList {...props}  />
@@ -226,9 +227,7 @@ const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   const navigation = useNavigation();
-  {/* 수정해야하는부분임 */}
   const { user } = useContext(AuthContext);
-  {/* 수정해야하는부분임 */}
   const handlePersonalCalendarPress = () => {
     if (!user) {
       // 로그인하지 않은 경우 알림 대화상자 표시
@@ -356,7 +355,11 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingHorizontal: 16,
     paddingTop: 16,
-    // backgroundColor: '#FDE68A',
+    // backgroundColor: '#FFEEE1',
+  },
+  headerBottomBorder: {
+    borderBottomColor: '#17375E', 
+    borderBottomWidth: 3, 
   },
   imageContainer: {
     marginTop: '80%', // 이미지를 아래쪽으로 내리기 위해 marginTop 추가

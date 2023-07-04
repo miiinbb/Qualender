@@ -11,4 +11,5 @@ export const imagePaths = [
     require('../data/images/lemon.png'),
     require('../data/images/rabbit.png'),
     require('../data/images/tomato.png'),
+    require('../data/images/hana.png'),
   ];
