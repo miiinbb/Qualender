@@ -17,14 +17,31 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [userNickname, setUserNickname] = useState('');
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [counted, setCounted] = useState(0);
+  const [counted2, setCounted2] = useState(0);
 
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('username');
-      if (value !== null) {
+      const usernameValue = await AsyncStorage.getItem('username');
+      if (usernameValue !== null) {
         setIsLoggedIn(true);
-        setUsername(value); // 수정: username 값 설정
-        setUserNickname(value);
+        setUsername(usernameValue); // username 값 설정
+  
+        // 사용자 정보 요청
+        const response = await fetch(`http://${IP}:3000/userinfo`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username: usernameValue }),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          setUserNickname(result.data.nickname); // userNickname 상태를 업데이트합니다.
+        } else {
+          console.error('Network response was not ok.');
+        }
       } else {
         setIsLoggedIn(false);
         setUserNickname('');
@@ -55,6 +72,8 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         console.log(result.data);
         // console.log('즐겨찾기 개수: ' +count);
         // console.log('취득자격 개수: ' +count2);
+        setUserNickname(result.data.nickname);
+
       } else {
         console.error('Network response was not ok.');
       }
@@ -105,8 +124,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     return <SignupPage onSignup={handleTogglePage} onBack={handleBack} />;
   }
 
-  const [counted, setCounted] = useState(0);
-  const [counted2, setCounted2] = useState(0);
   useFocusEffect(
     React.useCallback(()=>{
       getData();
@@ -117,14 +134,13 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     },[navigation]));
   console.log('외부에서 사용할 count 값:', counted);
 
-  getData();
 
   return (
     <View style={styles.outerContainer}>
       {/*닉네임 버튼 */}
       <View style={styles.iconID}>
         <Icon name="github" size={40} color="purple" style={styles.icon} />
-        <TouchableOpacity onPress={() => console.log('ID Pressed')}>
+        <TouchableOpacity onPress={() => console.log(userNickname,'ID Pressed')}>
           <Text style={styles.idText}>{isLoggedIn ?  `${userNickname}님 반갑습니다` : '로그인을 해주세요.'}</Text>
         </TouchableOpacity>
       </View> 

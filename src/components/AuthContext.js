@@ -19,7 +19,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const updateNickname = (newNickname) => {
     setUserNickname(newNickname);
-    console.log("룰루랄라", userNickname); // Move the `console.log` here
+    // console.log("룰루랄라", userNickname); // Move the `console.log` here
   };
 
   return (

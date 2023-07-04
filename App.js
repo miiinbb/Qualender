@@ -1,7 +1,7 @@
 //App.js
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { NavigationContainer,useNavigation } from '@react-navigation/native';
+import { useFocusEffect, NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -61,30 +61,69 @@ const SplashScreen = () => (
   </View>
 );
 
+const getData = async () => {
+  try {
+    const usernameValue = await AsyncStorage.getItem('username');
+    if (usernameValue !== null) {
+      setIsLoggedIn(true);
+      setUsername(usernameValue); // username 값 설정
+
+      // 사용자 정보 요청
+      const response = await fetch(`http://${IP}:3000/userinfo`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: usernameValue }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setUserNickname(result.data.nickname); // userNickname 상태를 업데이트합니다.
+      } else {
+        console.error('Network response was not ok.');
+      }
+    } else {
+      setIsLoggedIn(false);
+      setUserNickname('');
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const getUserInfo = async () => {
+  const data = { username: username };
+  let count = 0;
+  let count2 = 0;
+  try {
+    const response = await fetch(`http://${IP}:3000/personal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      setUserNickname(result.data.nickname);
+
+    } else {
+      console.error('Network response was not ok.');
+    }
+  } catch (error) {
+    console.error('Error occurred while making the request:', error);
+  }
+  return result.data.nickname;
+};
+
 //기능명은 main, js명은 my
 function MainCalendar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { user, userNickname, updateNickname, signOut } = useContext(AuthContext);
-  // const [userNickname, setUserNickname] = useState('');
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('username');
-        if (value !== null) {
-          setIsLoggedIn(true);
-          updateNickname(value); // Use the `updateNickname` function to update the user's nickname
-          // console.log("룰루랄라",userNickname)
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    getData();
-  }, [updateNickname]);
+  const { user, updateNickname, signOut } = useContext(AuthContext);
+  const [userNickname, setUserNickname] = useState('');
+  const navigation = useNavigation();
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: -20 }}>
@@ -122,9 +161,10 @@ function LoginPage1({navigation}) {
 function CustomDrawerContent(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userNickname, setUserNickname] = useState('');
+  const [username, setUsername] = useState('');
   const navigation = useNavigation();
   const progress = useDrawerProgress();
-  const { user,setUser,signOut } = useContext(AuthContext); // AuthContext 추가
+  const { user,updateNickname,setUser,signOut } = useContext(AuthContext); // AuthContext 추가
   const translateX = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
     outputRange: [-100, 0],
@@ -178,6 +218,15 @@ function CustomDrawerContent(props) {
   };
 
   // getData();
+  useFocusEffect(
+    React.useCallback(()=>{
+      getData();
+    //   getUserInfo().then(counted => {
+    //   setCounted(counted[0]);
+    //   setCounted2(counted[1]);
+    // })
+    },
+    [navigation]));
 
   return (
     <DrawerContentScrollView {...props}>
@@ -205,6 +254,11 @@ function CustomDrawerContent(props) {
               )}
           </View>
       </Animated.View>
+
+      <View style={styles.imageContainer}>
+        <Image source={require('./assets/pencil.png')} style={styles.image} />
+      </View>
+
     </DrawerContentScrollView>
   );
 }
@@ -310,7 +364,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
         {/* <Stack.Screen name="스플래시" component={SplashScreen} options={{ headerShown: false }} /> */}
         <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
-        <Stack.Screen name="MainCalendar" component={MyDrawer} options={{headerShown: false, title:'뒤로'}}/>
+        <Stack.Screen name="MyDrawer" component={MyDrawer} options={{headerShown: false, title:'뒤로'}}/>
         <Stack.Screen name="LoginPage" component={LoginPage1} options={{title:'로그인'}}/>
         <Stack.Screen name="SignupPage" component={SignupPage} options={{title:'회원가입'}}/>
         <Stack.Screen name="ObtainedList" component={ObtainedList} options={{title:'취득한 자격증'}}/>
@@ -344,5 +398,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
     // backgroundColor: '#FDE68A',
+  },
+  imageContainer: {
+    marginTop: '80%', // 이미지를 아래쪽으로 내리기 위해 marginTop 추가
+    alignItems: 'center', // 수평 가운데 정렬
+  },
+  image: {
+    width: 250, // 이미지의 가로 크기 조정
+    height: 250, // 이미지의 세로 크기 조정
   },
 });
