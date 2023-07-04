@@ -170,35 +170,23 @@ function CustomDrawerContent(props) {
     outputRange: [-100, 0],
   });
 
-    // const getData = async () => {
-    //   try {
-    //     const value = await AsyncStorage.getItem('username');
-    //     if (value !== null) {
-    //       setIsLoggedIn(true);
-    //       setUserNickname(value);
-    //     } else {
-    //       setIsLoggedIn(false);
-    //     }
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // };
-
-    // getData();
-
-
-  // const getData = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem('username');
-  //     if (value !== null) {
-  //       console.log("getData", value);
-  //       setUserNickname(value);
-  //       return value;
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('username');
+        if (value !== null) {
+          setIsLoggedIn(true);
+          setUserNickname(value);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  
+    getData();
+  }, []);
 
   const handleLoginPress = () => {
     navigation.navigate(LoginPage);
@@ -247,21 +235,24 @@ function CustomDrawerContent(props) {
           <View style={styles.headerContainer}>
           <Icon name="heart" size={24} color="pink" />
           <TouchableOpacity onPress={handleLoginPress}>
-            <Text style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold' }}>
+            <Text style={{ marginBottom: 8, fontSize: 19, fontWeight: 'bold' }}>
               {isLoggedIn ?  `안녕하세요, ${userNickname}님` : '로그인을 해주세요.'}
             </Text>
           </TouchableOpacity>
           </View>
-          <DrawerItemList {...props} />
-            { isLoggedIn && (
-            <DrawerItem
-              label="로그아웃"
-              onPress={handleLogoutPress}
-              icon={({ color, size }) => (
-                <Icon name="sign-out" color={color} size={size} />
+          <View >
+            <DrawerItemList {...props}  />
+              { isLoggedIn && (
+              <DrawerItem
+                label="로그아웃"
+                onPress={handleLogoutPress}
+                icon={({ color, size }) => (
+                  <Icon name="sign-out" color={color} size={size} />
+                )}
+                // labelStyle={{ color: 'white' }}
+                />
               )}
-              />
-            )}
+          </View>
       </Animated.View>
 
       <View style={styles.imageContainer}>
@@ -307,6 +298,7 @@ function MyDrawer() {
           headerTitle: '메인퀄린더',
           headerTitleStyle: {
             fontWeight: 'bold',
+            color: 'white',
           },
         }}
       />
@@ -405,6 +397,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingHorizontal: 16,
     paddingTop: 16,
+    // backgroundColor: '#FDE68A',
   },
   imageContainer: {
     marginTop: '80%', // 이미지를 아래쪽으로 내리기 위해 marginTop 추가
