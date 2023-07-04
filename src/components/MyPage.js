@@ -1,12 +1,13 @@
 //Mypage.js //자동업데이트 가능
 import React, {useState,useEffect,useContext} from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
 import { useFocusEffect,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './AuthContext';
 import IP from '../data/IP';
+import { imagePaths } from '../data/imagePaths';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [counted, setCounted] = useState(0);
   const [counted2, setCounted2] = useState(0);
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
   const getData = async () => {
     try {
@@ -130,16 +132,22 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       getUserInfo().then(counted => {
       setCounted(counted[0]);
       setCounted2(counted[1]);
+      const { width, height } = Dimensions.get('window');
+      const maxWidth = width * 0.08;
+      const maxHeight = height * 0.04;
+      setImageSize({ width: maxWidth, height: maxHeight });
     })
     },[navigation]));
   console.log('외부에서 사용할 count 값:', counted);
 
+  const randomIndex = Math.floor(Math.random() * imagePaths.length);
+  const randomPath = imagePaths[randomIndex];
 
   return (
     <View style={styles.outerContainer}>
       {/*닉네임 버튼 */}
       <View style={styles.iconID}>
-        <Icon name="github" size={40} color="purple" style={styles.icon} />
+        <Image source={randomPath} style={[styles.image, imageSize]} resizeMode="contain" />
         <TouchableOpacity onPress={() => console.log(userNickname,'ID Pressed')}>
           <Text style={styles.idText}>{isLoggedIn ?  `${userNickname}님 반갑습니다` : '로그인을 해주세요.'}</Text>
         </TouchableOpacity>
@@ -206,7 +214,7 @@ const styles = StyleSheet.create({
     borderColor:'#17375E',
     width: width*0.9,
   },
-  icon: {
+  image: {
     marginRight: 10, // 아이콘과 텍스트 사이 간격을 조정
   },
   idText: {
