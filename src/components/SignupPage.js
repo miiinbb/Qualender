@@ -227,7 +227,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
             value={nickname}
             onChangeText={text => setNickname(text)}
             style={styles.inputidandnickname}
-            placeholder="비밀번호입력(영소문자+숫자 8~12자리)"
+            placeholder="닉네임 입력"
             placeholderTextColor="silver"
           />
           <TouchableOpacity style={styles.smallButton} onPress={checkNameAvailability}>

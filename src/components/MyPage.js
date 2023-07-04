@@ -1,9 +1,7 @@
-//Mypage.js //IP분리 후 되는코드
+//Mypage.js //자동업데이트 가능
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
-import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
+import { useFocusEffect,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -109,13 +107,14 @@ function MyPage ({ onLogin, onBack, onSignup }) {
 
   const [counted, setCounted] = useState(0);
   const [counted2, setCounted2] = useState(0);
-  useEffect(() => {
-    getData();
-    getUserInfo().then(counted => {
+  useFocusEffect(
+    React.useCallback(()=>{
+      getData();
+      getUserInfo().then(counted => {
       setCounted(counted[0]);
       setCounted2(counted[1]);
-    });
-  },[navigation]);
+    })
+    },[navigation]));
   console.log('외부에서 사용할 count 값:', counted);
 
   getData();

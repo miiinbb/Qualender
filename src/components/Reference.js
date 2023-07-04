@@ -1,9 +1,7 @@
-//Mypage.js //네트워크 에러 나는 코드
+//Mypage.js //IP분리 후 되는코드
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
-import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
+import { useFocusEffect,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,6 +23,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
         setIsLoggedIn(true);
+        setUsername(value); // 수정: username 값 설정
         setUserNickname(value);
       } else {
         setIsLoggedIn(false);
@@ -93,6 +92,10 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     navigation.navigate('MemberInfoChange'); // 회원정보변경으로 이동
   };
 
+  const handleSignup = () => {
+    onSignup(); // 회원가입 버튼이 눌렸을 때 onSignup 함수 호출
+  };
+
   const handleTogglePage = () => {
     setIsSignup(!isSignup); // Toggle between login and signup pages
   };
@@ -105,13 +108,15 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [counted, setCounted] = useState(0);
   const [counted2, setCounted2] = useState(0);
   useEffect(() => {
-    // getData();
+    getData();
     getUserInfo().then(counted => {
       setCounted(counted[0]);
       setCounted2(counted[1]);
     });
   },[navigation]);
   console.log('외부에서 사용할 count 값:', counted);
+
+  getData();
 
   return (
     <View style={styles.outerContainer}>
