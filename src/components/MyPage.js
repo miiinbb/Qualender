@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthContext from './AuthContext';
 import IP from '../data/IP';
 import { imagePaths } from '../data/imagePaths';
+import { imagePaths2 } from '../data/imagePaths2';
 
 const Stack = createStackNavigator();
 
@@ -127,21 +128,27 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   }
 
   useFocusEffect(
-    React.useCallback(()=>{
+    React.useCallback(async () => {
       getData();
-      getUserInfo().then(counted => {
-      setCounted(counted[0]);
-      setCounted2(counted[1]);
+      const [count, count2] = await getUserInfo();
+      // getUserInfo().then(counted => {
+      setCounted(count);
+      setCounted2(count2);
       const { width, height } = Dimensions.get('window');
       const maxWidth = width * 0.08;
       const maxHeight = height * 0.04;
       setImageSize({ width: maxWidth, height: maxHeight });
-    })
-    },[navigation]));
+    },
+    // )
+    // },
+    [navigation]));
   console.log('외부에서 사용할 count 값:', counted);
 
   const randomIndex = Math.floor(Math.random() * imagePaths.length);
   const randomPath = imagePaths[randomIndex];
+
+  const randomIndex2 = Math.floor(Math.random() * imagePaths2.length);
+  const randomPath2 = imagePaths2[randomIndex2];
 
   return (
     <View style={styles.outerContainer}>
@@ -159,7 +166,8 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           <TouchableOpacity onPress={() => {clickFavorites(); console.log('Favorites Pressed');}}>
             <Text style={styles.favText}>즐겨찾기</Text>
             <Text/><Text/>
-            <Text style={[styles.favNum]}>⭐️ {counted}개</Text>
+            <Text style={[styles.favNum]}><Icon name="star" size={24} color="orange" /> {counted}개</Text>
+            
           </TouchableOpacity>
         </View>  
 
@@ -168,10 +176,15 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           <TouchableOpacity onPress={() => {clickObtained(); console.log('Obtained Pressed');}}>
             <Text style={styles.obtText}>취득한 자격증</Text>
             <Text/><Text/>
-            <Text style={[styles.obtNum]}>❤️ {counted2}개</Text>
+            <Text style={[styles.obtNum]}><Icon name="heart" size={24} color="red" /> {counted2}개</Text>
           </TouchableOpacity>
         </View>        
       </View>
+
+      <View style={styles.imageContainer}>
+        <Image source={randomPath2} style={[styles.image2]} resizeMode="contain" />
+      </View>
+
 
       {/* 회원정보변경 메뉴 버튼 */}
       <TouchableOpacity style={[styles.memberInfoManagement]} onPress={clickMemberInfoChange}>
@@ -229,7 +242,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     height: height*0.2,
-    marginBottom: height*0.33,
+    marginBottom: height*0.2,
   },
 
   favorites:{//즐겨찾기 메뉴 버튼
@@ -281,6 +294,7 @@ const styles = StyleSheet.create({
     width: width*0.9,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: '-10%',
   },
 
   memberInfoManagementText: {
@@ -303,6 +317,18 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'white',
     fontWeight: 'normal',
+  },
+  imageContainer: {
+    marginTop: '-40%', // 이미지를 아래쪽으로 내리기 위해 marginTop 추가
+    marginBottom: '2%',
+    marginRight: '-48%',
+    alignItems: 'center', // 수평 가운데 정렬
+  },
+  image2: {
+    width: 400, // 이미지의 가로 크기 조정
+    height: 400, // 이미지의 세로 크기 조정
+    marginLeft: '-30%',
+    marginBottom: '-9%',
   },
   
 });
