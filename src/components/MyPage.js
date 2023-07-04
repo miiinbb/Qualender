@@ -24,7 +24,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       if (value !== null) {
         setIsLoggedIn(true);
         setUsername(value); // 수정: username 값 설정
-        setUserNickname(value);
+        setUserNickname(value); // 이곳에서 userNickname 상태를 업데이트합니다.
       } else {
         setIsLoggedIn(false);
         setUserNickname('');
@@ -124,7 +124,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       {/*닉네임 버튼 */}
       <View style={styles.iconID}>
         <Icon name="github" size={40} color="purple" style={styles.icon} />
-        <TouchableOpacity onPress={() => console.log('ID Pressed')}>
+        <TouchableOpacity onPress={() => console.log(userNickname,'ID Pressed')}>
           <Text style={styles.idText}>{isLoggedIn ?  `${userNickname}님 반갑습니다` : '로그인을 해주세요.'}</Text>
         </TouchableOpacity>
       </View> 
