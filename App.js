@@ -237,8 +237,12 @@ function MyDrawer() {
     <Drawer.Navigator
       initialRouteName='메인퀄린더'
       useLegacyImplementation
-      //drawer 오른쪽 방향으로 바꾸는 코드..이지만 실행하면 뭔가 충돌나서 일단 멈춤
-      //screenOptions={{drawerPosition: 'right'}}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#17375E',
+        },
+        headerTintColor: 'white',
+      }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen

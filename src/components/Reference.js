@@ -1,275 +1,392 @@
-//Mypage.js //IP분리 후 되는코드
-import React, {useState,useEffect,useContext} from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
-import { useFocusEffect,useNavigation, CommonActions, } from '@react-navigation/native';
+import _ from 'lodash';
+import React, {useState, useEffect} from 'react';
+import {Platform, Dimensions, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  ExpandableCalendar,
+  AgendaList,
+  CalendarProvider,
+  WeekCalendar,
+} from 'react-native-calendars';
+import {add, sub, isSameMonth, eachDayOfInterval} from 'date-fns';
+import { NavigationContainer,useNavigation, useFocusEffect, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import ITEMS from './Items2';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AuthContext from './AuthContext';
+import { useEvent } from 'react-native-reanimated';
 import IP from '../data/IP';
 
 const Stack = createStackNavigator();
+const today = new Date().toISOString().split('T')[0];
+const fastDate = getPastDate(3);
+const futureDates = getFutureDates(9);
+const dates = [fastDate, today].concat(futureDates);
+const themeColor = '#17375E';
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
-function MyPage ({ onLogin, onBack, onSignup }) {
-  const navigation = useNavigation();
-  const [isSignup, setIsSignup] = useState(false); // Add isSignup state variable
-  const { user, updateNickname } = useContext(AuthContext);
-  const [userNickname, setUserNickname] = useState('');
-  const [username, setUsername] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function getFutureDates(days) {
+  const array = [];
+  for (let index = 1; index <= days; index++) {
+    const date = new Date(Date.now() + 864e5 * index); // 864e5 == 86400000 == 24*60*60*1000
+    const dateString = date.toISOString().split('T')[0];
+    array.push(dateString);
+  }
+  return array;
+}
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('username');
-      if (value !== null) {
-        setIsLoggedIn(true);
-        setUsername(value); // 수정: username 값 설정
-        setUserNickname(value);
-      } else {
-        setIsLoggedIn(false);
-        setUserNickname('');
-      }
-    } catch (e) {
-      console.log(e);
+function getPastDate(days) {
+  return new Date(Date.now() - 864e5 * days).toISOString().split('T')[0];
+}
+
+const getTheme = () => {
+  const disabledColor = 'grey';
+
+  return {
+    // arrows
+    arrowColor: 'black',
+    arrowStyle: { padding: 0 },
+    // month
+    monthTextColor: 'black',
+    textMonthFontSize: 16,
+    textMonthFontFamily: 'HelveticaNeue',
+    textMonthFontWeight: 'bold',
+    // day names
+    textSectionTitleColor: 'black',
+    textDayHeaderFontSize: 12,
+    textDayHeaderFontFamily: 'HelveticaNeue',
+    textDayHeaderFontWeight: 'normal',
+    // dates
+    todayTextColor: 'black',
+    dayTextColor: 'black',
+    textDayFontSize: 18,
+    textDayFontFamily: 'HelveticaNeue',
+    textDayFontWeight: 'normal', // 굵은 글씨 대신 일반 글씨로 설정
+    // selected date
+    selectedDayBackgroundColor: themeColor,
+    selectedDayTextColor: 'white',
+    selectedDayStyle: { borderRadius: 5 },
+    // disabled date
+    textDisabledColor: disabledColor,
+    // dot (marked date)
+    dotColor: 'black',
+    selectedDotColor: 'white',
+    disabledDotColor: disabledColor,
+    dotStyle: { marginTop: 0 },
+
+    dayContainerStyle: ({ date }) => {
+      const isCurrentMonth = isSameMonth(new Date(), date);
+      const dotOpacity = isCurrentMonth ? 1 : 0; // 현재 월에 해당하는 날짜의 dot 투명도
+    
+      // 아이템 배열에서 해당 날짜에 매치되는 아이템들을 찾아서 색상을 가져옴
+      const matchedItems = ITEMS.filter(item => item.title === date.dateString);
+      const dotColors = matchedItems.map(item => boxColors[boxNames.indexOf(item.data[0].title) % boxColors.length]);
+    
+      return {
+        opacity: dotOpacity,
+        backgroundColor: dotColors.length > 0 ? dotColors[0] : 'transparent', // 첫 번째 매치되는 아이템의 색상 사용
+      };
+    },
+  };
+};
+
+const boxNames = [ //자격증 리스트
+"펀드투자권유자문인력",
+"파생상품투자권유자문인력",
+"생명보험대리점",
+"제3보험",
+"손해보험대리점",
+"신용분석사",
+"ADsP",
+"SQLD",
+"COS",
+"COS PRO",
+"토익",
+"토스",
+];
+
+const boxColors = [  // 색상 리스트
+"#B8A6DF", // Pale Purple
+"#F791B6", // Soft Pink
+"#89CDD9", // Pale Aqua
+"#FBA58D", // Coral
+"#9ED6A1", // Pale Green
+"#FFB884", // Apricot
+"#FAC98A", // Peach
+"#CDA2D9", // Lavender
+"#9BCBF6", // Powder Blue
+"#FFCFA6", // Pale Orange
+"#FFC107", // Amber
+"#C4E9B5", // Pale Greenish
+];
+
+const renderItem = ({ item }) => {
+  const navigation = useNavigation(); // navigation 객체 얻기
+
+  if (_.isEmpty(item)) {
+    return renderEmptyItem();
+  }
+
+  const itemPressed = (item) => {
+    // 아이템 선택 시 동작 처리
+    // 아이템마다 다른 JavaScript 파일로 페이지 전환을 수행합니다.
+    switch (item.title) {
+      case '토익':
+        navigation.navigate('Toeic');
+        break;
+      case '토스':
+        navigation.navigate('ToeicSpeaking');
+        break;
+      case '펀드투자권유자문인력':
+        navigation.navigate('Fund');
+        break;
+      case '파생상품투자권유자문인력':
+        navigation.navigate('Derived');
+        break;
+      case '생명보험대리점':
+        navigation.navigate('Lifeinsurance');
+        break;
+      case '제3보험':
+        navigation.navigate('Thirdinsurance');
+        break;
+      case '손해보험대리점':
+        navigation.navigate('Nonlifeinsurance');
+        break;     
+      case '신용분석사':
+        navigation.navigate('Credit');
+        break;
+      case 'ADsP':
+        navigation.navigate('Adsp');
+        break;
+      case 'SQLD':
+        navigation.navigate('Sqld');
+        break;
+      case 'COS':
+        navigation.navigate('Cos');
+        break; 
+      case 'COS PRO':
+        navigation.navigate('Cospro');
+        break;
+      default:
+        // 처리할 아이템이 없을 경우에 대한 동작
+        break;
     }
   };
 
-  const getUserInfo = async () => {
-    const data = { username: username };
-    let count = 0;
-    let count2 = 0;
-    try {
-      const response = await fetch(`http://${IP}:3000/favorites`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        count = result.data.selectedFavorites.length;
-        count2 = result.data.selectedObtained.length;
-        console.log(result.message);
-        console.log(result.data);
-        // console.log('즐겨찾기 개수: ' +count);
-        // console.log('취득자격 개수: ' +count2);
-      } else {
-        console.error('Network response was not ok.');
-      }
-    } catch (error) {
-      console.error('Error occurred while making the request:', error);
-    }
-    return [count, count2];
-  };
-
-  console.log('유저 정보:', username);
-  const goToMain = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          { name: 'MainCalendar' },
-        ],
-      })
-    );
-  }
-
-  const handleBack = () => {
-    onBack(); // 뒤로가기 버튼이 눌렸을 때 onBack 함수 호출
-  };
-
-  const clickObtained = () => {
-    navigation.navigate('ObtainedList'); // 회원가입 페이지로 이동
-  };
-
-  const clickFavorites = () => {
-    navigation.navigate('Favorites'); // 즐겨찾기로 이동
-  };
-
-  const clickMemberInfoChange = () => {
-    navigation.navigate('MemberInfoChange'); // 회원정보변경으로 이동
-  };
-
-  const handleSignup = () => {
-    onSignup(); // 회원가입 버튼이 눌렸을 때 onSignup 함수 호출
-  };
-
-  const handleTogglePage = () => {
-    setIsSignup(!isSignup); // Toggle between login and signup pages
-  };
-
-  // Render SignupPage if isSignup is true
-  if (isSignup) {
-    return <SignupPage onSignup={handleTogglePage} onBack={handleBack} />;
-  }
-
-  const [counted, setCounted] = useState(0);
-  const [counted2, setCounted2] = useState(0);
-  useEffect(() => {
-    getData();
-    getUserInfo().then(counted => {
-      setCounted(counted[0]);
-      setCounted2(counted[1]);
-    });
-  },[navigation]);
-  console.log('외부에서 사용할 count 값:', counted);
-
-  getData();
+  const circleColor = boxColors[boxNames.indexOf(item.title) % boxColors.length]; // 변경된 부분
 
   return (
-    <View style={styles.outerContainer}>
-      {/*닉네임 버튼 */}
-      <View style={styles.iconID}>
-        <Icon name="github" size={40} color="purple" style={styles.icon} />
-        <TouchableOpacity onPress={() => console.log('ID Pressed')}>
-          <Text style={styles.idText}>{isLoggedIn ?  `${userNickname}님 반갑습니다` : '로그인을 해주세요.'}</Text>
-        </TouchableOpacity>
-      </View> 
-      {/* console.log(user) */}
-      <View style={styles.innerContainer}>
-        {/* 즐겨찾기 메뉴 버튼 */}
-        <View style={[styles.favorites, {marginRight: 10}]}>
-          <TouchableOpacity onPress={() => {clickFavorites(); console.log('Favorites Pressed');}}>
-            <Text style={styles.favText}>즐겨찾기</Text>
-            <Text/><Text/>
-            <Text style={[styles.favNum, {textDecorationLine: 'underline'}]}>⭐️ {counted}개</Text>
-          </TouchableOpacity>
-        </View>  
-
-        {/* 취득한자격증 메뉴 버튼 */}
-        <View style={styles.ObtainedList}>
-          <TouchableOpacity onPress={() => {clickObtained(); console.log('Obtained Pressed');}}>
-            <Text style={styles.obtText}>취득한 자격증</Text>
-            <Text/><Text/>
-            <Text style={[styles.obtNum, {textDecorationLine: 'underline'}]}>❤️ {counted2}개</Text>
-          </TouchableOpacity>
-        </View>        
+    <TouchableOpacity
+      onPress={() => itemPressed(item)}
+      style={[styles.item, { backgroundColor: 'white' }]}
+    >
+      <View style={[styles.circle, { backgroundColor: circleColor }]} />
+      <View>
+        <Text style={styles.itemtestatus}>{item.teststatus}</Text>
       </View>
-
-      {/* 회원정보변경 메뉴 버튼 */}
-      <TouchableOpacity style={[styles.memberInfoManagement]} onPress={clickMemberInfoChange}>
-        <Text style={styles.gotomainButtonText}>회원정보 변경</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity style={[styles.gotomainButton, {marginTop: 10}]} onPress={goToMain}>
-        <Text style={styles.gotomainButtonText}>메인캘린더로 돌아가기</Text>
-      </TouchableOpacity>
-    </View>
+      <Text style={styles.itemTitleText}>{item.title}</Text>
+    </TouchableOpacity>
   );
 };
 
-//화면 크기에 비례로 디자인 적용하기 위해 실행
-const { height, width } = Dimensions.get('window');
+const renderEmptyItem = () => {
+  return (
+    <View style={styles.emptyItem}>
+      <Text style={styles.emptyItemText}>No Events Planned 😴</Text>
+    </View>
+  );
+};
+const getDatesInRange = (startDate, endDate) => {
+  const dates = [];
+  const currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+    dates.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
+};
+
+const getMarkedDates = () => {
+  const marked = {};
+
+  ITEMS.forEach((item) => {
+    if (item.data && item.data.length > 0 && !_.isEmpty(item.data[0])) {
+      const dots = item.data.map((dataItem, index) => ({
+        key: index.toString(),
+        color: boxColors[boxNames.indexOf(dataItem.title) % boxColors.length],
+      }));
+      const periods = item.data.map((dataItem, index) => ({
+        key: index.toString(),
+        startingDay: dataItem.startingDay,
+        endingDay: dataItem.endingDay,
+        color: boxColors[boxNames.indexOf(dataItem.title) % boxColors.length],
+      }));
+
+      marked[item.title] = { marked: true, dots, periods };
+    } else {
+      marked[item.title] = { disabled: true };
+    }
+  });
+
+  marked[today] = { marked: true, dots: [{ key: 'today', color: 'white' }] };
+
+  return marked;
+};
+
+
+const onDateChanged = (/* date, updateSource */) => {
+};
+
+const onMonthChange = (/* month, updateSource */) => {
+};
+
+export default function MyCalendar(props) {
+  const [selectedIndex, updateIndex] = useState(0);
+  const [username, setUsername] = useState('');
+  const [calendarList, setCalendarlist] = useState([]);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('username');
+        if (value !== null) {
+          setUsername(value);
+          return value;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+  
+    const getUserInfo = async () => {
+      const data = { username: username };
+  
+      try {
+        const response = await fetch(`http://${IP}:3000/personal`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          console.log(result.message);
+          const _item = ITEMS.map((data) => {
+            data.data = data.data.filter(e => result.data.includes(e.title));
+            return data;
+          })
+          .filter(data=>data.data.length != 0)
+          setCalendarlist(_item);
+        } else {
+          console.error('Network response was not ok.');
+        }
+      } catch (error) {
+        console.error('Error occurred while making the request:', error);
+      }
+    };
+
+    getData();
+    getUserInfo();
+  },[]);
+
+  return (
+    <CalendarProvider
+      date={today}
+      onDateChanged={onDateChanged}
+      onMonthChange={onMonthChange}
+      showTodayButton
+      disabledOpacity={0.6}
+      theme={{
+        todayButtonTextColor: 'white',
+      }}
+      style={{
+      marginTop: 0,}}
+      todayButtonStyle={styles.todayButton}
+      todayBottomMargin={10}>
+      {props.weekView ? (
+        <WeekCalendar firstDay={1} markedDates={getMarkedDates()} />
+      ) : (
+        <ExpandableCalendar
+        
+          minDate={sub(new Date(), {years: 5})}
+          maxDate={add(new Date(), {years: 5})}
+          pastScrollRange={60}
+          futureScrollRange={60}
+          displayLoadingIndicator={false}
+          calendarStyle={[styles.calendar, { paddingHorizontal: screenWidth * 0.01, justifyContent: 'center' }]} // Add paddingHorizontal here
+          theme={getTheme()}
+          disableAllTouchEventsForDisabledDays
+          markingType={'multi-period'}
+          markedDates={getMarkedDates()} 
+        />
+      )}
+      <AgendaList
+        sections={calendarList}
+        extraData={calendarList}
+        renderItem={item => renderItem(item)}
+      />
+    </CalendarProvider>
+  );
+}
+
 const styles = StyleSheet.create({
-  outerContainer: { //하늘색 부분
-    flex: 1,
-    height: height,
-    width: width,
-    justifyContent: 'center',
+  calendar: {
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  item: {
+    padding: 20,
     backgroundColor: 'white',
-    alignItems: 'center',
-    // borderColor: '#5bd1d7', // 테두리 색상 설정
-    // borderWidth: 2, // 테두리 두께 설정
-    // borderRadius: 5, // 테두리의 둥근 정도를 설정 (옵션)
-    // padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
-  },
-
-  iconID: { //아이콘과 아이디가 들어있는 부분분
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgrey',
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    marginTop: -60,
-    marginVertical: 20,
-    marginHorizontal: 15,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    // borderRadius: 5,
-    borderWidth:1,
-    borderColor:'lightgray',
-    width: width*0.9,
   },
-  icon: {
-    marginRight: 10, // 아이콘과 텍스트 사이 간격을 조정
+  itemtestatus: {
+    color: 'grey',
+    fontSize: 12,
+    marginTop: 4,
   },
-  idText: {
-    fontSize: 20,
-    textAlign: 'left',
-    paddingTop: 10,
+  itemEndTime: {
+    color: 'grey',
+    fontSize: 12,
+    // marginTop: 4,
+    marginLeft: 4,
   },
-
-  innerContainer:{ //즐겨찾기랑 취득한자격증 버튼을 포함하는 영역
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    height: height*0.2,
-    marginBottom: height*0.33,
+  circle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'navy', // 동그라미의 색상 설정
+    marginRight: 10,
   },
-
-  favorites:{//즐겨찾기 메뉴 버튼
-    width: width*0.44,
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    backgroundColor: 'mistyrose',
-    borderWidth: 2,
-    borderColor: '#17375E',
+  itemTitleText: {
+    flex: 1,
+    flexWrap: 'wrap',
+    color: 'black',
+    marginLeft: 16,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
-  favText:{//즐겨찾기텍스트
-    fontSize: 23,
-    textAlign: 'center',
+  emptyItem: {
+    paddingLeft: 20,
+    height: 52,
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgrey',
   },
-  favNum:{//즐겨찾기 갯수
-    fontSize: 17,
-    textAlign: 'center',
+  emptyItemText: {
+    color: 'grey',
+    fontSize: 14,
+    alignSelf: 'center',
   },
-
-  ObtainedList:{//취득한자격증 메뉴 버튼
-    width: width*0.44,
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    backgroundColor: 'mintcream',
-    borderWidth: 2,
-    borderColor: '#17375E',
+  todayButton: {
+    padding: 10,
+    height: 45,
+    width: 100,
+    backgroundColor: '#e85a19d6',
   },
-  obtText:{//취득한 텍스트
-    fontSize: 23,
-    textAlign: 'center',
-  },
-  obtNum:{//취득한 갯수
-    fontSize: 17,
-    textAlign: 'center',
-  },
-  memberInfoManagement: { //'회원가입'버튼
-    backgroundColor: '#17375E',
-    paddingVertical: 17,
-    paddingHorizontal: 20,
-    padding: 5,
-    width: width*0.9,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  memberInfoManagementText: {
-  color: '#000000', //검은색으로 바꿈
-    fontSize: 20,
-    // fontWeight: 'bold',
-    // textDecorationLine: 'underline',
-  },
-  
-  gotomainButton: {
-    backgroundColor: '#17375E',
-    paddingVertical: 17,
-    paddingHorizontal: 20,
-    padding: 5,
-    width: width*0.9,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  gotomainButtonText: {
-    fontSize: 17,
-    color: 'white',
-    fontWeight: 'normal',
-  },
-  
 });
-
-export default MyPage;
