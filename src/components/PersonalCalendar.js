@@ -266,6 +266,8 @@ export default function MyCalendar(props) {
         const result = await response.json();
         console.log(result.message);
         console.log(result.data);
+        //result.data2
+        //const blah = result.data2
         const _item = ITEMS.map((data) => {
           data.data = data.data.filter(e => result.data.includes(e.title));
           return data;
@@ -284,31 +286,31 @@ export default function MyCalendar(props) {
   const getUserInfo = async () => {
     const data = { username: username };
 
-    try {
-      const response = await fetch(`http://${IP}:3000/personal`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+    // try {
+    //   const response = await fetch(`http://${IP}:3000/personal`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(data),
+    //   });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log(result.message);
-        console.log(result.data);
-        const _item = ITEMS.map((data) => {
-          data.data = data.data.filter(e => result.data.includes(e.title));
-          return data;
-        })
-        .filter(data=>data.data.length != 0)
-        setCalendarlist(_item);
-      } else {
-        console.error('Network response was not ok.');
-      }
-    } catch (error) {
-      console.error('Error occurred while making the request:', error);
-    }
+    //   if (response.ok) {
+    //     const result = await response.json();
+    //     console.log(result.message);
+    //     console.log(result.data);
+    //     const _item = ITEMS.map((data) => {
+    //       data.data = data.data.filter(e => result.data.includes(e.title));
+    //       return data;
+    //     })
+    //     .filter(data=>data.data.length != 0)
+    //     setCalendarlist(_item);
+    //   } else {
+    //     console.error('Network response was not ok.');
+    //   }
+    // } catch (error) {
+    //   console.error('Error occurred while making the request:', error);
+    // }
   };
 
   useFocusEffect(
