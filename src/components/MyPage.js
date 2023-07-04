@@ -135,7 +135,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           <TouchableOpacity onPress={() => {clickFavorites(); console.log('Favorites Pressed');}}>
             <Text style={styles.favText}>즐겨찾기</Text>
             <Text/><Text/>
-            <Text style={[styles.favNum, {textDecorationLine: 'underline'}]}>⭐️ {counted}개</Text>
+            <Text style={[styles.favNum]}>⭐️ {counted}개</Text>
           </TouchableOpacity>
         </View>  
 
@@ -144,7 +144,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           <TouchableOpacity onPress={() => {clickObtained(); console.log('Obtained Pressed');}}>
             <Text style={styles.obtText}>취득한 자격증</Text>
             <Text/><Text/>
-            <Text style={[styles.obtNum, {textDecorationLine: 'underline'}]}>❤️ {counted2}개</Text>
+            <Text style={[styles.obtNum]}>❤️ {counted2}개</Text>
           </TouchableOpacity>
         </View>        
       </View>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     // padding: 5, // 테두리와 내부 요소 간의 간격 설정 (옵션)
   },
 
-  iconID: { //아이콘과 아이디가 들어있는 부분분
+  iconID: { //아이콘과 아이디가 들어있는 부분
     flexDirection: 'row',
     backgroundColor:  '#FFF6B5',
     marginTop: -60,
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     // borderRadius: 5,
-    borderWidth:1,
+    borderWidth:2,
     borderColor:'#17375E',
     width: width*0.9,
   },
@@ -197,6 +197,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'left',
     paddingTop: 10,
+    color : '#17375E',
+    fontWeight: 'bold',
   },
 
   innerContainer:{ //즐겨찾기랑 취득한자격증 버튼을 포함하는 영역
@@ -217,10 +219,12 @@ const styles = StyleSheet.create({
   favText:{//즐겨찾기텍스트
     fontSize: 23,
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   favNum:{//즐겨찾기 갯수
-    fontSize: 17,
+    fontSize: 19,
     textAlign: 'center',
+    color : '#17375E',
   },
 
   ObtainedList:{//취득한자격증 메뉴 버튼
@@ -234,6 +238,7 @@ const styles = StyleSheet.create({
   obtText:{//취득한 텍스트
     fontSize: 23,
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   obtNum:{//취득한 갯수
     fontSize: 17,
