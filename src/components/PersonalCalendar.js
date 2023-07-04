@@ -248,50 +248,73 @@ export default function MyCalendar(props) {
   const [calendarList, setCalendarlist] = useState([]);
   const navigation = useNavigation();
 
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        setUsername(value);
+        const data = { username: value };
+        const response = await fetch(`http://${IP}:3000/personal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message);
+        console.log(result.data);
+        const _item = ITEMS.map((data) => {
+          data.data = data.data.filter(e => result.data.includes(e.title));
+          return data;
+        })
+        .filter(data=>data.data.length != 0)
+        setCalendarlist(_item);
+      } else {
+        console.error('Network response was not ok.');
+      }
+      return value;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const getUserInfo = async () => {
+    const data = { username: username };
+
+    try {
+      const response = await fetch(`http://${IP}:3000/personal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message);
+        console.log(result.data);
+        const _item = ITEMS.map((data) => {
+          data.data = data.data.filter(e => result.data.includes(e.title));
+          return data;
+        })
+        .filter(data=>data.data.length != 0)
+        setCalendarlist(_item);
+      } else {
+        console.error('Network response was not ok.');
+      }
+    } catch (error) {
+      console.error('Error occurred while making the request:', error);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(()=>{
-      const getData = async () => {
-        try {
-          const value = await AsyncStorage.getItem('username');
-          if (value !== null) {
-            setUsername(value);
-            return value;
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      };
-      const getUserInfo = async () => {
-        const data = { username: username };
-    
-        try {
-          const response = await fetch(`http://${IP}:3000/personal`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          });
-    
-          if (response.ok) {
-            const result = await response.json();
-            console.log(result.message);
-            console.log(result.data);
-            const _item = ITEMS.map((data) => {
-              data.data = data.data.filter(e => result.data.includes(e.title));
-              return data;
-            })
-            .filter(data=>data.data.length != 0)
-            setCalendarlist(_item);
-          } else {
-            console.error('Network response was not ok.');
-          }
-        } catch (error) {
-          console.error('Error occurred while making the request:', error);
-        }
-      };
       getData();
-      getUserInfo();
+      // getUserInfo();
     },[navigation]));
 
   return (

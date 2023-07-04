@@ -79,7 +79,7 @@ function LoginPage ({ onLogin, onBack}) {
           //   console.log('사용자 정보 없음');
           // }
           storeData(username);
-          navigation.navigate('MainCalendar');
+          navigation.navigate('MyDrawer');
         } else {
           // 로그인 실패 시 처리할 로직
           console.log('로그인 실패');
