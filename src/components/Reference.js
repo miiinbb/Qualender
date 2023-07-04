@@ -1,8 +1,9 @@
-//MyPage.js 소영이랑 합쳤더니 안되는 코드
+//Mypage.js //네트워크 에러 나는 코드
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect,useNavigation, CommonActions, } from '@react-navigation/native';
+import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
+import { NavigationContainer,useNavigation, CommonActions, } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,25 +19,21 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [userNickname, setUserNickname] = useState('');
   const [username, setUsername] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('username');
-        if (value !== null) {
-          setIsLoggedIn(true);
-          setUserNickname(value);
-        } else {
-          setIsLoggedIn(false);
-          setUserNickname('');
-        }
-      } catch (e) {
-        console.log(e);
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if (value !== null) {
+        setIsLoggedIn(true);
+        setUserNickname(value);
+      } else {
+        setIsLoggedIn(false);
+        setUserNickname('');
       }
-    };
-  
-    getData();
-  }, []);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const getUserInfo = async () => {
     const data = { username: username };
@@ -55,10 +52,10 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         const result = await response.json();
         count = result.data.selectedFavorites.length;
         count2 = result.data.selectedObtained.length;
-        // console.log(result.message);
+        console.log(result.message);
         console.log(result.data);
-        console.log('즐겨찾기 개수: ' +count);
-        console.log('취득자격 개수: ' +count2);
+        // console.log('즐겨찾기 개수: ' +count);
+        // console.log('취득자격 개수: ' +count2);
       } else {
         console.error('Network response was not ok.');
       }
@@ -108,12 +105,13 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [counted, setCounted] = useState(0);
   const [counted2, setCounted2] = useState(0);
   useEffect(() => {
+    // getData();
     getUserInfo().then(counted => {
       setCounted(counted[0]);
       setCounted2(counted[1]);
     });
   },[navigation]);
-  // console.log('외부에서 사용할 count 값:', counted);
+  console.log('외부에서 사용할 count 값:', counted);
 
   return (
     <View style={styles.outerContainer}>
@@ -246,8 +244,10 @@ const styles = StyleSheet.create({
   },
 
   memberInfoManagementText: {
-  color: '#000000',
+  color: '#000000', //검은색으로 바꿈
     fontSize: 20,
+    // fontWeight: 'bold',
+    // textDecorationLine: 'underline',
   },
   
   gotomainButton: {

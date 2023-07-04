@@ -1,5 +1,4 @@
 //SignupPage.js
-//SignupPage.js
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, TouchableOpacity, Text, Dimensions, StyleSheet, ScrollView  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {useForm, Controller} from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
+import IP from '../data/IP';
 
 const SignupPage = ({ onSignup, onBack, navigation }) => {
   const [username, setUsername] = useState('');
@@ -91,7 +91,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
     
     try {
-      const response = await fetch('http://172.30.1.37:3000/register', {
+      const response = await fetch(`http://${IP}:3000/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ const SignupPage = ({ onSignup, onBack, navigation }) => {
     }
 
     try {
-      const response = await fetch('http://172.30.1.37:3000/name', {
+      const response = await fetch(`http://${IP}:3000/name`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

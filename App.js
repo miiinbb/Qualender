@@ -49,10 +49,10 @@ const Stack = createStackNavigator();
 const SplashScreen = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start', backgroundColor: '#17375E' }}>
     <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: '10%', marginBottom: 20 }}>
-      <Text style={{ color: '#FFC107', fontSize: 50, fontWeight: 'bold', textAlign: 'left' }}>
+      <Text style={{ color: '#FFC107', fontSize: 50, fontWeight: 'bold', textAlign: 'left', marginTop: '-10%' }}>
         퀄 린 더
       </Text>
-      <Image source={require('./assets/logo.png')} style={{ width: 50, height: 50, marginLeft: 10 }} />
+      <Image source={require('./assets/logo.png')} style={{ width: 50, height: 50, marginLeft: 10, marginTop: '-10%' }} />
     </View>
     <Text style={{ color: 'white', fontSize: 25, fontWeight: 'bold', textAlign: 'left', marginLeft: '10%', marginTop: '-40%' }}>
       언제 어디서든 손쉽게 시작하는{'\n'}

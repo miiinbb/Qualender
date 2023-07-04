@@ -25,6 +25,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
         setIsLoggedIn(true);
+        setUsername(value); // 수정: username 값 설정
         setUserNickname(value);
       } else {
         setIsLoggedIn(false);
@@ -116,6 +117,8 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     });
   },[navigation]);
   console.log('외부에서 사용할 count 값:', counted);
+
+  getData();
 
   return (
     <View style={styles.outerContainer}>

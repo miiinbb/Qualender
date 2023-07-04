@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { KakaoLoginButton } from '@react-native-seoul/kakao-login';
 import { useRoute, NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
+import IP from '../data/IP';
 
 const Stack = createStackNavigator();
 
@@ -39,8 +40,7 @@ function LoginPage ({ onLogin, onBack}) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://172.30.1.37:3000/login', {
-        // http://172.30.1.36:3000/register
+      const response = await fetch(`http://${IP}:3000/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
