@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    // borderRadius: 5,
+    borderRadius: 5,
     borderWidth:2,
     borderColor:'#17375E',
     width: width*0.9,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'left',
     paddingTop: 10,
-    color : '#17375E',
+    // color : '#17375E',
     fontWeight: 'bold',
   },
 
@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'mistyrose',
     borderWidth: 2,
     borderColor: '#17375E',
+    borderRadius: 5,
   },
   favText:{//즐겨찾기텍스트
     fontSize: 23,
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
     textAlign: 'center',
     color : '#17375E',
+    fontWeight: 'bold',
   },
 
   ObtainedList:{//취득한자격증 메뉴 버튼
@@ -234,6 +236,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'mintcream',
     borderWidth: 2,
     borderColor: '#17375E',
+    borderRadius: 5,
   },
   obtText:{//취득한 텍스트
     fontSize: 23,
@@ -241,8 +244,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   obtNum:{//취득한 갯수
-    fontSize: 17,
+    fontSize: 19,
     textAlign: 'center',
+    color : '#17375E',
+    fontWeight: 'bold',
   },
   memberInfoManagement: { //'회원가입'버튼
     backgroundColor: '#17375E',
