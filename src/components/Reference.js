@@ -1,3 +1,4 @@
+//PersonalCalendar.js
 import _ from 'lodash';
 import React, {useState, useEffect} from 'react';
 import {Platform, Dimensions, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
@@ -247,51 +248,57 @@ export default function MyCalendar(props) {
   const [calendarList, setCalendarlist] = useState([]);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('username');
-        if (value !== null) {
-          setUsername(value);
-          return value;
+  useFocusEffect(
+    React.useCallback(()=>{
+      const getData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('username');
+          if (value !== null) {
+            setUsername(value);
+            return value;
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-  
-    const getUserInfo = async () => {
-      const data = { username: username };
-  
-      try {
-        const response = await fetch(`http://${IP}:3000/personal`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-  
-        if (response.ok) {
-          const result = await response.json();
-          console.log(result.message);
-          const _item = ITEMS.map((data) => {
-            data.data = data.data.filter(e => result.data.includes(e.title));
-            return data;
-          })
-          .filter(data=>data.data.length != 0)
-          setCalendarlist(_item);
-        } else {
-          console.error('Network response was not ok.');
+      };
+      const getUserInfo = async () => {
+        const data = { username: username };
+    
+        try {
+          const response = await fetch(`http://${IP}:3000/personal`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+    
+          if (response.ok) {
+            const result = await response.json();
+            console.log(result.message);
+            const _item = ITEMS.map((data) => {
+              data.data = data.data.filter(e => result.data.includes(e.title));
+              return data;
+            })
+            .filter(data=>data.data.length != 0)
+            setCalendarlist(_item);
+          } else {
+            console.error('Network response was not ok.');
+          }
+        } catch (error) {
+          console.error('Error occurred while making the request:', error);
         }
-      } catch (error) {
-        console.error('Error occurred while making the request:', error);
-      }
-    };
+      };
+      getData();
+      getUserInfo();
+    },[navigation]));
 
-    getData();
-    getUserInfo();
-  },[]);
+  // useEffect(() => {
+      
+
+  //   getData();
+  //   getUserInfo();
+  // },[]);
 
   return (
     <CalendarProvider

@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
 
   iconID: { //아이콘과 아이디가 들어있는 부분분
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor:  '#FFF6B5',
     marginTop: -60,
     marginVertical: 20,
     marginHorizontal: 15,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     // borderRadius: 5,
     borderWidth:1,
-    borderColor:'lightgray',
+    borderColor:'#17375E',
     width: width*0.9,
   },
   icon: {
