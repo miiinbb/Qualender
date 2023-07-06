@@ -64,38 +64,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
     return [count, count2];
   };
 
-  // const getUserInfo = async () => {
-  //   const data = { username: username };
-  //   let count = 0;
-  //   let count2 = 0;
-  //   try {
-  //     const response = await fetch(`http://${IP}:3000/favorites`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       count = result.data.selectedFavorites.length;
-  //       count2 = result.data.selectedObtained.length;
-  //       console.log(result.message);
-  //       console.log(result.data);
-  //       // console.log('즐겨찾기 개수: ' +count);
-  //       // console.log('취득자격 개수: ' +count2);
-  //       setUserNickname(result.data.nickname);
-
-  //     } else {
-  //       console.error('Network response was not ok.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error occurred while making the request:', error);
-  //   }
-  //   return [count, count2];
-  // };
-
   console.log('유저 정보:', username);
   const goToMain = () => {
     navigation.dispatch(

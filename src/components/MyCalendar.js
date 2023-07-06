@@ -194,9 +194,8 @@ export default function MyCalendar(props) {
         <WeekCalendar firstDay={1} markedDates={getMarkedDates()} />
       ) : (
         <ExpandableCalendar
-        
-          minDate={sub(new Date(), {years: 5})}
-          maxDate={add(new Date(), {years: 5})}
+          // minDate={sub(new Date(), {years: 5})}
+          // maxDate={add(new Date(), {years: 5})}
           pastScrollRange={60}
           futureScrollRange={60}
           displayLoadingIndicator={false}

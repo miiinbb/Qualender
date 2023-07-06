@@ -191,29 +191,29 @@ app.post('/getObtainedBoxes', async (req, res) => { //취득자격증 페이지�
   }
 });
 
-app.post('/favorites', async (req, res) => { //마이페이지에서 즐겨찾기 개수 가져올 때 사용
-  const { username } = req.body;
-  console.log("favorites", username);
+// app.post('/favorites', async (req, res) => { //마이페이지에서 즐겨찾기 개수 가져올 때 사용
+//   const { username } = req.body;
+//   console.log("favorites", username);
 
-  try {
-    const user = await User.findOne({ username }); 
-    console.log(user.selectedFavoritesBoxes);
+//   try {
+//     const user = await User.findOne({ username }); 
+//     console.log(user.selectedFavoritesBoxes);
 
-    if (user) {
-      res.status(200).json({ message: '선택한 박스 정보 불러옴', 
-      data: {
-        selectedFavorites: user.selectedFavoritesBoxes,
-        selectedObtained: user.selectedObtainedBoxes,
-        nickname: user.nickname,
-      } });
-    } else {
-      res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    }
-  } catch (error) {
-    res.status(500).send('선택한 박스 정보 저장 중 에러 발생');
-    console.log(error);
-  }
-});
+//     if (user) {
+//       res.status(200).json({ message: '선택한 박스 정보 불러옴', 
+//       data: {
+//         selectedFavorites: user.selectedFavoritesBoxes,
+//         selectedObtained: user.selectedObtainedBoxes,
+//         nickname: user.nickname,
+//       } });
+//     } else {
+//       res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+//     }
+//   } catch (error) {
+//     res.status(500).send('선택한 박스 정보 저장 중 에러 발생');
+//     console.log(error);
+//   }
+// });
 
 app.post('/personal', async (req, res) => { //마이캘린더(personal calendar.js에서 사용
   const { username } = req.body;
@@ -309,18 +309,25 @@ app.post('/email-change', async (req, res) => {
 
 // 라우팅 설정
 app.post('/userinfo', async (req, res) => {
+  const { username } = req.body;
   try {
-    const { username } = req.body;
     // username을 기반으로 사용자 정보를 데이터베이스에서 찾는 로직을 작성합니다.
     // 예시: MongoDB를 사용하는 경우
     const user = await User.findOne({ username });
+    console.log("mypage", username,"즐겨찾기",user.selectedFavoritesBoxes);
+    console.log("mypage", username,"즐겨찾기",user.selectedObtainedBoxes);
     if (user) {
-      res.status(200).json({ data: { nickname: user.nickname } });
+      res.status(200).json({ message: '마이페이지 정보 불러옴',
+      data: { 
+        selectedFavorites: user.selectedFavoritesBoxes,
+        selectedObtained: user.selectedObtainedBoxes,
+        nickname: user.nickname,
+      } });
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: '마이페이지 정보 불러오기 불가' });
   }
 });
 
