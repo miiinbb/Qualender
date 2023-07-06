@@ -25,12 +25,13 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
   const getData = async () => {
-    const data = { username: username };
+    // const data = { username: username };
     let count = 0;
     let count2 = 0;
     try {
       const usernameValue = await AsyncStorage.getItem('username');
       if (usernameValue !== null) {
+        const data = { username: username };
         setIsLoggedIn(true);
         setUsername(usernameValue); // username 값 설정
         // 사용자 정보 요청
@@ -150,7 +151,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
       fetchData();
     }, [navigation])
   );
-
+  
   console.log('외부에서 사용할 count 값:', counted);
 
   const randomIndex = Math.floor(Math.random() * imagePaths.length);
