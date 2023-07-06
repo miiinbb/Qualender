@@ -1,4 +1,5 @@
-//Mypage.js //자동업데이트 가능
+//Mypage.js 
+//자동업데이트 가능 구현 중. 일단 코드 하나로 합침
 import React, {useState,useEffect,useContext} from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions, Button, useWindowDimensions, } from 'react-native';
 import { useFocusEffect,useNavigation, CommonActions, } from '@react-navigation/native';
@@ -24,6 +25,9 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
   const getData = async () => {
+    const data = { username: username };
+    let count = 0;
+    let count2 = 0;
     try {
       const usernameValue = await AsyncStorage.getItem('username');
       if (usernameValue !== null) {
@@ -36,55 +40,61 @@ function MyPage ({ onLogin, onBack, onSignup }) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ username: usernameValue }),
+          body: JSON.stringify(data),
         });
   
         if (response.ok) {
           const result = await response.json();
+          count = result.data.selectedFavorites.length;
+          count2 = result.data.selectedObtained.length;
+          console.log(result.message);
+          console.log(result.data);
           setUserNickname(result.data.nickname); // userNickname 상태를 업데이트합니다.
         } else {
-          console.error('Network response was not ok.');
+          console.error('네트워크 오류');
         }
       } else {
         setIsLoggedIn(false);
         setUserNickname('');
+        console.error('사용자 정보 없음');
       }
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const getUserInfo = async () => {
-    const data = { username: username };
-    let count = 0;
-    let count2 = 0;
-    try {
-      const response = await fetch(`http://${IP}:3000/favorites`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        count = result.data.selectedFavorites.length;
-        count2 = result.data.selectedObtained.length;
-        console.log(result.message);
-        console.log(result.data);
-        // console.log('즐겨찾기 개수: ' +count);
-        // console.log('취득자격 개수: ' +count2);
-        setUserNickname(result.data.nickname);
-
-      } else {
-        console.error('Network response was not ok.');
-      }
-    } catch (error) {
-      console.error('Error occurred while making the request:', error);
-    }
     return [count, count2];
   };
+
+  // const getUserInfo = async () => {
+  //   const data = { username: username };
+  //   let count = 0;
+  //   let count2 = 0;
+  //   try {
+  //     const response = await fetch(`http://${IP}:3000/favorites`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       count = result.data.selectedFavorites.length;
+  //       count2 = result.data.selectedObtained.length;
+  //       console.log(result.message);
+  //       console.log(result.data);
+  //       // console.log('즐겨찾기 개수: ' +count);
+  //       // console.log('취득자격 개수: ' +count2);
+  //       setUserNickname(result.data.nickname);
+
+  //     } else {
+  //       console.error('Network response was not ok.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error occurred while making the request:', error);
+  //   }
+  //   return [count, count2];
+  // };
 
   console.log('유저 정보:', username);
   const goToMain = () => {
@@ -128,20 +138,22 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   }
 
   useFocusEffect(
-    React.useCallback(async () => {
-      getData();
-      const [count, count2] = await getUserInfo();
-      // getUserInfo().then(counted => {
-      setCounted(count);
-      setCounted2(count2);
-      const { width, height } = Dimensions.get('window');
-      const maxWidth = width * 0.08;
-      const maxHeight = height * 0.04;
-      setImageSize({ width: maxWidth, height: maxHeight });
-    },
+    React.useCallback(()=> {
+      async function fetchData() {
+        const [count, count2] = await getData();
+        // const [count, count2] = await getUserInfo();
+        // getUserInfo().then(counted => {
+        setCounted(count);
+        setCounted2(count2);
+        const { width, height } = Dimensions.get('window');
+        const maxWidth = width * 0.08;
+        const maxHeight = height * 0.04;
+        setImageSize({ width: maxWidth, height: maxHeight });
+      }
     // )
     // },
-    [navigation]));
+      fetchData();
+    }, [navigation]));
   console.log('외부에서 사용할 count 값:', counted);
 
   const randomIndex = Math.floor(Math.random() * imagePaths.length);
