@@ -113,7 +113,7 @@ function MyPage ({ onLogin, onBack, onSignup }) {
         setCounted2(count2);
         const { width, height } = Dimensions.get('window');
         const maxWidth = width * 0.08;
-        const maxHeight = height * 0.04;
+        const maxHeight = height * 0.04; 
         setImageSize({ width: maxWidth, height: maxHeight });
       };
       fetchData();
@@ -121,7 +121,6 @@ function MyPage ({ onLogin, onBack, onSignup }) {
   );
   
   console.log('외부에서 사용할 count 값:', counted);
-
   const randomIndex = Math.floor(Math.random() * imagePaths.length);
   const randomPath = imagePaths[randomIndex];
 
