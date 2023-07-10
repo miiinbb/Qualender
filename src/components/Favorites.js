@@ -128,6 +128,10 @@ function Favorites() {
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
+<<<<<<< HEAD
+=======
+      {/* <Text style={styles.title}>{username}</Text> */}
+>>>>>>> 7a1b222 (그냥)
         <Text style={styles.title}>🐣 즐겨찾기한 자격증 🐣</Text>
         {boxNames.map((name, index) => (
           <TouchableOpacity

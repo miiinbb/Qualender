@@ -322,6 +322,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="MainCalendar" component={MainCalendar}>
         {/* <Stack.Screen name="스플래시" component={SplashScreen} options={{ headerShown: false }} /> */}
         <Stack.Screen name="뒤로" component={MyDrawer} options={{ headerShown: false }} />
+        <Stack.Screen name="MainCalendar" component={MyDrawer} options={{headerShown: false, title:'뒤로'}}/>
         <Stack.Screen name="MyDrawer" component={MyDrawer} options={{headerShown: false, title:'뒤로'}}/>
         <Stack.Screen name="LoginPage" component={LoginPage1} options={{title:'로그인'}}/>
         <Stack.Screen name="SignupPage" component={SignupPage} options={{title:'회원가입'}}/>

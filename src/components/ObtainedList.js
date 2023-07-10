@@ -125,6 +125,10 @@ function ObtainedList() {
   return (
     <View style={styles.container}>
       <View style={styles.boxContainer}>
+<<<<<<< HEAD
+=======
+      {/* <Text style={styles.title}>{username}</Text> */}
+>>>>>>> 7a1b222 (그냥)
         <Text style={styles.title}>📚 자격증을 채워주세요 📚</Text>
         {boxNames.map((name, index) => (
           <TouchableOpacity
